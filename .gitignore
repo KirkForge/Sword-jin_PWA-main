@@ -1,0 +1,96 @@
+# === Secrets & Credentials ===
+*.pem
+*.key
+*_token*
+*.env
+.env.*
+credentials*
+secrets*
+
+# === Godot Engine ===
+.godot/imported/
+.godot/editor/
+.godot/uid_cache.bin
+.godot/global_script_class_cache.cfg
+.godot/scene_groups_cache.cfg
+*.import
+*.translation
+# Godot 4.4+ per-script unique resource IDs (build artifacts)
+*.gd.uid
+*.uid
+
+# === Dependencies ===
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# === OS ===
+.DS_Store
+Thumbs.db
+.directory
+*~
+
+# === Logs ===
+*.log
+logs/
+
+# === Build artifacts (keep sw.js and manifest.json) ===
+builds/web/*.side.wasm
+builds/web/*.audio.worklet.js
+builds/web/*.pck
+builds/web/*.wasm
+builds/web/index.html
+builds/web/Swordjin.js
+builds/android/
+builds/ios/
+builds/linux/
+dist/
+
+# === User data ===
+*.save
+*.sav
+
+# Type checking
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Coverage
+coverage/
+htmlcov/
+.coverage
+coverage.xml
+
+# === Generated binary assets (regenerate via scripts/) ===
+assets/bgm/
+assets/sfx/
+assets/art/generated/
+assets/video/
+
+# === AI/automation state files ===
+.dev_progress
+PROMPT_PACK.md
+.ci-cleandev.yml
+
+# === Session state ===
+state.md
+
+# === LLM tooling (never committed) ===
+.claude/
+CLAUDE.md
+AGENTS.md
+REPORULES.md
+
+# --- Security baseline (do not remove) ---
+token.json
+token_*.json
+*token*.json
+*.pickle
+client_secret*.json
+credentials.json
+*.db-shm
+*.db-wal
+*.sqlite

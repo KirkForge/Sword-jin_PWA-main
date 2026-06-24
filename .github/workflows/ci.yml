@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [main, dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Python syntax check
+        run: |
+          find scripts/ -name "*.py" -exec python3 -m py_compile {} +
+
+      - name: Shell lint
+        uses: ludeeus/action-shellcheck@2.0.0
+        with:
+          scandir: ./scripts
+
+      - name: Check project.godot exists
+        run: test -f project.godot

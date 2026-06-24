@@ -1,0 +1,97 @@
+{
+  "chapter_id": "act06_ch028",
+  "title": "The Second Memory",
+  "act": 6,
+  "chapter": 28,
+  "type": "combat",
+  "playtime_estimate_minutes": 7,
+  "objective": "Witness the sword's second memory — the betrayer who broke the world",
+  "background_color": [0.18, 0.02, 0.04],
+  "theme": "void",
+  "waves": [
+    {
+      "label": "The Betrayer's Court",
+      "enemies": [
+        {
+          "type": "assassin",
+          "positions": [
+            {"x": 130, "y": 100},
+            {"x": 510, "y": 100},
+            {"x": 320, "y": 270}
+          ],
+          "stats": {"health": 130, "speed": 150, "damage": 50}
+        }
+      ]
+    },
+    {
+      "label": "The Broken Empire",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 100},
+            {"x": 470, "y": 240}
+          ],
+          "stats": {"health": 220, "speed": 100, "damage": 52}
+        },
+        {
+          "type": "necromancer",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 280, "speed": 60, "damage": 40}
+        }
+      ]
+    },
+    {
+      "label": "The Betrayer",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 360, "speed": 110, "damage": 64}
+        },
+        {
+          "type": "golem",
+          "positions": [{"x": 130, "y": 280}],
+          "stats": {"health": 320, "speed": 50, "damage": 50, "armor": 18}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 220, "speed": 70, "heal_amount": 40}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "The second memory. The first wielder is dead — his empire broke. The sword passed to a betrayer. He used it to shatter the world the king had forged.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "PRIEST",
+      "text": "The sword remembers the betrayer. It was made to remember. That is the prophecy — that the sword would find a wielder who would end what the betrayer started.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "BETRAYER",
+      "text": "I broke the world because the world was a lie. The sword was the only truth. I wonder, Jin — do you have the strength to break it again?",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The second memory fades. The betrayer is dead in the sword's memory. The world is not a lie — I will not break it. I will keep it.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 1000,
+    "unlock_chapter": "act06_ch029",
+    "gold": 420
+  },
+  "next_chapter": "act06_ch029",
+  "is_unlocked": false
+}

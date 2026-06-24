@@ -1,0 +1,104 @@
+{
+  "chapter_id": "act06_ch030",
+  "title": "The Sword Set Down",
+  "act": 6,
+  "chapter": 30,
+  "type": "boss",
+  "playtime_estimate_minutes": 10,
+  "objective": "Refuse the prophecy. Put the sword down. End what the betrayer started.",
+  "background_color": [0.18, 0.12, 0.06],
+  "theme": "iron_throne",
+  "waves": [
+    {
+      "label": "The Sword's Last Trial",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 100},
+            {"x": 460, "y": 240}
+          ],
+          "stats": {"health": 280, "speed": 110, "damage": 60}
+        },
+        {
+          "type": "necromancer",
+          "positions": [{"x": 320, "y": 170}],
+          "stats": {"health": 320, "speed": 60, "damage": 44}
+        }
+      ]
+    },
+    {
+      "label": "The Sword's Final Argument",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 130, "y": 100},
+            {"x": 320, "y": 200},
+            {"x": 510, "y": 250}
+          ],
+          "stats": {"health": 280, "speed": 110, "damage": 60}
+        }
+      ]
+    },
+    {
+      "label": "The Prophecy's Heart",
+      "enemies": [
+        {
+          "type": "remembrance",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 800, "speed": 100, "damage": 80, "armor": 24}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 300, "speed": 70, "heal_amount": 60}
+    },
+    {
+      "type": "ally_bandit_king",
+      "count": 1,
+      "positions": [{"x": 540, "y": 280}],
+      "stats": {"health": 280, "speed": 95, "damage": 50}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "The sword burns in my hand. The prophecy is in my blood. I see the wraiths of every wielder Remembrance has claimed. I see the dark Jin. I see myself — if I do not choose.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "MERCHANT",
+      "text": "Jin. You do not have to do this alone. We came up the tower with you. The bandit king. The general's last soldier. We are here.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "REMEMBRANCE",
+      "text": "I have made kings. I have broken empires. I have outlived the world. You will not put me down, Jin. You are mine.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "I am Jin. I am no one's sword. I am the swordsman — and I set you down.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The sword is on the ground. The prophecy is broken. The world remains. The empire endures. The alliance stands.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 2000,
+    "gold": 1000,
+    "act6_complete": true,
+    "ending": "prophecy_refused"
+  },
+  "next_chapter": null,
+  "is_unlocked": false
+}

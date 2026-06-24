@@ -1,0 +1,101 @@
+{
+  "chapter_id": "act06_ch026",
+  "title": "What Comes After",
+  "act": 6,
+  "chapter": 26,
+  "type": "combat",
+  "playtime_estimate_minutes": 6,
+  "objective": "Confront the visions the master's death unleashed and survive the prophecy's first trial",
+  "background_color": [0.06, 0.04, 0.14],
+  "theme": "void",
+  "waves": [
+    {
+      "label": "Echoes of the Fang",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 100},
+            {"x": 460, "y": 240}
+          ],
+          "stats": {"health": 200, "speed": 100, "damage": 50}
+        }
+      ]
+    },
+    {
+      "label": "Visions of the Priest",
+      "enemies": [
+        {
+          "type": "necromancer",
+          "positions": [{"x": 320, "y": 170}],
+          "stats": {"health": 280, "speed": 60, "damage": 40}
+        },
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 130, "y": 280},
+            {"x": 510, "y": 270}
+          ],
+          "stats": {"health": 200, "speed": 100, "damage": 50}
+        }
+      ]
+    },
+    {
+      "label": "The Sword's Memory",
+      "enemies": [
+        {
+          "type": "berserker",
+          "positions": [{"x": 200, "y": 130}],
+          "stats": {"health": 240, "speed": 100, "damage": 50}
+        },
+        {
+          "type": "assassin",
+          "positions": [{"x": 470, "y": 240}],
+          "stats": {"health": 130, "speed": 150, "damage": 50}
+        },
+        {
+          "type": "wraith",
+          "positions": [{"x": 320, "y": 280}],
+          "stats": {"health": 200, "speed": 100, "damage": 50}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 220, "speed": 70, "heal_amount": 40}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "The tower is silent. The master is dead. But the sword in my hand burns — it's showing me something. Visions of what comes next.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "PRIEST",
+      "text": "Jin. The prophecy was never about the Fang. It was about the sword. The sword that was forged before the empire. The sword that remembers.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The sword has a name. I hear it now. *Remembrance*. It wants me to see what it has seen.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "MERCHANT",
+      "text": "The sword speaks to you. I always knew it would. The priest told me, before the Fang killed her.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 800,
+    "unlock_chapter": "act06_ch027",
+    "gold": 350
+  },
+  "next_chapter": "act06_ch027",
+  "is_unlocked": false
+}

@@ -1,0 +1,121 @@
+{
+  "chapter_id": "act05_ch022",
+  "title": "The Inner City",
+  "act": 5,
+  "chapter": 22,
+  "type": "combat",
+  "playtime_estimate_minutes": 7,
+  "objective": "Push the siege into the inner city and break the Fang's first district",
+  "background_color": [0.12, 0.06, 0.10],
+  "theme": "dark_city",
+  "waves": [
+    {
+      "label": "Street Vanguard",
+      "enemies": [
+        {
+          "type": "assassin",
+          "positions": [
+            {"x": 150, "y": 100},
+            {"x": 510, "y": 250}
+          ],
+          "stats": {"health": 100, "speed": 150, "damage": 42}
+        },
+        {
+          "type": "bandit",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 120, "speed": 100, "damage": 30}
+        }
+      ]
+    },
+    {
+      "label": "District Hold",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 100},
+            {"x": 470, "y": 110}
+          ],
+          "stats": {"health": 130, "speed": 95, "damage": 38}
+        },
+        {
+          "type": "golem",
+          "positions": [{"x": 330, "y": 270}],
+          "stats": {"health": 240, "speed": 50, "damage": 38, "armor": 14}
+        }
+      ]
+    },
+    {
+      "label": "The District Master",
+      "enemies": [
+        {
+          "type": "necromancer",
+          "positions": [{"x": 320, "y": 170}],
+          "stats": {"health": 220, "speed": 60, "damage": 30}
+        },
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 180, "y": 110},
+            {"x": 460, "y": 240}
+          ],
+          "stats": {"health": 150, "speed": 100, "damage": 42}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 150, "speed": 70, "heal_amount": 25}
+    },
+    {
+      "type": "ally_imperial_soldier",
+      "count": 4,
+      "positions": [
+        {"x": 80, "y": 200},
+        {"x": 560, "y": 200},
+        {"x": 540, "y": 130},
+        {"x": 100, "y": 100}
+      ],
+      "stats": {"health": 130, "speed": 80, "damage": 24}
+    },
+    {
+      "type": "ally_bandit_king",
+      "count": 1,
+      "positions": [{"x": 540, "y": 280}],
+      "stats": {"health": 200, "speed": 90, "damage": 38}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "The inner city. The dark tower is three districts away. We take them one by one.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "GENERAL",
+      "text": "The Fang has fortified each district. Necromancers at the heart of every block. We push through, you cut the head.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "KAELEN",
+      "text": "The wraiths in the second wave — they remember me. Good. So do I.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The first district falls. Two more to the tower. The Fang's master is watching now — I can feel it.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 700,
+    "unlock_chapter": "act05_ch023",
+    "gold": 320
+  },
+  "next_chapter": "act05_ch023",
+  "is_unlocked": false
+}

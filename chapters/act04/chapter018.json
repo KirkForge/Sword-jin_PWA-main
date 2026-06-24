@@ -1,0 +1,87 @@
+{
+  "chapter_id": "act04_ch018",
+  "title": "The Bandit King's Surrender",
+  "act": 4,
+  "chapter": 18,
+  "type": "combat",
+  "playtime_estimate_minutes": 5,
+  "objective": "Break the bandit king's last warband and accept his surrender",
+  "background_color": [0.18, 0.10, 0.06],
+  "theme": "dark_fortress",
+  "waves": [
+    {
+      "label": "The Bandit King's Honor Guard",
+      "enemies": [
+        {
+          "type": "bandit",
+          "positions": [
+            {"x": 150, "y": 100},
+            {"x": 510, "y": 130},
+            {"x": 330, "y": 280}
+          ],
+          "stats": {"health": 110, "speed": 100, "damage": 28}
+        }
+      ]
+    },
+    {
+      "label": "Fang Mercenaries",
+      "enemies": [
+        {
+          "type": "assassin",
+          "positions": [
+            {"x": 200, "y": 110},
+            {"x": 470, "y": 240}
+          ],
+          "stats": {"health": 95, "speed": 150, "damage": 38}
+        }
+      ]
+    },
+    {
+      "label": "The King Himself",
+      "enemies": [
+        {
+          "type": "berserker",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 180, "speed": 95, "damage": 40}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 100, "speed": 70, "heal_amount": 15}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "BANDIT_KING",
+      "text": "I am Kaelen Storm. I led the eastern bandits until the Fang bought my sword. Now I lead them for you — if you'll have me.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Prove it. Your warband against my blade. The last one standing earns the right to ask.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "BANDIT_KING",
+      "text": "Then we fight as brothers. Come, Sword of Ruin — let the eastern roads see who truly rules them.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Kaelen kneels. The eastern bandit clans are ours now. Three banners, three armies, one march south.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 460,
+    "unlock_chapter": "act04_ch019",
+    "gold": 180
+  },
+  "next_chapter": "act04_ch019",
+  "is_unlocked": false
+}

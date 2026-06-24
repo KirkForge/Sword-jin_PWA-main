@@ -1,0 +1,103 @@
+{
+  "chapter_id": "act03_ch014",
+  "title": "The Fang Priest",
+  "act": 3,
+  "chapter": 14,
+  "type": "boss",
+  "playtime_estimate_minutes": 8,
+  "objective": "Defeat the Crimson Fang's priest to break the cult's hold on the eastern roads",
+  "background_color": [0.22, 0.04, 0.10],
+  "theme": "iron_throne",
+  "waves": [
+    {
+      "label": "Priest's Honor Guard",
+      "enemies": [
+        {
+          "type": "assassin",
+          "positions": [
+            {"x": 130, "y": 90},
+            {"x": 510, "y": 250}
+          ],
+          "stats": {"health": 75, "speed": 145, "damage": 30}
+        },
+        {
+          "type": "shaman",
+          "positions": [{"x": 340, "y": 200}],
+          "stats": {"health": 90, "speed": 60, "damage": 16}
+        }
+      ]
+    },
+    {
+      "label": "Wraith Choir",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 100},
+            {"x": 470, "y": 130},
+            {"x": 330, "y": 270}
+          ],
+          "stats": {"health": 85, "speed": 75, "damage": 28}
+        }
+      ]
+    },
+    {
+      "label": "The Priest of Crimson",
+      "enemies": [
+        {
+          "type": "necromancer",
+          "positions": [{"x": 320, "y": 170}],
+          "stats": {"health": 160, "speed": 50, "damage": 18}
+        },
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 110},
+            {"x": 460, "y": 240}
+          ],
+          "stats": {"health": 100, "speed": 80, "damage": 32}
+        }
+      ]
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "PRIEST",
+      "text": "So. The Sword of Ruin stands before me. I had hoped the wraiths would greet you, but you cut through them as the prophecy said you would.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Prophecy. The Fang's not just a cult — you've been expecting me.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "PRIEST",
+      "text": "Every Fang priest learns your name. The wraiths you killed were the ones I bound. The wraith you ARE is the one the prophecy reserves.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The choir scatters when the priest dies. Hold the line — Spirit Edge cuts through their binding.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "PRIEST",
+      "text": "The Fang does not end with me. But the eastern roads... yes. You can have those.",
+      "trigger": "objective_complete"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The priest is dead. The Fang's eastern network is broken. But the prophecy she spoke — I need answers, and there's only one place left to look.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 360,
+    "unlock_chapter": "act03_ch015",
+    "gold": 130,
+    "unlock_weapon": "spirit_edge_duality"
+  },
+  "next_chapter": "act03_ch015",
+  "is_unlocked": false
+}

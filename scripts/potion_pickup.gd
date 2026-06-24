@@ -1,0 +1,39 @@
+extends Area2D
+# PotionPickup — small health orb dropped by enemies
+# Auto-pickup on player overlap, heals 15 HP
+
+@export var heal_amount := 15
+
+@onready var visual = $Polygon2D
+@onready var sprite = $Sprite2D
+
+const POTION_TEXTURE_PATH := "res://assets/art/generated/items/potion_health.webp"
+
+func _ready():
+	# Daily challenge: no_potions modifier — self-destruct
+	if GameState.is_daily_challenge_run and "no_potions" in GameState.active_daily_modifiers:
+		queue_free()
+		return
+
+	body_entered.connect(_on_body_entered)
+
+	# Prefer generated potion sprite; fall back to polygon placeholder
+	if sprite and ResourceLoader.exists(POTION_TEXTURE_PATH):
+		sprite.texture = load(POTION_TEXTURE_PATH)
+		visual.visible = false
+		sprite.visible = true
+	else:
+		visual.visible = true
+		if sprite:
+			sprite.visible = false
+
+	# Gentle bob animation
+	var bob_target = visual if visual.visible else sprite
+	var tween = create_tween().set_loops()
+	tween.tween_property(bob_target, "position:y", -4, 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(bob_target, "position:y", 0, 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+func _on_body_entered(body):
+	if body.is_in_group("player") and body.has_method("heal"):
+		body.heal(heal_amount)
+		queue_free()

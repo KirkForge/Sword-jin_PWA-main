@@ -1,0 +1,96 @@
+{
+  "chapter_id": "act06_ch029",
+  "title": "The Third Memory",
+  "act": 6,
+  "chapter": 29,
+  "type": "combat",
+  "playtime_estimate_minutes": 8,
+  "objective": "Witness the sword's third memory — Jin's own future, if he does not choose",
+  "background_color": [0.12, 0.08, 0.20],
+  "theme": "void",
+  "waves": [
+    {
+      "label": "The Future's Shadow",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 100},
+            {"x": 460, "y": 240}
+          ],
+          "stats": {"health": 250, "speed": 110, "damage": 56}
+        }
+      ]
+    },
+    {
+      "label": "The Future's Army",
+      "enemies": [
+        {
+          "type": "skeleton",
+          "positions": [
+            {"x": 150, "y": 100},
+            {"x": 510, "y": 100}
+          ],
+          "stats": {"health": 220, "speed": 80, "damage": 50}
+        },
+        {
+          "type": "skeleton_archer",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 200, "speed": 80, "damage": 50}
+        },
+        {
+          "type": "wraith",
+          "positions": [{"x": 320, "y": 270}],
+          "stats": {"health": 250, "speed": 110, "damage": 56}
+        }
+      ]
+    },
+    {
+      "label": "Jin, As the Sword Remembers",
+      "enemies": [
+        {
+          "type": "jin_dark_reflection",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 400, "speed": 120, "damage": 70, "armor": 20}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 250, "speed": 70, "heal_amount": 50}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "The third memory is mine. The sword shows me what I will become — if I do not choose.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "PRIEST",
+      "text": "The prophecy has a price. Every wielder becomes the sword. The king became conquest. The betrayer became ruin. The next wielder... becomes the sword itself.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "DARK_JIN",
+      "text": "You will break the world, Jin. Not because you are cruel. Because the sword will make you. The prophecy does not end. The sword does not let go.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Then the prophecy ends with me. I will not become the sword. I am Jin. I will put Remembrance down.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 1200,
+    "unlock_chapter": "act06_ch030",
+    "gold": 500
+  },
+  "next_chapter": "act06_ch030",
+  "is_unlocked": false
+}

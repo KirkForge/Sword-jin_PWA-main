@@ -1,0 +1,100 @@
+{
+  "chapter_id": "act05_ch025",
+  "title": "The Tower's Climb",
+  "act": 5,
+  "chapter": 25,
+  "type": "boss",
+  "playtime_estimate_minutes": 10,
+  "objective": "Climb the dark tower alone and confront the master of the Crimson Fang",
+  "background_color": [0.20, 0.02, 0.04],
+  "theme": "iron_throne",
+  "waves": [
+    {
+      "label": "The Tower's Outer Chamber",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 100},
+            {"x": 460, "y": 100}
+          ],
+          "stats": {"health": 180, "speed": 100, "damage": 46}
+        },
+        {
+          "type": "assassin",
+          "positions": [{"x": 330, "y": 270}],
+          "stats": {"health": 120, "speed": 150, "damage": 50}
+        }
+      ]
+    },
+    {
+      "label": "The Master's Inner Court",
+      "enemies": [
+        {
+          "type": "necromancer",
+          "positions": [{"x": 320, "y": 170}],
+          "stats": {"health": 300, "speed": 60, "damage": 40}
+        },
+        {
+          "type": "golem",
+          "positions": [{"x": 130, "y": 280}],
+          "stats": {"health": 320, "speed": 50, "damage": 48, "armor": 18}
+        },
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 110},
+            {"x": 460, "y": 240}
+          ],
+          "stats": {"health": 180, "speed": 110, "damage": 50}
+        }
+      ]
+    },
+    {
+      "label": "The Master of the Crimson Fang",
+      "enemies": [
+        {
+          "type": "master_fang",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 600, "speed": 100, "damage": 60, "armor": 20}
+        }
+      ]
+    }
+  ],
+  "allies": [],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "The door closes behind me. The alliance holds the third district. From here, I climb alone.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "MASTER",
+      "text": "The Sword of Ruin. The priest told me about you. She said the prophecy named you. She died before she could tell me the rest.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The prophecy is a lie. I am no one's sword. I am Jin, and I am here to end you.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "MASTER",
+      "text": "Then end me, Sword. But know this — the prophecy was never about the Fang. It was about what comes after.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The master falls. The tower crumbles. Act Five ends with the Fang broken — and the prophecy unanswered.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 1500,
+    "unlock_chapter": "act06_ch026",
+    "gold": 600,
+    "act5_complete": true
+  },
+  "next_chapter": "act06_ch026",
+  "is_unlocked": false
+}

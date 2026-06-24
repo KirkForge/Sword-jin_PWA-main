@@ -1,0 +1,114 @@
+{
+  "chapter_id": "act04_ch017",
+  "title": "The Frontier Camp",
+  "act": 4,
+  "chapter": 17,
+  "type": "combat",
+  "playtime_estimate_minutes": 6,
+  "objective": "Defend the imperial supply camp from a Crimson Fang night raid",
+  "background_color": [0.12, 0.10, 0.06],
+  "theme": "field",
+  "waves": [
+    {
+      "label": "First Strike",
+      "enemies": [
+        {
+          "type": "assassin",
+          "positions": [
+            {"x": 130, "y": 100},
+            {"x": 530, "y": 240}
+          ],
+          "stats": {"health": 85, "speed": 150, "damage": 36}
+        }
+      ]
+    },
+    {
+      "label": "Main Force",
+      "enemies": [
+        {
+          "type": "bandit",
+          "positions": [
+            {"x": 180, "y": 90},
+            {"x": 480, "y": 100}
+          ],
+          "stats": {"health": 100, "speed": 100, "damage": 26}
+        },
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 320, "y": 200},
+            {"x": 380, "y": 270}
+          ],
+          "stats": {"health": 110, "speed": 85, "damage": 32}
+        }
+      ]
+    },
+    {
+      "label": "Fang Commander",
+      "enemies": [
+        {
+          "type": "berserker",
+          "positions": [{"x": 200, "y": 130}],
+          "stats": {"health": 130, "speed": 90, "damage": 32}
+        },
+        {
+          "type": "assassin",
+          "positions": [{"x": 480, "y": 200}],
+          "stats": {"health": 90, "speed": 150, "damage": 38}
+        },
+        {
+          "type": "shaman",
+          "positions": [{"x": 320, "y": 280}],
+          "stats": {"health": 100, "speed": 60, "damage": 18}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 80, "y": 290}],
+      "stats": {"health": 100, "speed": 70, "heal_amount": 15}
+    },
+    {
+      "type": "ally_imperial_soldier",
+      "count": 2,
+      "positions": [
+        {"x": 100, "y": 180},
+        {"x": 560, "y": 180}
+      ],
+      "stats": {"health": 80, "speed": 80, "damage": 15}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "SOLDIER",
+      "text": "Commander Jin! The Fang's massing at the eastern treeline — hundreds of them!",
+      "trigger": "start"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Hold the line. The warden's seal means something now — every soldier on these walls fights under our banner.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "MERCHANT",
+      "text": "The shaman again. Same trick. We learned this lesson three times now.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The camp stands. The Fang broke against imperial steel and our blade. Tomorrow we march south for real.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 420,
+    "unlock_chapter": "act04_ch018",
+    "gold": 150,
+    "unlock_skill": "rally_cry"
+  },
+  "next_chapter": "act04_ch018",
+  "is_unlocked": false
+}

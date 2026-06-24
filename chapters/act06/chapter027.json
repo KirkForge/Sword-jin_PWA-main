@@ -1,0 +1,91 @@
+{
+  "chapter_id": "act06_ch027",
+  "title": "The First Memory",
+  "act": 6,
+  "chapter": 27,
+  "type": "combat",
+  "playtime_estimate_minutes": 7,
+  "objective": "Witness the sword's first memory — the empire that forged it",
+  "background_color": [0.04, 0.06, 0.18],
+  "theme": "void",
+  "waves": [
+    {
+      "label": "The Ancient Empire's Guard",
+      "enemies": [
+        {
+          "type": "skeleton",
+          "positions": [
+            {"x": 150, "y": 100},
+            {"x": 510, "y": 100}
+          ],
+          "stats": {"health": 180, "speed": 80, "damage": 40}
+        }
+      ]
+    },
+    {
+      "label": "The Forge Temple",
+      "enemies": [
+        {
+          "type": "skeleton_archer",
+          "positions": [
+            {"x": 200, "y": 100},
+            {"x": 470, "y": 230}
+          ],
+          "stats": {"health": 160, "speed": 80, "damage": 42}
+        },
+        {
+          "type": "skeleton",
+          "positions": [{"x": 320, "y": 270}],
+          "stats": {"health": 200, "speed": 80, "damage": 44}
+        }
+      ]
+    },
+    {
+      "label": "The First Wielder",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 320, "speed": 100, "damage": 60}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 220, "speed": 70, "heal_amount": 40}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "The first memory. An empire I do not recognize — older than the throne, older than the Fang. A forge temple where Remembrance was made.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "PRIEST",
+      "text": "The first wielder. A king who conquered the world. The sword remembers him — it remembers what he did with it.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "FIRST_WIELDER",
+      "text": "I forged a world. The sword remembers the world I forged. It will remember what you do with it, Sword of Ruin.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The first memory fades. I am Jin. I am not that king. I will not forge a world with this blade — I will end it.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 900,
+    "unlock_chapter": "act06_ch028",
+    "gold": 380
+  },
+  "next_chapter": "act06_ch028",
+  "is_unlocked": false
+}

@@ -1,0 +1,116 @@
+{
+  "chapter_id": "act05_ch023",
+  "title": "The Second District",
+  "act": 5,
+  "chapter": 23,
+  "type": "combat",
+  "playtime_estimate_minutes": 7,
+  "objective": "Push the siege through the second district toward the dark tower",
+  "background_color": [0.10, 0.04, 0.10],
+  "theme": "dark_city",
+  "waves": [
+    {
+      "label": "Rooftop Assassins",
+      "enemies": [
+        {
+          "type": "assassin",
+          "positions": [
+            {"x": 130, "y": 90},
+            {"x": 330, "y": 100},
+            {"x": 510, "y": 100}
+          ],
+          "stats": {"health": 110, "speed": 150, "damage": 44}
+        }
+      ]
+    },
+    {
+      "label": "The Fang's Wraith Block",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 110},
+            {"x": 320, "y": 270},
+            {"x": 470, "y": 130}
+          ],
+          "stats": {"health": 150, "speed": 100, "damage": 42}
+        }
+      ]
+    },
+    {
+      "label": "The Second District's Master",
+      "enemies": [
+        {
+          "type": "necromancer",
+          "positions": [{"x": 320, "y": 170}],
+          "stats": {"health": 240, "speed": 60, "damage": 32}
+        },
+        {
+          "type": "golem",
+          "positions": [{"x": 130, "y": 280}],
+          "stats": {"health": 260, "speed": 50, "damage": 40, "armor": 16}
+        },
+        {
+          "type": "shaman",
+          "positions": [{"x": 510, "y": 270}],
+          "stats": {"health": 130, "speed": 60, "damage": 24}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 180, "speed": 70, "heal_amount": 30}
+    },
+    {
+      "type": "ally_imperial_soldier",
+      "count": 5,
+      "positions": [
+        {"x": 80, "y": 200},
+        {"x": 560, "y": 200},
+        {"x": 540, "y": 130},
+        {"x": 100, "y": 100},
+        {"x": 100, "y": 250}
+      ],
+      "stats": {"health": 150, "speed": 80, "damage": 28}
+    },
+    {
+      "type": "ally_bandit_king",
+      "count": 1,
+      "positions": [{"x": 540, "y": 280}],
+      "stats": {"health": 220, "speed": 95, "damage": 42}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "Rooftop assassins. The Fang's pulling out their best for the second district.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "MERCHANT",
+      "text": "Three assassins at once. Rally Cry is going to be everything here.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "KAELEN",
+      "text": "A golem *and* a necromancer. The master is angry we broke the first district.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Second district falls. One more. The dark tower is in sight now — the master's window glows red.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 800,
+    "unlock_chapter": "act05_ch024",
+    "gold": 360
+  },
+  "next_chapter": "act05_ch024",
+  "is_unlocked": false
+}

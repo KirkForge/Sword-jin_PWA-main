@@ -1,0 +1,120 @@
+{
+  "chapter_id": "act05_ch021",
+  "title": "The Imperial Army Arrives",
+  "act": 5,
+  "chapter": 21,
+  "type": "combat",
+  "playtime_estimate_minutes": 6,
+  "objective": "Meet the imperial army at the breach and repel the Fang's first counter-siege",
+  "background_color": [0.16, 0.10, 0.08],
+  "theme": "iron_throne",
+  "waves": [
+    {
+      "label": "Fang Skirmishers",
+      "enemies": [
+        {
+          "type": "bandit",
+          "positions": [
+            {"x": 130, "y": 100},
+            {"x": 510, "y": 100}
+          ],
+          "stats": {"health": 110, "speed": 100, "damage": 28}
+        },
+        {
+          "type": "assassin",
+          "positions": [{"x": 320, "y": 200}],
+          "stats": {"health": 95, "speed": 150, "damage": 40}
+        }
+      ]
+    },
+    {
+      "label": "Fang Heavy Push",
+      "enemies": [
+        {
+          "type": "golem",
+          "positions": [{"x": 200, "y": 130}],
+          "stats": {"health": 240, "speed": 50, "damage": 38, "armor": 14}
+        },
+        {
+          "type": "wraith",
+          "positions": [{"x": 470, "y": 240}],
+          "stats": {"health": 130, "speed": 90, "damage": 36}
+        }
+      ]
+    },
+    {
+      "label": "Fang Siege-Mage",
+      "enemies": [
+        {
+          "type": "necromancer",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 200, "speed": 60, "damage": 28}
+        },
+        {
+          "type": "shaman",
+          "positions": [{"x": 130, "y": 280}],
+          "stats": {"health": 120, "speed": 60, "damage": 22}
+        },
+        {
+          "type": "wraith",
+          "positions": [{"x": 510, "y": 270}],
+          "stats": {"health": 140, "speed": 95, "damage": 40}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 150, "speed": 70, "heal_amount": 25}
+    },
+    {
+      "type": "ally_imperial_soldier",
+      "count": 4,
+      "positions": [
+        {"x": 80, "y": 200},
+        {"x": 560, "y": 200},
+        {"x": 540, "y": 130},
+        {"x": 100, "y": 100}
+      ],
+      "stats": {"health": 130, "speed": 80, "damage": 24}
+    },
+    {
+      "type": "ally_bandit_king",
+      "count": 1,
+      "positions": [{"x": 540, "y": 280}],
+      "stats": {"health": 180, "speed": 90, "damage": 36}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "GENERAL",
+      "text": "Commander Jin. The throne sends a thousand swords. Yours to command — we hold the breach, you lead the strike.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The Fang counter-attacks at dawn. They know we hold the wall. Rally Cry before the second wave — that's when the golem comes.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "NECROMANCER",
+      "text": "A thousand swords means a thousand souls. The master will be pleased.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The breach holds. The imperial army is here. The war has truly begun.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 600,
+    "unlock_chapter": "act05_ch022",
+    "gold": 280
+  },
+  "next_chapter": "act05_ch022",
+  "is_unlocked": false
+}

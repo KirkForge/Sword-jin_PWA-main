@@ -1,0 +1,93 @@
+{
+  "chapter_id": "act03_ch011",
+  "title": "The Betrayer's Blade",
+  "act": 3,
+  "chapter": 11,
+  "type": "combat",
+  "playtime_estimate_minutes": 5,
+  "objective": "Survive the ambush and uncover the Crimson Fang's new weapon",
+  "background_color": [0.10, 0.04, 0.14],
+  "theme": "dark_fortress",
+  "waves": [
+    {
+      "label": "Crimson Vanguard",
+      "enemies": [
+        {
+          "type": "bandit",
+          "positions": [
+            {"x": 150, "y": 110},
+            {"x": 520, "y": 130}
+          ],
+          "stats": {"health": 70, "speed": 100, "damage": 18}
+        },
+        {
+          "type": "assassin",
+          "positions": [{"x": 330, "y": 80}],
+          "stats": {"health": 55, "speed": 140, "damage": 24}
+        }
+      ]
+    },
+    {
+      "label": "The Fang Reveals Itself",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 220, "y": 200},
+            {"x": 460, "y": 220}
+          ],
+          "stats": {"health": 70, "speed": 65, "damage": 22}
+        },
+        {
+          "type": "bandit",
+          "positions": [{"x": 380, "y": 100}],
+          "stats": {"health": 75, "speed": 100, "damage": 20}
+        }
+      ]
+    },
+    {
+      "label": "Spectral Vanguard",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 180, "y": 120},
+            {"x": 480, "y": 140},
+            {"x": 320, "y": 250}
+          ],
+          "stats": {"health": 75, "speed": 70, "damage": 24}
+        }
+      ]
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "Past the gates. The Crimson Fang's territory... and they're ready for me.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "ASSASSIN",
+      "text": "The Sword of Ruin. The Master warned us you were coming.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Wraiths. They weren't at the gate — someone summoned them here.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "That wraith's blade was forged from the consumed. Spirit Edge may be the only thing that cuts clean through.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 220,
+    "unlock_chapter": "act03_ch012",
+    "gold": 65,
+    "unlock_weapon": "spirit_edge"
+  },
+  "next_chapter": "act03_ch012",
+  "is_unlocked": false
+}

@@ -1,0 +1,120 @@
+{
+  "chapter_id": "act05_ch024",
+  "title": "The Third District",
+  "act": 5,
+  "chapter": 24,
+  "type": "combat",
+  "playtime_estimate_minutes": 8,
+  "objective": "Storm the third district and reach the base of the dark tower",
+  "background_color": [0.16, 0.04, 0.06],
+  "theme": "iron_throne",
+  "waves": [
+    {
+      "label": "Tower Guard",
+      "enemies": [
+        {
+          "type": "golem",
+          "positions": [
+            {"x": 200, "y": 100},
+            {"x": 470, "y": 250}
+          ],
+          "stats": {"health": 280, "speed": 50, "damage": 42, "armor": 16}
+        }
+      ]
+    },
+    {
+      "label": "The Master's Wraith Horde",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 130, "y": 100},
+            {"x": 320, "y": 200},
+            {"x": 510, "y": 250}
+          ],
+          "stats": {"health": 160, "speed": 100, "damage": 44}
+        },
+        {
+          "type": "wraith",
+          "positions": [{"x": 220, "y": 270}],
+          "stats": {"health": 180, "speed": 110, "damage": 48}
+        }
+      ]
+    },
+    {
+      "label": "The Tower's Threshold",
+      "enemies": [
+        {
+          "type": "necromancer",
+          "positions": [{"x": 320, "y": 170}],
+          "stats": {"health": 280, "speed": 60, "damage": 36}
+        },
+        {
+          "type": "berserker",
+          "positions": [{"x": 130, "y": 280}],
+          "stats": {"health": 220, "speed": 100, "damage": 48}
+        },
+        {
+          "type": "shaman",
+          "positions": [{"x": 510, "y": 270}],
+          "stats": {"health": 150, "speed": 60, "damage": 26}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 200, "speed": 70, "heal_amount": 35}
+    },
+    {
+      "type": "ally_imperial_soldier",
+      "count": 5,
+      "positions": [
+        {"x": 80, "y": 200},
+        {"x": 560, "y": 200},
+        {"x": 540, "y": 130},
+        {"x": 100, "y": 100},
+        {"x": 100, "y": 250}
+      ],
+      "stats": {"health": 170, "speed": 80, "damage": 30}
+    },
+    {
+      "type": "ally_bandit_king",
+      "count": 1,
+      "positions": [{"x": 540, "y": 280}],
+      "stats": {"health": 240, "speed": 95, "damage": 44}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "The third district. The tower rises at the end of the street. We go through the Fang's last line.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "GENERAL",
+      "text": "The master is summoning. The wraiths in the second wave are not the patrol — they're a horde.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "KAELEN",
+      "text": "Berserkers. The master's last elites. After this — only the tower remains.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The third district is ours. The tower door is ahead. Tomorrow I climb it alone.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 900,
+    "unlock_chapter": "act05_ch025",
+    "gold": 400
+  },
+  "next_chapter": "act05_ch025",
+  "is_unlocked": false
+}

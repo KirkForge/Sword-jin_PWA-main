@@ -1,0 +1,91 @@
+{
+  "chapter_id": "act04_ch016",
+  "title": "The Imperial Seal",
+  "act": 4,
+  "chapter": 16,
+  "type": "combat",
+  "playtime_estimate_minutes": 5,
+  "objective": "Earn the gate warden's trust and accept the imperial commission",
+  "background_color": [0.10, 0.14, 0.10],
+  "theme": "fortress",
+  "waves": [
+    {
+      "label": "Fang Vanguard",
+      "enemies": [
+        {
+          "type": "bandit",
+          "positions": [
+            {"x": 150, "y": 110},
+            {"x": 510, "y": 250}
+          ],
+          "stats": {"health": 90, "speed": 100, "damage": 24}
+        },
+        {
+          "type": "assassin",
+          "positions": [{"x": 340, "y": 90}],
+          "stats": {"health": 80, "speed": 150, "damage": 34}
+        }
+      ]
+    },
+    {
+      "label": "Wraith Honor Guard",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 120},
+            {"x": 470, "y": 230}
+          ],
+          "stats": {"health": 100, "speed": 80, "damage": 30}
+        }
+      ]
+    },
+    {
+      "label": "The Warden's Test",
+      "enemies": [
+        {
+          "type": "golem",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 220, "speed": 50, "damage": 36, "armor": 12}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 280}],
+      "stats": {"health": 100, "speed": 70, "heal_amount": 15}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "WARDEN",
+      "text": "The Sword of Ruin. The priest's death echoes through the imperial court. The throne takes notice.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "JIN",
+      "text": "I didn't come for the throne's notice. I came for answers about the prophecy.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "WARDEN",
+      "text": "Defeat my golem without breaking. Then the seal is yours — and an army answers when you call.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The warden's seal. Now the southern roads answer to me — and the imperial army stands with us.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 350,
+    "unlock_chapter": "act04_ch017",
+    "gold": 120
+  },
+  "next_chapter": "act04_ch017",
+  "is_unlocked": false
+}

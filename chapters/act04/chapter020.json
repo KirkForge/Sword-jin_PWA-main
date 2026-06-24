@@ -1,0 +1,131 @@
+{
+  "chapter_id": "act04_ch020",
+  "title": "The Capital's Shadow",
+  "act": 4,
+  "chapter": 20,
+  "type": "boss",
+  "playtime_estimate_minutes": 8,
+  "objective": "Storm the southern capital's outer fortress and break the Fang's first line of defense",
+  "background_color": [0.18, 0.04, 0.06],
+  "theme": "iron_throne",
+  "waves": [
+    {
+      "label": "Outer Garrison",
+      "enemies": [
+        {
+          "type": "golem",
+          "positions": [
+            {"x": 180, "y": 100},
+            {"x": 470, "y": 250}
+          ],
+          "stats": {"health": 220, "speed": 50, "damage": 36, "armor": 12}
+        },
+        {
+          "type": "bandit",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 110, "speed": 100, "damage": 28}
+        }
+      ]
+    },
+    {
+      "label": "Inner Guard",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 100},
+            {"x": 460, "y": 230}
+          ],
+          "stats": {"health": 120, "speed": 90, "damage": 34}
+        },
+        {
+          "type": "assassin",
+          "positions": [{"x": 330, "y": 270}],
+          "stats": {"health": 95, "speed": 150, "damage": 40}
+        }
+      ]
+    },
+    {
+      "label": "The Fang's Inner Master",
+      "enemies": [
+        {
+          "type": "necromancer",
+          "positions": [{"x": 320, "y": 170}],
+          "stats": {"health": 200, "speed": 60, "damage": 24}
+        },
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 110},
+            {"x": 460, "y": 240}
+          ],
+          "stats": {"health": 140, "speed": 95, "damage": 40}
+        },
+        {
+          "type": "shaman",
+          "positions": [{"x": 100, "y": 280}],
+          "stats": {"health": 110, "speed": 60, "damage": 20}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 150, "speed": 70, "heal_amount": 25}
+    },
+    {
+      "type": "ally_imperial_soldier",
+      "count": 3,
+      "positions": [
+        {"x": 80, "y": 200},
+        {"x": 560, "y": 200},
+        {"x": 540, "y": 280}
+      ],
+      "stats": {"health": 120, "speed": 80, "damage": 22}
+    },
+    {
+      "type": "ally_bandit_king",
+      "count": 1,
+      "positions": [{"x": 540, "y": 130}],
+      "stats": {"health": 180, "speed": 90, "damage": 36}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "The southern capital. Tomorrow we breach the inner wall. Tonight — we rest. The Fang's master is in there, and I intend to meet him.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "WARDEN",
+      "text": "Jin. The throne's full army is on the road. You'll have a thousand swords by the inner wall. Make the breach count.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Two golems. The Fang's pulling out everything. Rally Cry before the second wave — the alliance needs to be at full strength for what's coming.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "NECROMANCER",
+      "text": "You have come so far. But beyond me is the master — and he does not die as I do.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The outer fortress is ours. The inner wall is broken. The throne's army arrives at dawn. Act Four ends here — the war begins in earnest.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 600,
+    "unlock_chapter": "act05_ch021",
+    "gold": 250,
+    "act4_complete": true
+  },
+  "next_chapter": "act05_ch021",
+  "is_unlocked": false
+}

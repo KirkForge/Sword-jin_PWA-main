@@ -1,0 +1,88 @@
+{
+  "chapter_id": "act03_ch012",
+  "title": "Crimson's Hollow",
+  "act": 3,
+  "chapter": 12,
+  "type": "boss",
+  "playtime_estimate_minutes": 7,
+  "objective": "Defeat the Hollow's necromancer and break the wraith binding",
+  "background_color": [0.18, 0.02, 0.06],
+  "theme": "dark_fortress",
+  "waves": [
+    {
+      "label": "Acolytes of the Hollow",
+      "enemies": [
+        {
+          "type": "bandit",
+          "positions": [
+            {"x": 150, "y": 100},
+            {"x": 520, "y": 130}
+          ],
+          "stats": {"health": 80, "speed": 100, "damage": 20}
+        },
+        {
+          "type": "shaman",
+          "positions": [{"x": 340, "y": 250}],
+          "stats": {"health": 75, "speed": 60, "damage": 14}
+        }
+      ]
+    },
+    {
+      "label": "The Hollow's Summons",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 90},
+            {"x": 480, "y": 250}
+          ],
+          "stats": {"health": 80, "speed": 70, "damage": 25}
+        },
+        {
+          "type": "necromancer",
+          "positions": [{"x": 340, "y": 150}],
+          "stats": {"health": 100, "speed": 55, "damage": 14}
+        }
+      ]
+    },
+    {
+      "label": "The Last Bound",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [{"x": 320, "y": 180}],
+          "stats": {"health": 120, "speed": 80, "damage": 30}
+        }
+      ]
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "NECROMANCER",
+      "text": "You've come so far to die in my hollow, Sword of Ruin. The Fang made me what I am — and you will feed my choir.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Kill the shaman first. Without her aura, the rest of them are just dead men walking.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "NECROMANCER",
+      "text": "No — the binding! You cannot break what the Crimson Fang has forged!",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The hollow is silent. Whoever taught that necromancer the binding... that's who I need to find.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 280,
+    "unlock_chapter": "act03_ch013",
+    "gold": 90
+  },
+  "next_chapter": "act03_ch013",
+  "is_unlocked": false
+}

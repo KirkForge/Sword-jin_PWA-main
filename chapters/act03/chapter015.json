@@ -1,0 +1,118 @@
+{
+  "chapter_id": "act03_ch015",
+  "title": "The Road South",
+  "act": 3,
+  "chapter": 15,
+  "type": "combat",
+  "playtime_estimate_minutes": 7,
+  "objective": "Hold the southern pass until the merchant caravan can break through",
+  "background_color": [0.10, 0.10, 0.18],
+  "theme": "field",
+  "waves": [
+    {
+      "label": "Fang Reprisal",
+      "enemies": [
+        {
+          "type": "bandit",
+          "positions": [
+            {"x": 130, "y": 100},
+            {"x": 510, "y": 250}
+          ],
+          "stats": {"health": 80, "speed": 100, "damage": 22}
+        },
+        {
+          "type": "assassin",
+          "positions": [{"x": 340, "y": 80}],
+          "stats": {"health": 70, "speed": 145, "damage": 32}
+        }
+      ]
+    },
+    {
+      "label": "Wraith Pursuit",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 200, "y": 120},
+            {"x": 470, "y": 230}
+          ],
+          "stats": {"health": 95, "speed": 80, "damage": 30}
+        },
+        {
+          "type": "shaman",
+          "positions": [{"x": 330, "y": 280}],
+          "stats": {"health": 85, "speed": 60, "damage": 16}
+        }
+      ]
+    },
+    {
+      "label": "The Fang's Last Vanguard",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 180, "y": 110},
+            {"x": 460, "y": 130}
+          ],
+          "stats": {"health": 110, "speed": 85, "damage": 34}
+        },
+        {
+          "type": "assassin",
+          "positions": [{"x": 320, "y": 260}],
+          "stats": {"health": 80, "speed": 150, "damage": 36}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 2,
+      "positions": [
+        {"x": 320, "y": 180},
+        {"x": 360, "y": 200}
+      ],
+      "stats": {"health": 100, "speed": 70, "heal_amount": 15}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "MERCHANT",
+      "text": "Jin — the priest's dead but the Fang's still between us and the southern road. I'm not leaving you this time.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Then we hold here. The caravan gets through or none of us do.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "MERCHANT",
+      "text": "I'll patch whoever I can. Don't you dare die on me now.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "The shaman again. Same trick, same fix. Cut the head off first.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "MERCHANT",
+      "text": "The road is clear. Jin — I'm coming with you. Whatever the Fang's planning down south, you shouldn't walk into it alone.",
+      "trigger": "objective_complete"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Act Three ends here. The prophecy, the priest, the Fang's master — all of it lies south now. And for the first time, I won't be walking alone.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 400,
+    "unlock_chapter": "act04_ch016",
+    "gold": 150,
+    "act3_complete": true
+  },
+  "next_chapter": "act04_ch016",
+  "is_unlocked": false
+}

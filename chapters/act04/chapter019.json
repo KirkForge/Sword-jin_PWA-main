@@ -1,0 +1,116 @@
+{
+  "chapter_id": "act04_ch019",
+  "title": "The Alliance Marches",
+  "act": 4,
+  "chapter": 19,
+  "type": "combat",
+  "playtime_estimate_minutes": 7,
+  "objective": "Lead the three-banner alliance south through the Fang's outer provinces",
+  "background_color": [0.14, 0.06, 0.10],
+  "theme": "field",
+  "waves": [
+    {
+      "label": "Provincial Garrison",
+      "enemies": [
+        {
+          "type": "bandit",
+          "positions": [
+            {"x": 130, "y": 100},
+            {"x": 510, "y": 100},
+            {"x": 320, "y": 270}
+          ],
+          "stats": {"health": 110, "speed": 100, "damage": 28}
+        },
+        {
+          "type": "wraith",
+          "positions": [{"x": 200, "y": 200}],
+          "stats": {"health": 110, "speed": 85, "damage": 32}
+        }
+      ]
+    },
+    {
+      "label": "Fang Counter-Attack",
+      "enemies": [
+        {
+          "type": "assassin",
+          "positions": [
+            {"x": 150, "y": 90},
+            {"x": 510, "y": 250}
+          ],
+          "stats": {"health": 95, "speed": 150, "damage": 38}
+        },
+        {
+          "type": "necromancer",
+          "positions": [{"x": 330, "y": 180}],
+          "stats": {"health": 120, "speed": 55, "damage": 20}
+        }
+      ]
+    },
+    {
+      "label": "The Fang's Wraith Vanguard",
+      "enemies": [
+        {
+          "type": "wraith",
+          "positions": [
+            {"x": 180, "y": 110},
+            {"x": 320, "y": 270},
+            {"x": 470, "y": 130}
+          ],
+          "stats": {"health": 120, "speed": 90, "damage": 36}
+        }
+      ]
+    }
+  ],
+  "allies": [
+    {
+      "type": "merchant_ally",
+      "count": 1,
+      "positions": [{"x": 100, "y": 290}],
+      "stats": {"health": 120, "speed": 70, "heal_amount": 20}
+    },
+    {
+      "type": "ally_imperial_soldier",
+      "count": 2,
+      "positions": [
+        {"x": 80, "y": 200},
+        {"x": 560, "y": 200}
+      ],
+      "stats": {"health": 100, "speed": 80, "damage": 18}
+    },
+    {
+      "type": "ally_bandit_king",
+      "count": 1,
+      "positions": [{"x": 540, "y": 280}],
+      "stats": {"health": 150, "speed": 90, "damage": 30}
+    }
+  ],
+  "dialogue": [
+    {
+      "speaker": "JIN",
+      "text": "Three banners. The merchant's caravan, the imperial garrison, Kaelen's riders. The Fang's outer provinces fall in a day.",
+      "trigger": "start"
+    },
+    {
+      "speaker": "KAELEN",
+      "text": "The necromancer is mine. Let the Sword of Ruin handle the assassins — the old bandit lord has scores to settle.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "JIN",
+      "text": "Wraith vanguard. The Fang's pulling out their best for this. Good — let them.",
+      "trigger": "mid_combat"
+    },
+    {
+      "speaker": "MERCHANT",
+      "text": "The southern provinces are ours. Tomorrow we see the Fang's capital with our own eyes.",
+      "trigger": "objective_complete"
+    }
+  ],
+  "rewards": {
+    "xp": 500,
+    "unlock_chapter": "act04_ch020",
+    "gold": 200
+  },
+  "next_chapter": "act04_ch020",
+  "is_unlocked": false
+}

@@ -1,0 +1,132 @@
+#!/usr/bin/env python3
+"""
+generate_even_more_npcs.py
+Batch-generate even more NPC dialogue portraits for Swordjin.
+Reads API key from /home/kirk/Madlab/Lockdown/.minimax
+Outputs webp images to assets/art/generated/npcs/
+"""
+
+import base64
+import re
+import sys
+import time
+from io import BytesIO
+from pathlib import Path
+
+import requests
+from PIL import Image
+
+API_KEY_PATH = Path("/home/kirk/Madlab/Lockdown/.minimax")
+OUT_DIR = Path(__file__).parent.parent / "assets" / "art" / "generated" / "npcs"
+API_URL = "https://api.minimax.io/v1/image_generation"
+RESOLUTION = (128, 128)
+
+
+def load_api_key() -> str:
+    if not API_KEY_PATH.exists():
+        raise FileNotFoundError(f"API key not found at {API_KEY_PATH}")
+    text = API_KEY_PATH.read_text().strip()
+    for line in text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        if "=" in line:
+            key, value = line.split("=", 1)
+            if key.strip().lower() in ("api_key", "key", "minimax_api_key"):
+                return value.strip()
+        if re.match(r"^sk-[A-Za-z0-9_-]+", line):
+            return line
+    return text.splitlines()[0].strip()
+
+
+def generate_image(prompt: str, api_key: str) -> Image.Image:
+    headers = {"Authorization": f"Bearer {api_key}"}
+    payload = {
+        "model": "image-01",
+        "prompt": prompt,
+        "aspect_ratio": "1:1",
+        "response_format": "base64",
+    }
+    resp = requests.post(API_URL, headers=headers, json=payload, timeout=120)
+    resp.raise_for_status()
+    data = resp.json()
+    b64_list = data.get("data", {}).get("image_base64", [])
+    if not b64_list:
+        raise RuntimeError(f"No image returned: {data}")
+    raw = base64.b64decode(b64_list[0])
+    img = Image.open(BytesIO(raw))
+    return img.convert("RGB")
+
+
+def fit_square(img: Image.Image, size: int = 128) -> Image.Image:
+    img.thumbnail((size, size), Image.LANCZOS)
+    bg = Image.new("RGB", (size, size), (25, 20, 18))
+    x = (size - img.width) // 2
+    y = (size - img.height) // 2
+    bg.paste(img, (x, y))
+    return bg
+
+
+NPCS = [
+    {
+        "id": "npc_innkeeper",
+        "name": "Innkeeper",
+        "prompt": "Pixel-art style fantasy RPG NPC portrait, bust shot, 1:1, dark background: a warm-smiling innkeeper with an apron, holding a steaming mug, rosy cheeks",
+    },
+    {
+        "id": "npc_priestess",
+        "name": "Priestess",
+        "prompt": "Pixel-art style fantasy RPG NPC portrait, bust shot, 1:1, dark background: a serene priestess in white and gold robes with a holy sigil glowing on her forehead",
+    },
+    {
+        "id": "npc_berserker",
+        "name": "Berserker",
+        "prompt": "Pixel-art style fantasy RPG NPC portrait, bust shot, 1:1, dark background: a wild-eyed berserker with face paint, fur cloak, and a huge grin showing teeth",
+    },
+    {
+        "id": "npc_rogue",
+        "name": "Rogue",
+        "prompt": "Pixel-art style fantasy RPG NPC portrait, bust shot, 1:1, dark background: a sly rogue with a half-mask, hood, and a dagger twirling in hand",
+    },
+    {
+        "id": "npc_paladin",
+        "name": "Paladin",
+        "prompt": "Pixel-art style fantasy RPG NPC portrait, bust shot, 1:1, dark background: a stern paladin with polished silver armor, short hair, and a golden oath symbol",
+    },
+    {
+        "id": "npc_necro_apprentice",
+        "name": "Necromancer Apprentice",
+        "prompt": "Pixel-art style fantasy RPG NPC portrait, bust shot, 1:1, dark background: a nervous young necromancer apprentice holding a skull candle, dark robes too large",
+    },
+]
+
+
+def main():
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    api_key = load_api_key()
+    print("Loaded MiniMax API key.")
+    print(f"Output directory: {OUT_DIR}")
+
+    for npc in NPCS:
+        path = OUT_DIR / f"{npc['id']}.webp"
+        if path.exists():
+            print(f"Skipping {npc['id']} (exists)")
+            continue
+
+        print(f"\nGenerating NPC portrait: {npc['name']}")
+        try:
+            img = generate_image(npc["prompt"], api_key)
+            square = fit_square(img, RESOLUTION[0])
+            square.save(path, "WEBP", quality=85, method=6)
+            print(f"  Saved: {path}")
+        except Exception as e:
+            print(f"  ERROR {npc['id']}: {e}", file=sys.stderr)
+            continue
+
+        time.sleep(1.5)
+
+    print("\nDone.")
+
+
+if __name__ == "__main__":
+    main()
