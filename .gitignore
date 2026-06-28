@@ -33,13 +33,11 @@ Thumbs.db
 *.log
 logs/
 
-# === Build artifacts (keep sw.js and manifest.json) ===
-builds/web/*.side.wasm
-builds/web/*.audio.worklet.js
+# === Build artifacts (keep sw.js, manifest.json, offline.html) ===
+builds/web/index.*
 builds/web/*.pck
 builds/web/*.wasm
-builds/web/index.html
-builds/web/Swordjin.js
+builds/web/Swordjin*
 builds/android/
 builds/ios/
 builds/linux/

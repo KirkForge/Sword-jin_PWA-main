@@ -54,6 +54,8 @@ func _ready():
 	
 	if chapter_data.is_empty():
 		push_error("No chapter data loaded")
+		if Engine.has_singleton("ErrorScreen"):
+			ErrorScreen.show_error("Chapter Load Failed", "No chapter data available.\nTap Return to Menu to go back.")
 		return
 	
 	# Build tilemap arena

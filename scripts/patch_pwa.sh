@@ -27,7 +27,7 @@ done < <(find "$BUILD_DIR" -maxdepth 1 -type f \( -name "*.js" -o -name "*.wasm"
 if [ ${#ASSETS[@]} -eq 0 ]; then
     echo "WARNING: No export artifacts found in $BUILD_DIR"
     echo "Falling back to defaults"
-    ASSETS=('/' '/index.html' '/Swordjin.js' '/Swordjin.wasm' '/Swordjin.pck' '/Swordjin.audio.worklet.js' '/manifest.json' '/icon-192.png' '/icon-512.png')
+    ASSETS=('/' '/index.html' '/index.js' '/index.wasm' '/index.pck' '/index.audio.worklet.js' '/index.icon.png' '/manifest.json')
 fi
 
 # Determine project version for cache name

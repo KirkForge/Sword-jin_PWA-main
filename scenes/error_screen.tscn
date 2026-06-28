@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/error_screen.gd" id="1_error"]
+
+[node name="ErrorScreen" type="CanvasLayer"]
+layer = 100
+script = ExtResource("1_error")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+color = Color(0, 0, 0, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -80.0
+offset_right = 200.0
+offset_bottom = 80.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VBoxContainer"]
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.75, 0.22, 0.17, 1)
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "Error"
+
+[node name="MessageLabel" type="Label" parent="VBoxContainer"]
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.88, 0.85, 0.78, 1)
+horizontal_alignment = 1
+vertical_alignment = 1
+text = "Something went wrong."
+autowrap_mode = 2
+
+[node name="ReturnButton" type="Button" parent="VBoxContainer"]
+custom_minimum_size = Vector2(160, 40)
+theme_override_font_sizes/font_size = 16
+text = "Return to Menu"

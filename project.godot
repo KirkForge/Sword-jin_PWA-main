@@ -41,6 +41,7 @@ CritEffect="*res://scripts/autoload/crit_effect.gd"
 ScreenShake="*res://scripts/screen_shake.gd"
 HitStop="*res://scripts/hit_stop.gd"
 ScreenFader="*res://scenes/screen_fader.tscn"
+ErrorScreen="*res://scenes/error_screen.tscn"
 
 [playfab]
 title_id=""

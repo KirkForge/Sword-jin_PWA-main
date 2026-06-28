@@ -44,6 +44,8 @@ func _load_json(path: String) -> Variant:
 	var file_obj := FileAccess.open(path, FileAccess.READ)
 	if file_obj == null:
 		push_error("Failed to read: " + path)
+		if Engine.has_singleton("ErrorScreen"):
+			ErrorScreen.show_error("Chapter Load Failed", "Could not read chapter file:\n" + path)
 		return {}
 	
 	var text := file_obj.get_as_text()
@@ -53,6 +55,8 @@ func _load_json(path: String) -> Variant:
 	var err = json.parse(text)
 	if err != OK:
 		push_error("JSON parse error in " + path + ": " + json.get_error_message())
+		if Engine.has_singleton("ErrorScreen"):
+			ErrorScreen.show_error("Chapter Load Failed", "Chapter file corrupted:\n" + path + "\n" + json.get_error_message())
 		return {}
 	
 	return json.data
