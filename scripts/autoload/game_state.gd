@@ -574,7 +574,13 @@ func _ready():
 	load_game()
 	_check_daily_streak()
 	_calculate_rested_xp()
+	if OS.has_feature("web"):
+		_start_autosave()
 	print("GameState loaded — Act %d, Ch %d, Level %d, Weapon: %s, Skills: %s, Streak: %d, Rested XP: %d" % [current_act, current_chapter, player_level, equipped_weapon, str(equipped_skills), daily_streak, rested_xp])
+
+func _notification(what):
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		save_game()
 
 func _migrate_save(data: Dictionary) -> Dictionary:
 	"""Migrate save data from older versions to current format."""
@@ -822,12 +828,24 @@ func reset_chapter_state():
 	chapter_deaths = 0
 	chapter_loot.clear()
 
+var _autosave_timer: Timer = null
+
+func _start_autosave():
+	_autosave_timer = Timer.new()
+	_autosave_timer.wait_time = 60.0
+	_autosave_timer.autostart = true
+	_autosave_timer.timeout.connect(_on_autosave_timeout)
+	add_child(_autosave_timer)
+
+func _on_autosave_timeout():
+	save_game()
+
 func _save_indexeddb():
-	if OS.has_feature("web") and OS.has_feature("wasm"):
+	if OS.has_feature("web"):
 		JavaScriptBridge.eval("""
 			if (typeof Module !== 'undefined' && Module.FS && Module.FS.syncfs) {
 				Module.FS.syncfs(false, function(err) {
-					if (err) console.error('Save sync error:', err);
+					if (err) console.error('GameState: syncfs error:', err);
 				});
 			}
 		""")

@@ -31,6 +31,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `project.godot`: `ErrorScreen` autoload registration
 - PWA: `beforeinstallprompt` capture via `html/head_include` inject
 - PWA: Install App button on title screen (visible when prompt deferred)
+- Save: Periodic autosave every 60s on web platform
+- Save: Save on WM_CLOSE_REQUEST (tab close / refresh)
+- Save: Improved syncfs error logging in _save_indexeddb
 - Docs: `CONTRIBUTING.md` with dev setup guide
 - License: MIT `LICENSE` file
 
