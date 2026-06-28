@@ -60,8 +60,6 @@ coverage.xml
 
 # === Generated binary assets (regenerate via scripts/) ===
 assets/bgm/
-assets/sfx/
-assets/art/generated/
 assets/video/
 
 # === AI/automation state files ===
