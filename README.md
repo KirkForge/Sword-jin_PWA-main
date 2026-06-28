@@ -16,14 +16,15 @@ A mobile-first action RPG built in Godot 4.4, deployed as a Progressive Web App.
 
 ## Quick Start
 
-Requires Godot 4.4.1. Open `project.godot`, run from editor.
+Requires Godot 4.4.1-stable. Open `project.godot`, run from editor.
 
-For PWA deployment:
+For PWA deployment (auto-generates service worker + cache):
 ```bash
-# After HTML5 export from Godot:
-cd scripts
-./patch_pwa.sh
+godot --headless --path . --export-release "HTML5" builds/web/index.html
+bash scripts/patch_pwa.sh
 ```
+
+Pushes to `main` auto-deploy to GitHub Pages via `.github/workflows/deploy.yml`.
 
 ## Controls
 
