@@ -42,6 +42,9 @@ ScreenShake="*res://scripts/screen_shake.gd"
 HitStop="*res://scripts/hit_stop.gd"
 ScreenFader="*res://scenes/screen_fader.tscn"
 
+[playfab]
+title_id=""
+
 [rendering]
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"

@@ -23,3 +23,46 @@ jobs:
 
       - name: Check project.godot exists
         run: test -f project.godot
+
+      - name: GDScript check
+        run: |
+          if command -v godot &> /dev/null; then
+            godot --headless --path . --check-only --script res://scripts/autoload/game_state.gd
+          else
+            echo "Godot not available — skipping GDScript check"
+          fi
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Godot HTML5 export
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if command -v godot &> /dev/null; then
+            godot --headless --path . --export-release "HTML5" builds/web/index.html
+            echo "Export exit code: $?"
+          else
+            echo "Godot not available — skipping export"
+            exit 0
+          fi
+        timeout-minutes: 15
+
+      - name: Verify export artifacts
+        if: github.ref == 'refs/heads/main'
+        run: |
+          failures=0
+          for f in builds/web/index.html builds/web/*.wasm builds/web/*.pck builds/web/*.js; do
+            if [ -f "$f" ]; then
+              echo "OK: $f ($(stat -c%s "$f") bytes)"
+            else
+              echo "MISSING: $f"
+              failures=$((failures + 1))
+            fi
+          done
+          if [ "$failures" -gt 0 ]; then exit 1; fi
+
+      - name: Patch PWA
+        if: github.ref == 'refs/heads/main'
+        run: bash scripts/patch_pwa.sh

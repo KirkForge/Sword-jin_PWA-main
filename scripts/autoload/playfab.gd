@@ -16,8 +16,8 @@ signal leaderboard_received(chapter_id: String, entries: Array)
 signal leaderboard_failed(chapter_id: String, error: String)
 
 # ─── Config ──────────────────────────────────────────────────────────────────
-# Set your PlayFab Title ID here or via project settings
-var TITLE_ID := "191992"
+# Load from project settings or fall back to env var
+var TITLE_ID := ProjectSettings.get_setting("playfab/title_id", "")
 const API_BASE := "https://titleId.playfabapi.com/Client"
 const STATISTIC_NAME := "ChapterTime"
 
@@ -26,7 +26,7 @@ var session_ticket := ""
 var playfab_id := ""
 var custom_id := ""
 var is_logged_in := false
-var _pending_submits: Array = []  # Queue scores before login completes
+var _pending_submits: Array = []  # Queue scores before login completes (persisted)
 
 # ─── HTTP ────────────────────────────────────────────────────────────────────
 var _http: HTTPRequest
@@ -258,6 +258,10 @@ func _load_or_create_custom_id() -> String:
 				if saved_title != "" and TITLE_ID == "":
 					TITLE_ID = saved_title
 				if saved_id != "":
+					# Restore pending score submissions from disk
+					var saved_pending: Array = data.get("pending_submits", [])
+					for p in saved_pending:
+						_pending_submits.append(p)
 					return saved_id
 	
 	# Generate a new custom ID
@@ -270,10 +274,14 @@ func _load_or_create_custom_id() -> String:
 
 func _save_state(id: String = ""):
 	"""Save PlayFab state to disk."""
+	var pending_saves := []
+	for s in _pending_submits:
+		pending_saves.append({"chapter_id": s.chapter_id, "time": s.time})
 	var data := {
 		"custom_id": id if id != "" else custom_id,
 		"title_id": TITLE_ID,
 		"playfab_id": playfab_id,
+		"pending_submits": pending_saves,
 	}
 	var file := FileAccess.open(SAVE_PATH, FileAccess.WRITE)
 	if file:

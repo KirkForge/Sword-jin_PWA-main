@@ -576,6 +576,27 @@ func _ready():
 	_calculate_rested_xp()
 	print("GameState loaded — Act %d, Ch %d, Level %d, Weapon: %s, Skills: %s, Streak: %d, Rested XP: %d" % [current_act, current_chapter, player_level, equipped_weapon, str(equipped_skills), daily_streak, rested_xp])
 
+func _migrate_save(data: Dictionary) -> Dictionary:
+	"""Migrate save data from older versions to current format."""
+	var ver := data.get("version", "0.0")
+	
+	if ver < "2.6":
+		if not data.has("rested_xp"):
+			data["rested_xp"] = 0
+		if not data.has("last_logout_time"):
+			data["last_logout_time"] = 0.0
+		if not data.has("ghost_runs_enabled"):
+			data["ghost_runs_enabled"] = true
+		if not data.has("daily_challenge_best_gold"):
+			data["daily_challenge_best_gold"] = 0
+		if not data.has("daily_challenge_total_completed"):
+			data["daily_challenge_total_completed"] = 0
+		if not data.has("collected_weapons"):
+			data["collected_weapons"] = {}
+	
+	data["version"] = "2.6"
+	return data
+
 func save_game():
 	var data := {
 		"version": "2.6",
@@ -614,6 +635,7 @@ func save_game():
 	if file:
 		file.store_string(JSON.stringify(data, "\t"))
 		file.close()
+		_save_indexeddb()
 		print("Game saved")
 	else:
 		push_error("Failed to save game")
@@ -639,6 +661,7 @@ func load_game():
 	
 	var data = json.data
 	if data is Dictionary:
+		data = _migrate_save(data)
 		current_act = data.get("current_act", 1)
 		current_chapter = data.get("current_chapter", 1)
 		completed_chapters = data.get("completed_chapters", [])

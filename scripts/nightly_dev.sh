@@ -191,7 +191,7 @@ EOF
         # Attempt HTML5 export if Godot is available
         if command -v godot &> /dev/null; then
             echo "Running Godot HTML5 export..."
-            timeout 120 godot --headless --path "$PROJECT_DIR" --export-release "HTML5" "$BUILD_DIR/web/index.html" 2>&1 || echo "Export failed or timed out — will retry tomorrow"
+            timeout 120 godot --headless --path "$PROJECT_DIR" --export-release "HTML5" "$BUILD_DIR/web/index.html" 2>&1 || { echo "[NIGHTLY] Export failed — aborting"; exit 1; }
             
             # Copy PWA files into build
             cp "$PROJECT_DIR/builds/web/manifest.json" "$BUILD_DIR/web/" 2>/dev/null || true
