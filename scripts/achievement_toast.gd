@@ -35,18 +35,18 @@ func _show_next():
 	# Slide in from top
 	visible = true
 	toast_panel.position = Vector2(toast_panel.position.x, -60)
-	modulate = Color.TRANSPARENT
+	toast_panel.modulate = Color.TRANSPARENT
 	
 	var tween := create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tween.tween_property(self, "modulate", Color.WHITE, 0.3)
+	tween.tween_property(toast_panel, "modulate", Color.WHITE, 0.3)
 	tween.parallel().tween_property(toast_panel, "position:y", 8.0, 0.3).set_ease(Tween.EASE_OUT)
 	
 	# Hold for 3 seconds
 	tween.tween_interval(3.0)
 	
 	# Fade out
-	tween.tween_property(self, "modulate", Color.TRANSPARENT, 0.5)
+	tween.tween_property(toast_panel, "modulate", Color.TRANSPARENT, 0.5)
 	tween.tween_callback(_on_toast_done)
 
 func _on_toast_done():

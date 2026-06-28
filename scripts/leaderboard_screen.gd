@@ -58,10 +58,10 @@ func show_leaderboard():
 	_update_ghost_button()
 	_update_online_button()
 	visible = true
-	modulate = Color.TRANSPARENT
+	panel.modulate = Color.TRANSPARENT
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tween.tween_property(self, "modulate", Color.WHITE, 0.3)
+	tween.tween_property(panel, "modulate", Color.WHITE, 0.3)
 
 func _populate_chapters():
 	"""Populate the chapter list with best times and ghost status."""
@@ -292,8 +292,9 @@ func _on_back():
 func hide_leaderboard():
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tween.tween_property(self, "modulate", Color.TRANSPARENT, 0.2)
-	tween.tween_callback(func():
-		visible = false
-		get_tree().paused = false
-	)
+	tween.tween_property(panel, "modulate", Color.TRANSPARENT, 0.2)
+	tween.tween_callback(_on_hide_anim_done)
+
+func _on_hide_anim_done():
+	visible = false
+	get_tree().paused = false

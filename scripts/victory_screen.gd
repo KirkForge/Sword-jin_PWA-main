@@ -167,10 +167,10 @@ func show_victory(chapter_title: String, xp_gained: int, gold_gained: int = 0, r
 	
 	# Fade in
 	visible = true
-	modulate = Color.TRANSPARENT
+	panel.modulate = Color.TRANSPARENT
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tween.tween_property(self, "modulate", Color.WHITE, 0.4)
+	tween.tween_property(panel, "modulate", Color.WHITE, 0.4)
 	
 	# Use triumphant fanfare for act completion, victory theme otherwise
 	var victory_bgm := "bgm_victory"
@@ -206,7 +206,7 @@ func _on_title():
 func hide_victory():
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	tween.tween_property(self, "modulate", Color.TRANSPARENT, 0.3)
+	tween.tween_property(panel, "modulate", Color.TRANSPARENT, 0.3)
 	await tween.finished
 	visible = false
 	get_tree().paused = false

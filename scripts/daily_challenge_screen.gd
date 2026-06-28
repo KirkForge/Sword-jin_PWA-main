@@ -53,7 +53,7 @@ func _refresh():
 	
 	# Chapter name
 	var ch_data := ChapterDatabase.chapters.get(chapter_id, {})
-	var ch_title := ch_data.get("title", chapter_id)
+	var ch_title: String = ch_data.get("title", chapter_id)
 	chapter_label.text = "📍 %s" % ch_title
 	
 	# Modifiers
@@ -72,7 +72,7 @@ func _refresh():
 			if icon_tex:
 				var icon_rect := TextureRect.new()
 				icon_rect.texture = icon_tex
-				icon_rect.expand_mode = TextureRect.EXPAND_FIT_SIZE_PROPORTIONAL
+				icon_rect.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
 				icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 				icon_rect.custom_minimum_size = Vector2(24, 24)
 				row.add_child(icon_rect)
@@ -109,8 +109,8 @@ func _refresh():
 	
 	# Lifetime stats
 	stats_label.text = "Completed: %d total | Best: %dg" % [
-		GameState.daily_challenge_total_completed,
-		GameState.daily_challenge_best_gold
+		int(GameState.daily_challenge_total_completed),
+		int(GameState.daily_challenge_best_gold)
 	]
 
 func _on_start_pressed():
