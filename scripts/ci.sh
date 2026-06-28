@@ -51,7 +51,7 @@ load_config() {
 
         key="${line%%=*}"
         val="${line#*=}"
-        key="$(echo "$key" | sed 's/[[:space:]]*//')"
+        key="$(echo "$key" | sed 's/[[:space:]]*//')"  # shellcheck disable=SC2001
         val="$(echo "$val" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
 
         case "$key" in
@@ -258,26 +258,26 @@ if [ -f package.json ]; then
     else
         # Typecheck
         if has_npm_script "typecheck"; then
-            run_step "typecheck" $pm run typecheck
+            run_step "typecheck" "$pm" run typecheck
         elif has_npm_script "check"; then
-            run_step "typecheck" $pm run check
+            run_step "typecheck" "$pm" run check
         fi
 
         # Lint
         if has_npm_script "lint"; then
-            run_step "lint" $pm run lint
+            run_step "lint" "$pm" run lint
         fi
 
         # Format check
         if has_npm_script "format:check"; then
-            run_step "format" $pm run format:check
+            run_step "format" "$pm" run format:check
         elif has_npm_script "formatting"; then
-            run_step "format" $pm run formatting
+            run_step "format" "$pm" run formatting
         fi
 
         # Test — prefer test:ci over test (avoids watch-mode hangs)
         if has_npm_script "test:ci"; then
-            run_step "test" $pm run test:ci
+            run_step "test" "$pm" run test:ci
         elif has_npm_script "test"; then
             if is_watch_test; then
                 warn_step "test" "watch mode detected — forcing single run"
@@ -287,23 +287,23 @@ if [ -f package.json ]; then
                 elif echo "$test_cmd" | grep -q 'jest'; then
                     run_step "test" npx jest --ci
                 else
-                    run_step "test" $pm test
+                    run_step "test" "$pm" test
                 fi
             else
-                run_step "test" $pm test
+                run_step "test" "$pm" test
             fi
         fi
 
         # Additional test suites
         if has_npm_script "test:adapter"; then
-            run_step "test:adapter" $pm run test:adapter
+            run_step "test:adapter" "$pm" run test:adapter
         fi
 
         # Build
         if has_npm_script "build"; then
-            run_step "build" $pm run build
+            run_step "build" "$pm" run build
         elif has_npm_script "compile"; then
-            run_step "build" $pm run compile
+            run_step "build" "$pm" run compile
         fi
 
         # Audit
@@ -392,7 +392,7 @@ if [ "$CI_MODE" != "fast" ]; then
         if [ -f .gitleaks.toml ]; then
             GL_ARGS="$GL_ARGS --config .gitleaks.toml"
         fi
-        run_step "secrets (gitleaks)" gitleaks $GL_ARGS
+        run_step "secrets (gitleaks)" gitleaks $GL_ARGS  # shellcheck disable=SC2086
         SECRET_SCANNERS=$((SECRET_SCANNERS + 1))
     fi
 

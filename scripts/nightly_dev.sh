@@ -23,6 +23,7 @@ CURRENT_ACT=1
 CURRENT_CHAPTER=1
 CURRENT_PHASE="foundation"  # foundation | content | assets | polish | export
 if [ -f "$PROGRESS_FILE" ]; then
+    # shellcheck disable=SC1090
     source "$PROGRESS_FILE"
 fi
 
@@ -104,7 +105,7 @@ EOF
         
         # Create chapter directory structure
         for act in {1..10}; do
-            mkdir -p "$PROJECT_DIR/chapters/act$(printf %02d $act)"
+            mkdir -p "$PROJECT_DIR/chapters/act$(printf %02d "$act")"
         done
         
         # Advance to next phase after foundation is set

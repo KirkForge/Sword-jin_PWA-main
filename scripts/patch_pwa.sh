@@ -8,7 +8,6 @@ set -e
 BUILD_DIR="$(dirname "$0")/../builds/web"
 INDEX="$BUILD_DIR/index.html"
 SW="$BUILD_DIR/sw.js"
-MANIFEST="$BUILD_DIR/manifest.json"
 
 if [ ! -f "$INDEX" ]; then
     echo "ERROR: No index.html found in $BUILD_DIR"
@@ -20,7 +19,7 @@ fi
 echo "Scanning export artifacts..."
 ASSETS=()
 while IFS= read -r -d '' f; do
-    rel="/${f#$BUILD_DIR/}"
+    rel="/${f#"$BUILD_DIR"/}"
     ASSETS+=("$rel")
 done < <(find "$BUILD_DIR" -maxdepth 1 -type f \( -name "*.js" -o -name "*.wasm" -o -name "*.pck" -o -name "*.html" -o -name "*.json" -o -name "*.png" -o -name "*.webp" \) -print0 | sort -z)
 
