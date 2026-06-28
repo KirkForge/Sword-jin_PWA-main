@@ -2,7 +2,6 @@ extends Node
 ## CritEffect — Cinematic critical hit effects
 ## Triggers slow-motion, camera zoom, flash, and particle burst on crit
 
-class_name CritEffect
 
 # Slow-motion settings
 const SLOWMO_SCALE := 0.2

@@ -17,7 +17,7 @@ signal leaderboard_failed(chapter_id: String, error: String)
 
 # ─── Config ──────────────────────────────────────────────────────────────────
 # Load from project settings or fall back to env var
-var TITLE_ID := ProjectSettings.get_setting("playfab/title_id", "")
+var TITLE_ID = ProjectSettings.get_setting("playfab/title_id", "")
 const API_BASE := "https://titleId.playfabapi.com/Client"
 const STATISTIC_NAME := "ChapterTime"
 

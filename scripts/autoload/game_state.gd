@@ -578,7 +578,7 @@ func _ready():
 
 func _migrate_save(data: Dictionary) -> Dictionary:
 	"""Migrate save data from older versions to current format."""
-	var ver := data.get("version", "0.0")
+	var ver: String = data.get("version", "0.0")
 	
 	if ver < "2.6":
 		if not data.has("rested_xp"):
@@ -988,7 +988,7 @@ func _pick_weapon_by_rarity(rarity: String) -> String:
 	
 	# Try exact rarity first, then fall back to lower
 	for i in range(target_idx, rarity_order.size()):
-		var r := rarity_order[i]
+		var r: String = rarity_order[i]
 		var candidates: Array = []
 		for wid in WEAPON_STATS.keys():
 			if WEAPON_STATS[wid].get("rarity", "common") == r:

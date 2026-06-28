@@ -13,7 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI: HTML5 export artifact validation (wasm, pck, js existence checks)
 - CI: `patch_pwa.sh` auto-runs after build
 - CI: Lighthouse CI audit step (PWA category ≥ 80 threshold)
+- CI: `godot --import` step before export (regenerates `.godot/imported/` in fresh CI)
 - Deploy: GitHub Pages workflow via `actions/deploy-pages@v4`
+- Build: PCK compression via `file_format/compress=true` (Zstandard)
+- Build: Removed 78 MB of unused BGM files (only 17 tracks kept)
 - PWA: `offline.html` branded fallback page for network-off navigation
 - PWA: `patch_pwa.sh` auto-generates `ASSETS_TO_CACHE` from actual export artifacts
 - PWA: `patch_pwa.sh` auto-computes cache version from `.pck` content hash
@@ -31,6 +34,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- `title_screen.gd`: missing newline before `func _on_daily_challenge_pressed()` causing parse error
+- `game_state.gd`: type inference warnings treated as errors (`var ver :=` → `var ver: String =`)
+- `game_state.gd`: type inference warnings (`var r :=` → `var r: String =`)
+- `ghost_recorder.gd`: type inference warnings (`var data := json.data` → `var data = json.data`)
+- `playfab.gd`: type inference warnings (`var TITLE_ID :=` → `var TITLE_ID =`)
+- `crit_effect.gd`: removed `class_name CritEffect` (conflicts with autoload singleton)
+- `hit_stop.gd`: removed `class_name HitStop` (conflicts with autoload singleton)
+- `skeleton_archer.gd`: `attack_damage` not declared (changed to `arrow_damage`)
 - `nightly_dev.sh`: export failure now aborts the pipeline (`exit 1`) instead of silently continuing
 - `sw.js`: removed dead push notification listener (no subscription flow implemented)
 - `sw.js`: fetch catch handler returns `/offline.html` for navigation requests when uncached

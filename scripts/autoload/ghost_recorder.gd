@@ -94,7 +94,7 @@ func load_ghost(chapter_id: String) -> Array:
 		push_error("[GhostRecorder] Failed to parse ghost: " + path)
 		return []
 	
-	var data := json.data
+	var data = json.data
 	if data is Dictionary and data.has("snapshots"):
 		return data["snapshots"]
 	return []
@@ -115,7 +115,7 @@ func get_best_time(chapter_id: String) -> float:
 	if json.parse(text) != OK:
 		return -1.0
 	
-	var data := json.data
+	var data = json.data
 	if data is Dictionary and data.has("time"):
 		return float(data["time"])
 	return -1.0
@@ -136,7 +136,7 @@ func get_ghost_info(chapter_id: String) -> Dictionary:
 	if json.parse(text) != OK:
 		return {}
 	
-	var data := json.data
+	var data = json.data
 	if data is Dictionary:
 		return {
 			"time": data.get("time", 0.0),

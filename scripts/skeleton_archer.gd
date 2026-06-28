@@ -238,13 +238,13 @@ func apply_knockback(direction: Vector2, force: float):
 		modulate = Color.WHITE
 
 func apply_shaman_buff(damage_mult: float, speed_mult: float, duration: float):
-	var orig_damage := attack_damage
+	var orig_damage := arrow_damage
 	var orig_speed := speed
-	attack_damage = int(attack_damage * damage_mult)
+	arrow_damage = int(arrow_damage * damage_mult)
 	speed *= speed_mult
 	await get_tree().create_timer(duration).timeout
 	if not is_dead:
-		attack_damage = orig_damage
+		arrow_damage = orig_damage
 		speed = orig_speed
 
 

@@ -1,7 +1,6 @@
 """Hit stop (freeze frames) — pauses game time briefly on impact for weightier feel."""
 extends Node
 
-class_name HitStop
 
 @export var default_freeze_ms: int = 80
 @export var heavy_freeze_ms: int = 150

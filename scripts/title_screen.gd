@@ -239,7 +239,9 @@ func _on_streak_claim_pressed():
 	# Show reward feedback via toast
 	if achievement_toast == null:
 		achievement_toast = load("res://scenes/ui/achievement_toast.tscn").instantiate()
-		add_child(achievement_toast)func _on_daily_challenge_pressed():
+		add_child(achievement_toast)
+
+func _on_daily_challenge_pressed():
 	AudioManager.play_sfx("ui_click")
 	if daily_challenge_screen == null:
 		daily_challenge_screen = load("res://scenes/ui/daily_challenge_screen.tscn").instantiate()
