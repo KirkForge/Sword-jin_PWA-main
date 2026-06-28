@@ -29,6 +29,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - PlayFab: `TITLE_ID` loaded from `ProjectSettings.get_setting("playfab/title_id")` instead of hardcoded literal
 - `project.godot`: `[playfab]` settings section with `title_id` key (empty by default)
 - `project.godot`: `ErrorScreen` autoload registration
+- PWA: `beforeinstallprompt` capture via `html/head_include` inject
+- PWA: Install App button on title screen (visible when prompt deferred)
 - Docs: `CONTRIBUTING.md` with dev setup guide
 - License: MIT `LICENSE` file
 

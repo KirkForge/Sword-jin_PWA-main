@@ -147,6 +147,13 @@ custom_minimum_size = Vector2(160, 40)
 focus_mode = 2
 text = "⚔ Daily Challenge"
 
+[node name="InstallAppButton" type="Button" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+custom_minimum_size = Vector2(160, 40)
+focus_mode = 2
+text = "📲 Install App"
+visible = false
+
 [node name="ChapterManager" parent="." instance=ExtResource("2_chm")]
 visible = false
 
@@ -159,3 +166,4 @@ visible = false
 [connection signal="pressed" from="CenterContainer/VBoxContainer/SettingsButton" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/StreakClaimButton" to="." method="_on_streak_claim_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/DailyChallengeButton" to="." method="_on_daily_challenge_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/InstallAppButton" to="." method="_on_install_app_pressed"]

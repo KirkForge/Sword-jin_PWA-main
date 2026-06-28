@@ -18,6 +18,8 @@ extends Control
 @onready var daily_challenge_btn = $CenterContainer/VBoxContainer/DailyChallengeButton
 @onready var chm = $ChapterManager
 
+@onready var install_app_btn = $CenterContainer/VBoxContainer/InstallAppButton
+
 var bestiary_screen: CanvasLayer = null
 var achievement_screen: CanvasLayer = null
 var achievement_toast: CanvasLayer = null
@@ -155,6 +157,8 @@ func _ready():
 	
 	# Run initial achievement check (catches any that should already be unlocked)
 	GameState.check_achievements()
+	
+	_check_install_prompt()
 
 func _on_start_pressed():
 	ChapterDatabase.set_current_chapter("act01_ch001")
@@ -290,6 +294,22 @@ func _on_settings_pressed():
 		settings_screen.close_btn.pressed.connect(_on_settings_closed)
 		add_child(settings_screen)
 	settings_screen.visible = true
+
+func _check_install_prompt():
+	if install_app_btn == null:
+		return
+	if OS.has_feature("web"):
+		var bridge = JavaScriptBridge.get_interface("godot")
+		if bridge != null:
+			var available = JavaScriptBridge.eval("isInstallPromptAvailable()", true)
+			if available:
+				install_app_btn.visible = true
+
+func _on_install_app_pressed():
+	AudioManager.play_sfx("ui_click")
+	if OS.has_feature("web"):
+		JavaScriptBridge.eval("showInstallPrompt()", true)
+		install_app_btn.visible = false
 
 func _on_settings_closed():
 	start_btn.grab_focus()
