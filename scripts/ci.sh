@@ -51,8 +51,8 @@ load_config() {
 
         key="${line%%=*}"
         val="${line#*=}"
-        key="$(echo "$key" | sed 's/[[:space:]]*//')"  # shellcheck disable=SC2001
-        val="$(echo "$val" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')"
+        key="$(echo "$key" | tr -d '[:space:]')"
+        val="$(echo "$val" | xargs)"
 
         case "$key" in
             timeout)            TIMEOUT="$val" ;;
@@ -388,11 +388,11 @@ if [ "$CI_MODE" != "fast" ]; then
 
     # gitleaks: primary scanner — uses per-repo .gitleaks.toml rules
     if command -v gitleaks >/dev/null 2>&1; then
-        GL_ARGS="detect --source . --redact --exit-code 1"
+        GL_ARGS=(detect --source . --redact --exit-code 1)
         if [ -f .gitleaks.toml ]; then
-            GL_ARGS="$GL_ARGS --config .gitleaks.toml"
+            GL_ARGS+=(--config .gitleaks.toml)
         fi
-        run_step "secrets (gitleaks)" gitleaks $GL_ARGS  # shellcheck disable=SC2086
+        run_step "secrets (gitleaks)" gitleaks "${GL_ARGS[@]}"
         SECRET_SCANNERS=$((SECRET_SCANNERS + 1))
     fi
 
