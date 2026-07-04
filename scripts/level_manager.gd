@@ -138,12 +138,12 @@ func _on_dialogue_ended_start():
 # Chapter title card overlay — shows for 2.5s then fades
 func _show_title_card(chapter_id: String) -> void:
 	var ch_idx := chapter_id.right(3).to_int() if chapter_id.length() >= 3 else 1
-	var title_path = "res://assets/art/bg/ch%02d_title.webp" % ch_idx
+	var title_path: String = "res://assets/art/bg/ch%02d_title.webp" % ch_idx
 
 	# Boss chapters use the generated boss splash portrait if available
 	if chapter_id in BOSS_CHAPTERS:
-		var safe_title := chapter_data.get("title", "").to_lower().replace(" ", "_").replace("'", "")
-		var boss_path := "res://assets/art/generated/boss_splash/boss%02d_%s_portrait.webp" % [ch_idx, safe_title]
+		var safe_title: String = chapter_data.get("title", "").to_lower().replace(" ", "_").replace("'", "")
+		var boss_path: String = "res://assets/art/generated/boss_splash/boss%02d_%s_portrait.webp" % [ch_idx, safe_title]
 		if ResourceLoader.exists(boss_path):
 			title_path = boss_path
 
@@ -195,10 +195,10 @@ func _show_title_card(chapter_id: String) -> void:
 func _get_bgm_for_current_chapter() -> String:
 	if GameState.is_daily_challenge_run:
 		return "bgm_daily"
-	var chapter_id := chapter_data.get("chapter_id", "")
+	var chapter_id: String = chapter_data.get("chapter_id", "")
 	if chapter_id in BOSS_CHAPTERS:
 		return "bgm_boss"
-	var act := chapter_data.get("act", 1)
+	var act: int = chapter_data.get("act", 1)
 	match act:
 		3: return "bgm_act3"
 		4: return "bgm_act4"
@@ -271,7 +271,8 @@ func _setup_level():
 		gate.position = Vector2(580, 180)
 		add_child(gate)
 		GameState.has_gate_key = false
-		$Objective.text = "Objective: Defeat defenders and open the gate!"
+		if has_node("Objective"):
+			$Objective.text = "Objective: Defeat defenders and open the gate!"
 	
 	enemies_remaining = 0
 	for child in get_children():
@@ -420,14 +421,12 @@ func _spawn_next_wave():
 			_spawn_enemy(enemy_type, pos, stats)
 	
 	# Count enemies in this wave
-	enemies_remaining = 0
-	for child in get_children():
-		if child.is_in_group("enemy") and not child.is_dead:
-			enemies_remaining += 1
+	enemies_remaining = _count_live_enemies()
 	
 	# Update HUD
 	var wave_text = "WAVE %d/%d: %s" % [current_wave + 1, total_waves, wave_label]
-	$Objective.text = wave_text
+	if has_node("Objective"):
+		$Objective.text = wave_text
 	print("[Wave] %s — %d enemies" % [wave_text, enemies_remaining])
 	
 	# Show wave announcement
@@ -539,23 +538,24 @@ func _apply_daily_modifiers():
 		return
 	
 	var challenge_info := GameState.get_daily_challenge()
-	var mod_labels := []
+	var mod_labels: Array[String] = []
 	for mod_id in modifiers:
-		var mod_data := GameState.DAILY_CHALLENGE_MODIFIERS.get(mod_id, {})
+		var mod_data: Dictionary = GameState.DAILY_CHALLENGE_MODIFIERS.get(mod_id, {})
 		mod_labels.append(mod_data.get("icon", "?") + " " + mod_data.get("label", mod_id))
 	
-	$Objective.text = "⚔ DAILY: " + " | ".join(mod_labels)
+	if has_node("Objective"):
+		$Objective.text = "⚔ DAILY: " + " | ".join(mod_labels)
 	print("DAILY CHALLENGE modifiers: %s" % str(modifiers))
 	
 	# double_enemies: duplicate each enemy
 	if "double_enemies" in modifiers:
-		var enemy_nodes := []
+		var enemy_nodes: Array = []
 		for child in get_children():
 			if child.is_in_group("enemy") and not child.is_dead:
 				enemy_nodes.append(child)
 		for enemy in enemy_nodes:
-			var offset := Vector2(randf_range(-30, 30), randf_range(-30, 30))
-			var new_pos := enemy.position + offset
+			var offset: Vector2 = Vector2(randf_range(-30, 30), randf_range(-30, 30))
+			var new_pos: Vector2 = enemy.position + offset
 			# Determine enemy type from script name
 			var enemy_type := "skeleton"
 			var script_path = enemy.get_script().resource_path if enemy.get_script() else ""
