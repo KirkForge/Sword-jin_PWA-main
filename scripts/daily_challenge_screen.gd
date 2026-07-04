@@ -52,7 +52,7 @@ func _refresh():
 	title_label.text = "⚔ Daily Challenge"
 	
 	# Chapter name
-	var ch_data := ChapterDatabase.chapters.get(chapter_id, {})
+	var ch_data: Dictionary = ChapterDatabase.chapters.get(chapter_id, {})
 	var ch_title: String = ch_data.get("title", chapter_id)
 	chapter_label.text = "📍 %s" % ch_title
 	
@@ -61,14 +61,14 @@ func _refresh():
 		child.queue_free()
 
 	for mod_id in modifiers:
-		var mod_data := GameState.DAILY_CHALLENGE_MODIFIERS.get(mod_id, {})
+		var mod_data: Dictionary = GameState.DAILY_CHALLENGE_MODIFIERS.get(mod_id, {})
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 6)
 
 		# Generated modifier icon with emoji fallback
 		var icon_path: String = mod_data.get("icon_path", "")
 		if icon_path != "" and ResourceLoader.exists(icon_path):
-			var icon_tex = load(icon_path)
+			var icon_tex: Texture2D = load(icon_path)
 			if icon_tex:
 				var icon_rect := TextureRect.new()
 				icon_rect.texture = icon_tex

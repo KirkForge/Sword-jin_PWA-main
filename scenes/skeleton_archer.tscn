@@ -1,4 +1,6 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=9 format=3]
+[ext_resource type="Texture2D" uid="uid://mfwnw0k2ylsm" path="res://assets/art/enemies/archer_idle.png" id="archer_idle_tex"]
+[ext_resource type="Texture2D" uid="uid://dlxil3b8hrj3m" path="res://assets/art/enemies/archer_walk.png" id="archer_walk_tex"]
 
 [ext_resource type="Script" path="res://scripts/skeleton_archer.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c5h7x1b3v2a9p" path="res://scenes/ui/health_bar.tscn" id="2_healthbar"]
@@ -15,12 +17,12 @@ radius = 300.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1"]
 animations = [{
-"frames": [ExtResource("res://assets/art/enemies/archer_idle.png")],
+"frames": [ExtResource("archer_idle_tex")],
 "loop": true,
 "name": &"idle",
 "speed": 5.0
 }, {
-"frames": [ExtResource("res://assets/art/enemies/archer_walk.png")],
+"frames": [ExtResource("archer_walk_tex")],
 "loop": true,
 "name": &"walk",
 "speed": 8.0

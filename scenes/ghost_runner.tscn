@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/ghost_runner.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/art/characters/player_idle.png" id="2_idle"]

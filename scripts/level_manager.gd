@@ -98,9 +98,11 @@ func _ready():
 	
 	_dialogue_start()
 	
-	# Update UI
-	$Objective.text = "Objective: " + chapter_data.get("objective", "Defeat enemies!")
-	$LevelLabel.text = chapter_data.get("title", "Level 1")
+	# Update UI (see also _setup_level for safe fallback)
+	if has_node("Objective"):
+		$Objective.text = "Objective: " + chapter_data.get("objective", "Defeat enemies!")
+	if has_node("LevelLabel"):
+		$LevelLabel.text = chapter_data.get("title", "Level 1")
 	
 	# Show chapter title card overlay
 	_show_title_card(chapter_id)
@@ -283,6 +285,12 @@ func _setup_level():
 	GameState.reset_chapter_state()
 	GameState.chapter_kills = 0
 	
+	# Update objective label safely
+	if has_node("Objective"):
+		$Objective.text = "Objective: " + chapter_data.get("objective", "Defeat enemies!")
+	if has_node("LevelLabel"):
+		$LevelLabel.text = chapter_data.get("title", "Level 1")
+	
 	# Start ghost recording for this chapter
 	GhostRecorder.start_recording()
 	
@@ -425,29 +433,34 @@ func _spawn_next_wave():
 	# Show wave announcement
 	_show_wave_announcement(current_wave + 1, total_waves, wave_label)
 
+func _count_live_enemies() -> int:
+	var live := 0
+	for child in get_children():
+		if child.is_in_group("enemy") and not child.is_dead:
+			live += 1
+	return live
+
 func _process_waves(delta: float):
 	"""Check if current wave is cleared and spawn next wave."""
 	if current_wave >= total_waves:
 		return
 	
 	# Count live enemies
-	var live_enemies := 0
-	for child in get_children():
-		if child.is_in_group("enemy") and not child.is_dead:
-			live_enemies += 1
+	var live_enemies := _count_live_enemies()
 	
 	if live_enemies == 0 and wave_spawned:
 		# Current wave cleared
 		current_wave += 1
 		wave_spawned = false
 		
-		if current_wave < total_waves:
-			# Start cooldown before next wave
-			wave_cooldown = WAVE_COOLDOWN_TIME
-			$Objective.text = "WAVE CLEARED! Next wave incoming..."
-		else:
-			# All waves done — chapter completes via the normal check
-			$Objective.text = "ALL WAVES CLEARED!"
+		if has_node("Objective"):
+			if current_wave < total_waves:
+				# Start cooldown before next wave
+				wave_cooldown = WAVE_COOLDOWN_TIME
+				$Objective.text = "WAVE CLEARED! Next wave incoming..."
+			else:
+				# All waves done — chapter completes via the normal check
+				$Objective.text = "ALL WAVES CLEARED!"
 	
 	# Wave cooldown timer
 	if wave_cooldown > 0:
@@ -622,7 +635,8 @@ func _process_daily_modifiers(delta: float):
 			return
 		# Show timer in objective
 		var remaining := 90.0 - _daily_speed_timer
-		$Objective.text = "⚔ DAILY ⏱ %.0fs remaining" % remaining
+		if has_node("Objective"):
+			$Objective.text = "⚔ DAILY ⏱ %.0fs remaining" % remaining
 	
 	# poison_swamp: 1 poison tick every 3 seconds
 	if "poison_swamp" in modifiers:
@@ -655,10 +669,7 @@ func _process(_delta):
 		_process_waves(_delta)
 	
 	if chapter_data.get("type", "combat") == "combat":
-		var live_enemies := 0
-		for child in get_children():
-			if child.is_in_group("enemy") and not child.is_dead:
-				live_enemies += 1
+		var live_enemies := _count_live_enemies()
 		
 		# Wave mode: don't complete chapter until all waves done
 		if total_waves > 0:
@@ -671,7 +682,8 @@ func _process(_delta):
 			var ch_id = chapter_data.get("chapter_id", "")
 			if ch_id == "act01_ch004":
 				enemies_remaining = 0
-				$Objective.text = "The defenders are dead. Open the gate!"
+				if has_node("Objective"):
+					$Objective.text = "The defenders are dead. Open the gate!"
 			else:
 				enemies_remaining = 0
 				_objective_complete()
@@ -702,10 +714,15 @@ func _on_objective_dialogue_done():
 	_finish_chapter_complete()
 
 func _finish_chapter_complete():
+	# Guard against double-completion
+	if get_node_or_null("VictoryScreen"):
+		return
+	
 	# Merchant heal if ally present
 	var allies = chapter_data.get("allies", [])
 	if not allies.is_empty():
-		player.heal(25)
+		if player and not player.is_dead:
+			player.heal(25)
 	
 	# Complete daily challenge if this was a challenge run
 	if GameState.is_daily_challenge_run:

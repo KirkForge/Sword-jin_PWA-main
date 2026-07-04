@@ -261,12 +261,14 @@ func _load_or_create_custom_id() -> String:
 					# Restore pending score submissions from disk
 					var saved_pending: Array = data.get("pending_submits", [])
 					for p in saved_pending:
-						_pending_submits.append(p)
+						if p is Dictionary:
+							_pending_submits.append(p)
 					return saved_id
 	
 	# Generate a new custom ID
+	var unique_id := OS.get_unique_id()
 	var new_id := "swordjin_%s_%s" % [
-		OS.get_unique_id().left(16) if OS.get_unique_id() != "" else str(randi()),
+		unique_id.left(16) if unique_id != "" else str(randi()),
 		Time.get_unix_time_from_system()
 	]
 	_save_state(new_id)
@@ -276,9 +278,13 @@ func _save_state(id: String = ""):
 	"""Save PlayFab state to disk."""
 	var pending_saves := []
 	for s in _pending_submits:
-		pending_saves.append({"chapter_id": s.chapter_id, "time": s.time})
+		if s is Dictionary and s.has("chapter_id") and s.has("time"):
+			pending_saves.append({"chapter_id": s.chapter_id, "time": s.time})
+	var save_id := id if id != "" else custom_id
+	if save_id == "":
+		save_id = _load_or_create_custom_id()
 	var data := {
-		"custom_id": id if id != "" else custom_id,
+		"custom_id": save_id,
 		"title_id": TITLE_ID,
 		"playfab_id": playfab_id,
 		"pending_submits": pending_saves,
@@ -291,5 +297,7 @@ func _save_state(id: String = ""):
 func set_title_id(title_id: String):
 	"""Set the PlayFab title ID and attempt login."""
 	TITLE_ID = title_id
+	if custom_id == "":
+		custom_id = _load_or_create_custom_id()
 	_save_state()
 	login()
