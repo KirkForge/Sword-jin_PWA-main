@@ -744,11 +744,13 @@ func _finish_chapter_complete():
 	var rested_xp_before := GameState.rested_xp
 	var rested_bonus := mini(rested_xp_before, xp_gained)
 	
+	# Capture current chapter ID BEFORE it advances in complete_current_chapter()
+	var chapter_id_for_ghost: String = "act%02d_ch%03d" % [GameState.current_act, GameState.current_chapter]
+	
 	GameState.complete_current_chapter()
 	
 	# Stop ghost recording and save if best time
 	var recording := GhostRecorder.stop_recording()
-	var chapter_id_for_ghost := "act%02d_ch%03d" % [GameState.current_act, GameState.current_chapter]
 	var elapsed := (Time.get_ticks_msec() / 1000.0) - GameState.chapter_start_time
 	
 	# Capture ghost data BEFORE clearing state
@@ -769,9 +771,8 @@ func _finish_chapter_complete():
 	if PlayFab.is_configured():
 		PlayFab.submit_chapter_time(chapter_id_for_ghost, elapsed)
 	
-	# Get stars earned this chapter
-	var chapter_id := "act%02d_ch%03d" % [GameState.current_act, GameState.current_chapter]
-	var stars: int = GameState.get_stars(chapter_id)
+	# Get stars earned this chapter (use the captured chapter ID)
+	var stars: int = GameState.get_stars(chapter_id_for_ghost)
 	
 	# Show victory screen instead of instant reload
 	victory_screen = victory_screen_scene.instantiate()
