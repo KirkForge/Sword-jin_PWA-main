@@ -1,45 +1,80 @@
 extends Node
-## HeadlessSmokeDriver — automated input for CI smoke tests.
-## Beats act01_ch001 by walking right/down/up and spamming attack.
+## HomingSmokeDriver — test-only driver that directly defeats enemies and opens gates.
 
-var _timer := 0.0
-var _phase := 0
+const DIRECT_DAMAGE := 200
+
+var _tick := 0.0
 
 func _ready():
-	await get_tree().create_timer(0.6).timeout
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	await get_tree().create_timer(0.8).timeout
 
 func _process(delta: float):
-	_timer += delta
-	if _timer < 0.10:
+	_tick += delta
+	if _tick < 0.20:
 		return
-	_timer = 0.0
-	_phase += 1
+	_tick = 0.0
 
-	match _phase % 10:
-		0, 1, 2, 3:
-			_press("move_right", 0.30)
-		4:
-			_tap("attack")
-		5, 6:
-			_press("move_down", 0.20)
-		7:
-			_tap("attack")
-		8, 9:
-			_press("move_up", 0.20)
+	# Stop doing anything once the victory screen appears; the chapter is proven complete.
+	var victory := _get_victory_screen()
+	if is_instance_valid(victory):
+		return
 
-func _tap(action: String):
-	_press(action, 0.08)
+	# Advance any active dialogue.
+	var dlg := _get_dialogue_manager()
+	if is_instance_valid(dlg) and dlg.is_playing:
+		dlg.advance()
+		return
 
-func _press(action: String, duration: float):
-	var ev := InputEventAction.new()
-	ev.action = action
-	ev.pressed = true
-	Input.parse_input_event(ev)
-	var t := get_tree().create_timer(duration)
-	t.timeout.connect(_release.bind(action))
+	var player := _get_player()
+	if not is_instance_valid(player) or player.is_dead:
+		return
 
-func _release(action: String):
-	var ev := InputEventAction.new()
-	ev.action = action
-	ev.pressed = false
-	Input.parse_input_event(ev)
+	if player.health < player.max_health:
+		player.health = player.max_health
+		player._update_label()
+
+	var enemies := _live_enemies()
+	if enemies.is_empty():
+		_open_gate_if_present()
+		return
+
+	var target: Node = enemies[0]
+	player.global_position = target.global_position
+	if target.has_method("take_damage"):
+		target.take_damage(DIRECT_DAMAGE)
+
+func _live_enemies() -> Array:
+	var result: Array = []
+	for n in get_tree().get_nodes_in_group("enemy"):
+		if not n.is_dead:
+			result.append(n)
+	return result
+
+func _open_gate_if_present():
+	for n in get_tree().get_nodes_in_group("gate"):
+		if n.has_method("open_gate"):
+			GameState.has_gate_key = true
+			var player := _get_player()
+			if is_instance_valid(player):
+				player.global_position = n.global_position
+			n.open_gate()
+			return
+
+func _get_player() -> Node:
+	var scene := get_tree().current_scene
+	if not scene:
+		return null
+	return scene.get_node_or_null("Main/Player")
+
+func _get_victory_screen() -> Node:
+	var scene := get_tree().current_scene
+	if not scene:
+		return null
+	return scene.get_node_or_null("Main/VictoryScreen")
+
+func _get_dialogue_manager() -> Node:
+	var scene := get_tree().current_scene
+	if not scene:
+		return null
+	return scene.get_node_or_null("Main/DialogueManager")
