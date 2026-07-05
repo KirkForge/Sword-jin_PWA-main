@@ -8,6 +8,7 @@ extends StaticBody2D
 var is_open := false
 
 func _ready():
+	add_to_group("gate")
 	update_visual()
 	label.text = "🔒 Gate Locked"
 
