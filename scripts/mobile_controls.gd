@@ -1,9 +1,9 @@
-extends Control
+extends CanvasLayer
 ## Mobile touch controls — virtual joystick + attack/skill/potion buttons
 ## Auto-detects touch input, hidden on desktop with keyboard.
 
 @onready var joystick_base = $JoystickBase
-@onready var joystick_knob = $JoystickKnob
+@onready var joystick_knob = $JoystickBase/JoystickKnob
 @onready var attack_btn = $AttackButton
 @onready var skill1_btn = $Skill1Button
 @onready var skill2_btn: Button
@@ -71,7 +71,8 @@ func _input(event):
 
 func _handle_touch_start(pos: Vector2):
 	# Check if touch is in the left half (joystick zone) and not on buttons
-	if pos.x < get_viewport_rect().size.x * 0.4:
+	var vp_rect := get_viewport().get_visible_rect()
+	if pos.x < vp_rect.size.x * 0.4:
 		joystick_active = true
 		joystick_start_pos = pos
 		joystick_base.global_position = joystick_start_pos - joystick_base.size / 2
