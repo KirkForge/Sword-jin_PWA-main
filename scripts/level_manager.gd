@@ -117,7 +117,7 @@ func _ready():
 	print("Controls: WASD move | SPACE attack | LEFT SHIFT dodge | ESC pause | C chapter select | M mute")
 
 func _dialogue_start():
-	var dlg = get_node("DialogueManager")
+	var dlg = get_node_or_null("DialogueManager")
 	if not dlg:
 		dialogue_triggered["start"] = true
 		return
@@ -695,7 +695,7 @@ func _on_gate_opened():
 
 func _objective_complete():
 	# Handle "objective_complete" dialogue trigger
-	var dlg = get_node("DialogueManager")
+	var dlg = get_node_or_null("DialogueManager")
 	var dialogue = chapter_data.get("dialogue", [])
 	var has_completion_dialogue = false
 	for entry in dialogue:
