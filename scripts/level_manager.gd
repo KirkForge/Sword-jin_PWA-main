@@ -46,6 +46,7 @@ var wave_data := []         # Array of wave definitions from chapter JSON
 var wave_spawned := false   # Whether current wave has been spawned
 var wave_cooldown := 0.0    # Delay between waves (seconds)
 const WAVE_COOLDOWN_TIME := 2.0  # Seconds between waves
+var is_completing := false  # Guard against repeated completion triggers
 
 func _ready():
 	# Default to chapter 001 only if no chapter is already selected
@@ -58,6 +59,10 @@ func _ready():
 		if Engine.has_singleton("ErrorScreen"):
 			ErrorScreen.show_error("Chapter Load Failed", "No chapter data available.\nTap Return to Menu to go back.")
 		return
+	
+	# Sync GameState act/chapter so saves, completion, and ghost IDs match the loaded chapter
+	GameState.current_act = chapter_data.get("act", 1)
+	GameState.current_chapter = chapter_data.get("chapter", 1)
 	
 	# Build tilemap arena
 	arena = load("res://scripts/arena_builder.gd").new()
@@ -678,7 +683,7 @@ func _process(_delta):
 		
 		# Wave mode: don't complete chapter until all waves done
 		if total_waves > 0:
-			if live_enemies == 0 and wave_spawned and current_wave >= total_waves:
+			if live_enemies == 0 and current_wave >= total_waves:
 				enemies_remaining = 0
 				_objective_complete()
 		elif live_enemies == 0 and enemies_remaining > 0:
@@ -700,6 +705,9 @@ func _on_gate_opened():
 
 func _objective_complete():
 	# Handle "objective_complete" dialogue trigger
+	if is_completing:
+		return
+	is_completing = true
 	var dlg = get_node_or_null("DialogueManager")
 	var dialogue = chapter_data.get("dialogue", [])
 	var has_completion_dialogue = false
@@ -750,7 +758,7 @@ func _finish_chapter_complete():
 	var rested_bonus := mini(rested_xp_before, xp_gained)
 	
 	# Capture current chapter ID BEFORE it advances in complete_current_chapter()
-	var chapter_id_for_ghost: String = "act%02d_ch%03d" % [GameState.current_act, GameState.current_chapter]
+	var chapter_id_for_ghost: String = chapter_data.get("chapter_id", "act%02d_ch%03d" % [GameState.current_act, GameState.current_chapter])
 	
 	GameState.complete_current_chapter()
 	
