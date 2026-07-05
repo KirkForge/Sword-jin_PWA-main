@@ -1,4 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=10 format=3]
+[ext_resource type="Texture2D" uid="uid://b01e8mcptmq2h" path="res://assets/art/enemies/wraith_attack.png" id="wraith_attack_tex"]
+[ext_resource type="Texture2D" uid="uid://bmpjripa1sm6m" path="res://assets/art/enemies/wraith_idle.png" id="wraith_idle_tex"]
+[ext_resource type="Texture2D" uid="uid://dhh4k75vmj18x" path="res://assets/art/enemies/wraith_walk.png" id="wraith_walk_tex"]
 
 [ext_resource type="Script" path="res://scripts/wraith.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c5h7x1b3v2a9p" path="res://scenes/ui/health_bar.tscn" id="2_healthbar"]
@@ -15,17 +18,17 @@ radius = 300.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1"]
 animations = [{
-"frames": [ExtResource("res://assets/art/enemies/wraith_idle.png")],
+"frames": [ExtResource("wraith_idle_tex")],
 "loop": true,
 "name": &"idle",
 "speed": 5.0
 }, {
-"frames": [ExtResource("res://assets/art/enemies/wraith_walk.png")],
+"frames": [ExtResource("wraith_walk_tex")],
 "loop": true,
 "name": &"walk",
 "speed": 6.0
 }, {
-"frames": [ExtResource("res://assets/art/enemies/wraith_attack.png")],
+"frames": [ExtResource("wraith_attack_tex")],
 "loop": false,
 "name": &"attack",
 "speed": 8.0

@@ -9,6 +9,15 @@ on:
 env:
   GODOT_VERSION: 4.4.1-stable
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -78,6 +87,12 @@ jobs:
           ./godot --headless --path . --export-release "HTML5" builds/web/index.html 2>&1
         timeout-minutes: 15
 
+      - name: Godot headless smoke test
+        run: |
+          export GODOT_BIN=./godot
+          bash scripts/ci/smoke_test.sh
+        timeout-minutes: 2
+
       - name: Verify export artifacts
         run: |
           failures=0
@@ -94,12 +109,36 @@ jobs:
       - name: Patch PWA
         run: bash scripts/patch_pwa.sh
 
+      - name: Upload web build to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: builds/web
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
   lighthouse:
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
+
+      - name: Download web build
+        uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: builds/web
 
       - name: Serve build directory
         run: |

@@ -285,7 +285,9 @@ func merchant_heal(amount: int):
 func show_damage_number(amount: int, is_heal := false):
 	var dn = damage_number_scene.instantiate() as Node2D
 	dn.global_position = global_position + Vector2(0, -24)
-	get_tree().current_scene.add_child(dn)
+	var container := get_parent() if get_parent() else get_tree().current_scene
+	if container:
+		container.add_child(dn)
 	if is_heal:
 		dn.setup_heal(amount)
 	else:
@@ -387,8 +389,8 @@ func _release_heavy_attack():
 	
 	# Store heavy DMG temporarily
 	attack_damage = dmg
-	await get_tree().create_timer(attack_duration * 1.5).timeout
-	_apply_weapon()  # Restore normal damage
+	var timer = get_tree().create_timer(attack_duration * 1.5)
+	timer.timeout.connect(_on_heavy_attack_complete)
 	
 	AudioManager.play_random_pitch("captain_charge", 0.7, 1.0)
 	ScreenShake.shake(5.0 * charge_ratio, 0.4)
@@ -398,6 +400,11 @@ func _release_heavy_attack():
 	var facing = Vector2.RIGHT if facing_right else Vector2.LEFT
 	velocity = facing * speed * 1.5
 	print("HEAVY ATTACK! %.0f%% charged → %d DMG" % [charge_ratio * 100, dmg])
+
+func _on_heavy_attack_complete():
+	if is_dead:
+		return
+	_apply_weapon()  # Restore normal damage
 
 # --- DODGE ROLL ---
 func set_dodge_enabled(enabled: bool):
@@ -571,7 +578,9 @@ func _on_attack_hitbox_body_entered(body):
 			# Spawn golden crit damage number
 			var crit_dn = damage_number_scene.instantiate() as Node2D
 			crit_dn.global_position = body.global_position + Vector2(0, -24)
-			get_tree().current_scene.add_child(crit_dn)
+			var container := get_parent() if get_parent() else get_tree().current_scene
+			if container:
+				container.add_child(crit_dn)
 			crit_dn.setup_crit(dmg)
 			# Crit counts as combo finisher juice too
 			ScreenShake.shake(4.0, 0.2)

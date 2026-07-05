@@ -1,4 +1,5 @@
-[gd_scene load_steps=3 format=3 uid="uid://merchant_ally_001"]
+[gd_scene load_steps=5 format=3 uid="uid://merchant_ally_001"]
+[ext_resource type="Texture2D" uid="uid://byprqjeon65f" path="res://assets/art/npcs/merchant_idle.webp" id="merchant_idle_tex"]
 
 [ext_resource type="Script" path="res://scripts/merchant_ally.gd" id="1_merchant"]
 
@@ -7,7 +8,7 @@ radius = 12.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_merchant"]
 animations = [{
-"frames": [ExtResource("res://assets/art/npcs/merchant_idle.webp")],
+"frames": [ExtResource("merchant_idle_tex")],
 "loop": true,
 "name": &"idle",
 "speed": 5.0

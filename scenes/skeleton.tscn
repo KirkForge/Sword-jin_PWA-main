@@ -1,4 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=10 format=3]
+[ext_resource type="Texture2D" uid="uid://mg57luvnj3a8" path="res://assets/art/enemies/skeleton_attack.png" id="skeleton_attack_tex"]
+[ext_resource type="Texture2D" uid="uid://bgjmavxd4deya" path="res://assets/art/enemies/skeleton_idle.png" id="skeleton_idle_tex"]
+[ext_resource type="Texture2D" uid="uid://c31yyupv82fb8" path="res://assets/art/enemies/skeleton_walk.png" id="skeleton_walk_tex"]
 
 [ext_resource type="Script" path="res://scripts/skeleton.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c5h7x1b3v2a9p" path="res://scenes/ui/health_bar.tscn" id="2_healthbar"]
@@ -15,17 +18,17 @@ radius = 250.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1"]
 animations = [{
-"frames": [ExtResource("res://assets/art/enemies/skeleton_idle.png")],
+"frames": [ExtResource("skeleton_idle_tex")],
 "loop": true,
 "name": &"idle",
 "speed": 5.0
 }, {
-"frames": [ExtResource("res://assets/art/enemies/skeleton_walk.png")],
+"frames": [ExtResource("skeleton_walk_tex")],
 "loop": true,
 "name": &"walk",
 "speed": 8.0
 }, {
-"frames": [ExtResource("res://assets/art/enemies/skeleton_attack.png")],
+"frames": [ExtResource("skeleton_attack_tex")],
 "loop": false,
 "name": &"attack",
 "speed": 8.0

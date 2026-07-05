@@ -157,13 +157,15 @@ func _input(event):
 	if not is_playing:
 		return
 	
-	# Touch tap or mouse click or space
+	# Touch tap or mouse click or space or attack button
 	var should_advance = false
 	if event is InputEventScreenTouch and event.pressed:
 		should_advance = true
 	elif event is InputEventMouseButton and event.pressed:
 		should_advance = true
 	elif event is InputEventKey and event.pressed and event.keycode == KEY_SPACE:
+		should_advance = true
+	elif event is InputEventAction and event.pressed and event.action == "attack":
 		should_advance = true
 	
 	if should_advance:

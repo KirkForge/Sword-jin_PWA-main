@@ -2,6 +2,10 @@ extends CharacterBody2D
 ## Golem — slow heavy construct with damage-reducing armor.
 ## Deals massive damage but attacks slowly. Stuns briefly after each hit.
 
+
+func _get_container() -> Node:
+	return get_parent() if get_parent() else get_tree().current_scene
+
 var damage_number_scene = preload("res://scenes/ui/damage_number.tscn")
 
 @export var max_health := 180
@@ -123,7 +127,9 @@ func _end_attack():
 func show_damage_number(amount: int, is_heal := false):
 	var dn = damage_number_scene.instantiate() as Node2D
 	dn.global_position = global_position + Vector2(0, -24)
-	get_tree().current_scene.add_child(dn)
+	var container := _get_container()
+	if container:
+		container.add_child(dn)
 	if is_heal:
 		dn.setup_heal(amount)
 	else:
@@ -222,7 +228,9 @@ func _show_loot_popup(loot: Dictionary):
 	label_node.add_theme_font_size_override("font_size", 16)
 	label_node.global_position = global_position + Vector2(-40, -40)
 	label_node.z_index = 100
-	get_tree().current_scene.add_child(label_node)
+	var container := _get_container()
+	if container:
+		container.add_child(label_node)
 	var tween := label_node.create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tween.parallel().tween_property(label_node, "position:y", label_node.position.y - 30, 1.5)
@@ -241,7 +249,9 @@ func _show_death_sprite(sprite_name: String):
 			death_sprite.global_position = global_position
 			death_sprite.z_index = 10
 			death_sprite.scale = Vector2(0.5, 0.5)
-			get_tree().current_scene.add_child(death_sprite)
+			var container := _get_container()
+			if container:
+				container.add_child(death_sprite)
 			var tween = get_tree().create_tween()
 			tween.tween_property(death_sprite, "modulate:a", 0.0, 0.8)
 			tween.tween_callback(death_sprite.queue_free)

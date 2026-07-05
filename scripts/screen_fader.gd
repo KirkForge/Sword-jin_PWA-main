@@ -6,19 +6,26 @@ extends CanvasLayer
 
 func _ready():
 	# Start transparent
-	rect.modulate = Color.TRANSPARENT
+	if rect:
+		rect.modulate = Color.TRANSPARENT
 
 func fade_to_black(duration: float = 0.5) -> Signal:
+	if not rect:
+		return Signal()
 	var tween := create_tween()
 	tween.tween_property(rect, "modulate", Color.BLACK, duration)
 	return tween.finished
 
 func fade_from_black(duration: float = 0.5) -> Signal:
+	if not rect:
+		return Signal()
 	var tween := create_tween()
 	tween.tween_property(rect, "modulate", Color.TRANSPARENT, duration)
 	return tween.finished
 
 func flash_white(duration: float = 0.15) -> Signal:
+	if not rect:
+		return Signal()
 	rect.modulate = Color.WHITE
 	var tween := create_tween()
 	tween.tween_property(rect, "modulate", Color.TRANSPARENT, duration)

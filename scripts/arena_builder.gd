@@ -162,10 +162,6 @@ func _build_tileset(tex: Texture2D) -> TileSet:
 	var ts = TileSet.new()
 	ts.tile_size = Vector2i(TILE_SIZE, TILE_SIZE)
 	
-	# Add physics layer for wall collisions
-	ts.add_physics_layer(0)
-	ts.set_physics_layer_collision_mask(0, 1)  # Collide with layer 1
-	
 	# Create one source for all tiles (horizontal strip)
 	var source = TileSetAtlasSource.new()
 	source.texture = tex
@@ -173,24 +169,33 @@ func _build_tileset(tex: Texture2D) -> TileSet:
 	source.margins = Vector2i(0, 0)
 	source.separation = Vector2i(0, 0)
 	
-	# 7 tiles in a row (0-6)
-	source.columns = 7
-	source.rows = 1
-	
-	# Define collision for wall tiles (tile types 2 and 3)
-	var wall_poly = [
-		Vector2(0, 0), Vector2(TILE_SIZE, 0),
-		Vector2(TILE_SIZE, TILE_SIZE), Vector2(0, TILE_SIZE)
-	]
-	for i in [2, 3]:  # wall + wall_top
-		var coords = Vector2i(i, 0)
-		source.add_collision_polygon(coords, 0, wall_poly)
-	
-	# Hazard tiles (6) — also solid, blocks movement
-	var hazard_coords = Vector2i(6, 0)
-	source.add_collision_polygon(hazard_coords, 0, wall_poly)
+	# Ensure atlas tiles are exposed for the 7-tile strip before modifying TileData
+	for x in range(7):
+		source.create_tile(Vector2i(x, 0))
 	
 	ts.add_source(source, 0)
+	
+	# Add physics layer *after* source is attached so TileData sees it
+	ts.add_physics_layer(0)
+	ts.set_physics_layer_collision_mask(0, 1)  # Collide with layer 1
+	
+	# Define collision for wall tiles (tile types 2 and 3)
+	var wall_poly := PackedVector2Array([
+		Vector2(0, 0), Vector2(TILE_SIZE, 0),
+		Vector2(TILE_SIZE, TILE_SIZE), Vector2(0, TILE_SIZE)
+	])
+	for i in [2, 3]:  # wall + wall_top
+		var coords := Vector2i(i, 0)
+		var data := source.get_tile_data(coords, 0)
+		data.add_collision_polygon(0)
+		data.set_collision_polygon_points(0, 0, wall_poly)
+	
+	# Hazard tiles (6) — also solid, blocks movement
+	var hazard_coords := Vector2i(6, 0)
+	var hazard_data := source.get_tile_data(hazard_coords, 0)
+	hazard_data.add_collision_polygon(0)
+	hazard_data.set_collision_polygon_points(0, 0, wall_poly)
+	
 	return ts
 
 

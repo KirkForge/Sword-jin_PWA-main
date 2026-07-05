@@ -111,17 +111,13 @@ func _process(delta):
 	if is_attacking:
 		if sprite.animation != "attack":
 			sprite.play("attack")
-	else:
-		if sprite.animation != "idle" and sprite.animation != "run":
-			sprite.play("run")
-		# Use run animation if moving, idle if standing still
-		if snapshot_index > 0:
-			var prev = snapshots[snapshot_index - 1]
-			var moved = absf(current.x - prev.x) > 2.0 or absf(current.y - prev.y) > 2.0
-			if moved and sprite.animation != "attack":
-				sprite.play("run")
-			elif not moved and sprite.animation != "attack":
-				sprite.play("idle")
+	elif snapshot_index > 0:
+		var prev = snapshots[snapshot_index - 1]
+		var moved = absf(current.x - prev.x) > 2.0 or absf(current.y - prev.y) > 2.0
+		if moved and sprite.animation != "attack":
+			sprite.play("walk")
+		elif not moved and sprite.animation != "attack":
+			sprite.play("idle")
 	
 	# Check if we've reached the end
 	if snapshot_index >= snapshots.size() - 1 and playback_time > snapshots[-1].t + 1.0:

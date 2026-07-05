@@ -718,7 +718,8 @@ func complete_current_chapter():
 	var stars := calculate_stars(chapter_id, chapter_deaths, elapsed)
 	print("Chapter %s complete — %d stars (deaths: %d, time: %.1fs)" % [chapter_id, stars, chapter_deaths, elapsed])
 	
-	var next_chapter_id: String = ChapterDatabase.get_current_chapter().get("next_chapter", "")
+	var next_chapter_id_raw = ChapterDatabase.get_current_chapter().get("next_chapter", "")
+	var next_chapter_id: String = "" if next_chapter_id_raw == null else str(next_chapter_id_raw)
 	if next_chapter_id != "" and ChapterDatabase.chapters.has(next_chapter_id):
 		ChapterDatabase.chapters[next_chapter_id]["is_unlocked"] = true
 	
@@ -1277,8 +1278,9 @@ func _check_daily_streak() -> void:
 	"""Check and update daily login streak. Call on game startup."""
 	var today := Time.get_datetime_string_from_system().split(" ")[0]  # YYYY-MM-DD
 	
-	if last_login_date.is_empty():
-		# First ever login
+	# Guard against malformed/empty saved dates
+	if last_login_date.is_empty() or not _is_valid_date_string(last_login_date):
+		# First ever login (or corrupted save)
 		daily_streak = 1
 		last_login_date = today
 		streak_claimed_today = false
@@ -1352,8 +1354,22 @@ func _check_streak_achievements() -> void:
 	if daily_streak >= 7:
 		unlock_achievement("streak_7")
 
+func _is_valid_date_string(date_str: String) -> bool:
+	"""Validate YYYY-MM-DD format and sane values."""
+	var parts := date_str.split("-")
+	if parts.size() != 3:
+		return false
+	var year := int(parts[0])
+	var month := int(parts[1])
+	var day := int(parts[2])
+	if year < 2020 or year > 2100 or month < 1 or month > 12 or day < 1 or day > 31:
+		return false
+	return true
+
 func _get_yesterday_date(date_str: String) -> String:
 	"""Get the date string for the day before the given date."""
+	if not _is_valid_date_string(date_str):
+		return ""
 	var parts := date_str.split("-")
 	var year := int(parts[0])
 	var month := int(parts[1])

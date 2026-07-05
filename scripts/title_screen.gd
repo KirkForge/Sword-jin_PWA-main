@@ -181,8 +181,9 @@ func _on_select_pressed():
 	# Hide our buttons while chapter manager is open
 	$CenterContainer.visible = false
 	# Re-show when back is pressed
-	var back_btn = chm.get_node("MarginContainer/VBoxContainer/HBoxContainer/BackButton")
-	back_btn.pressed.connect(_on_chapter_back, CONNECT_ONE_SHOT)
+	var back_btn = chm.get_node_or_null("MarginContainer/VBoxContainer/HBoxContainer/BackButton")
+	if back_btn:
+		back_btn.pressed.connect(_on_chapter_back, CONNECT_ONE_SHOT)
 
 func _on_chapter_back():
 	$CenterContainer.visible = true

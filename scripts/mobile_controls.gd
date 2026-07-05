@@ -1,14 +1,14 @@
-extends Control
+extends CanvasLayer
 ## Mobile touch controls — virtual joystick + attack/skill/potion buttons
 ## Auto-detects touch input, hidden on desktop with keyboard.
 
 @onready var joystick_base = $JoystickBase
-@onready var joystick_knob = $JoystickKnob
+@onready var joystick_knob = $JoystickBase/JoystickKnob
 @onready var attack_btn = $AttackButton
 @onready var skill1_btn = $Skill1Button
-@onready var skill2_btn = $Skill2Button
-@onready var potion_btn = $PotionButton
-@onready var pause_btn = $PauseButton
+@onready var skill2_btn: Button
+@onready var potion_btn: Button
+@onready var pause_btn: Button
 
 var joystick_active := false
 var joystick_start_pos := Vector2.ZERO
@@ -21,22 +21,31 @@ func _ready():
 		# Keep visible on web exports too
 		pass
 	
+	# Optional buttons may be added by other scenes; guard against missing nodes
+	skill2_btn = get_node_or_null("Skill2Button") as Button
+	potion_btn = get_node_or_null("PotionButton") as Button
+	pause_btn = get_node_or_null("PauseButton") as Button
+	
 	_setup_button_labels()
 	attack_btn.pressed.connect(_on_attack)
 	attack_btn.button_up.connect(_on_attack_up)
 	skill1_btn.pressed.connect(_on_skill1)
-	skill2_btn.pressed.connect(_on_skill2)
-	potion_btn.pressed.connect(_on_potion)
-	pause_btn.pressed.connect(_on_pause)
+	if skill2_btn:
+		skill2_btn.pressed.connect(_on_skill2)
+	if potion_btn:
+		potion_btn.pressed.connect(_on_potion)
+	if pause_btn:
+		pause_btn.pressed.connect(_on_pause)
 
 func _setup_button_labels():
-	var skill1 := GameState.equipped_skills[0] if GameState.equipped_skills.size() > 0 else ""
-	var skill2 := GameState.equipped_skills[1] if GameState.equipped_skills.size() > 1 else ""
+	var skill1: String = GameState.equipped_skills[0] if GameState.equipped_skills.size() > 0 else ""
+	var skill2: String = GameState.equipped_skills[1] if GameState.equipped_skills.size() > 1 else ""
 
 	skill1_btn.text = _skill_name(0)
-	skill2_btn.text = _skill_name(1)
+	if skill2_btn:
+		skill2_btn.text = _skill_name(1)
+		skill2_btn.icon = _skill_icon(skill2)
 	skill1_btn.icon = _skill_icon(skill1)
-	skill2_btn.icon = _skill_icon(skill2)
 
 func _skill_name(slot: int) -> String:
 	if GameState.equipped_skills.size() > slot and GameState.equipped_skills[slot] != "":
@@ -62,7 +71,8 @@ func _input(event):
 
 func _handle_touch_start(pos: Vector2):
 	# Check if touch is in the left half (joystick zone) and not on buttons
-	if pos.x < get_viewport_rect().size.x * 0.4:
+	var vp_rect := get_viewport().get_visible_rect()
+	if pos.x < vp_rect.size.x * 0.4:
 		joystick_active = true
 		joystick_start_pos = pos
 		joystick_base.global_position = joystick_start_pos - joystick_base.size / 2

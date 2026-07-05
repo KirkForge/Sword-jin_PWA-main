@@ -1,4 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=10 format=3]
+[ext_resource type="Texture2D" uid="uid://c0xkni4ipeb35" path="res://assets/art/enemies/shaman_attack.png" id="shaman_attack_tex"]
+[ext_resource type="Texture2D" uid="uid://4wolavofhnw4" path="res://assets/art/enemies/shaman_idle.png" id="shaman_idle_tex"]
+[ext_resource type="Texture2D" uid="uid://bjd1n0dq6xfkh" path="res://assets/art/enemies/shaman_walk.png" id="shaman_walk_tex"]
 
 [ext_resource type="Script" path="res://scripts/shaman.gd" id="1"]
 [ext_resource type="PackedScene" uid="uid://c5h7x1b3v2a9p" path="res://scenes/ui/health_bar.tscn" id="2_healthbar"]
@@ -15,17 +18,17 @@ radius = 300.0
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_1"]
 animations = [{
-"frames": [ExtResource("res://assets/art/enemies/shaman_idle.png")],
+"frames": [ExtResource("shaman_idle_tex")],
 "loop": true,
 "name": &"idle",
 "speed": 5.0
 }, {
-"frames": [ExtResource("res://assets/art/enemies/shaman_walk.png")],
+"frames": [ExtResource("shaman_walk_tex")],
 "loop": true,
 "name": &"walk",
 "speed": 8.0
 }, {
-"frames": [ExtResource("res://assets/art/enemies/shaman_attack.png")],
+"frames": [ExtResource("shaman_attack_tex")],
 "loop": false,
 "name": &"attack",
 "speed": 8.0

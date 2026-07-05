@@ -46,10 +46,12 @@ var wave_data := []         # Array of wave definitions from chapter JSON
 var wave_spawned := false   # Whether current wave has been spawned
 var wave_cooldown := 0.0    # Delay between waves (seconds)
 const WAVE_COOLDOWN_TIME := 2.0  # Seconds between waves
+var is_completing := false  # Guard against repeated completion triggers
 
 func _ready():
-	# Load chapter 001 by default
-	ChapterDatabase.set_current_chapter("act01_ch001")
+	# Default to chapter 001 only if no chapter is already selected
+	if ChapterDatabase.get_current_chapter().is_empty():
+		ChapterDatabase.set_current_chapter("act01_ch001")
 	chapter_data = ChapterDatabase.get_current_chapter()
 	
 	if chapter_data.is_empty():
@@ -57,6 +59,10 @@ func _ready():
 		if Engine.has_singleton("ErrorScreen"):
 			ErrorScreen.show_error("Chapter Load Failed", "No chapter data available.\nTap Return to Menu to go back.")
 		return
+	
+	# Sync GameState act/chapter so saves, completion, and ghost IDs match the loaded chapter
+	GameState.current_act = chapter_data.get("act", 1)
+	GameState.current_chapter = chapter_data.get("chapter", 1)
 	
 	# Build tilemap arena
 	arena = load("res://scripts/arena_builder.gd").new()
@@ -98,9 +104,11 @@ func _ready():
 	
 	_dialogue_start()
 	
-	# Update UI
-	$Objective.text = "Objective: " + chapter_data.get("objective", "Defeat enemies!")
-	$LevelLabel.text = chapter_data.get("title", "Level 1")
+	# Update UI (see also _setup_level for safe fallback)
+	if has_node("Objective"):
+		$Objective.text = "Objective: " + chapter_data.get("objective", "Defeat enemies!")
+	if has_node("LevelLabel"):
+		$LevelLabel.text = chapter_data.get("title", "Level 1")
 	
 	# Show chapter title card overlay
 	_show_title_card(chapter_id)
@@ -115,7 +123,7 @@ func _ready():
 	print("Controls: WASD move | SPACE attack | LEFT SHIFT dodge | ESC pause | C chapter select | M mute")
 
 func _dialogue_start():
-	var dlg = get_node("DialogueManager")
+	var dlg = get_node_or_null("DialogueManager")
 	if not dlg:
 		dialogue_triggered["start"] = true
 		return
@@ -136,12 +144,12 @@ func _on_dialogue_ended_start():
 # Chapter title card overlay — shows for 2.5s then fades
 func _show_title_card(chapter_id: String) -> void:
 	var ch_idx := chapter_id.right(3).to_int() if chapter_id.length() >= 3 else 1
-	var title_path = "res://assets/art/bg/ch%02d_title.webp" % ch_idx
+	var title_path: String = "res://assets/art/bg/ch%02d_title.webp" % ch_idx
 
 	# Boss chapters use the generated boss splash portrait if available
 	if chapter_id in BOSS_CHAPTERS:
-		var safe_title := chapter_data.get("title", "").to_lower().replace(" ", "_").replace("'", "")
-		var boss_path := "res://assets/art/generated/boss_splash/boss%02d_%s_portrait.webp" % [ch_idx, safe_title]
+		var safe_title: String = chapter_data.get("title", "").to_lower().replace(" ", "_").replace("'", "")
+		var boss_path: String = "res://assets/art/generated/boss_splash/boss%02d_%s_portrait.webp" % [ch_idx, safe_title]
 		if ResourceLoader.exists(boss_path):
 			title_path = boss_path
 
@@ -193,10 +201,10 @@ func _show_title_card(chapter_id: String) -> void:
 func _get_bgm_for_current_chapter() -> String:
 	if GameState.is_daily_challenge_run:
 		return "bgm_daily"
-	var chapter_id := chapter_data.get("chapter_id", "")
+	var chapter_id: String = chapter_data.get("chapter_id", "")
 	if chapter_id in BOSS_CHAPTERS:
 		return "bgm_boss"
-	var act := chapter_data.get("act", 1)
+	var act: int = chapter_data.get("act", 1)
 	match act:
 		3: return "bgm_act3"
 		4: return "bgm_act4"
@@ -269,7 +277,8 @@ func _setup_level():
 		gate.position = Vector2(580, 180)
 		add_child(gate)
 		GameState.has_gate_key = false
-		$Objective.text = "Objective: Defeat defenders and open the gate!"
+		if has_node("Objective"):
+			$Objective.text = "Objective: Defeat defenders and open the gate!"
 	
 	enemies_remaining = 0
 	for child in get_children():
@@ -282,6 +291,12 @@ func _setup_level():
 	
 	GameState.reset_chapter_state()
 	GameState.chapter_kills = 0
+	
+	# Update objective label safely
+	if has_node("Objective"):
+		$Objective.text = "Objective: " + chapter_data.get("objective", "Defeat enemies!")
+	if has_node("LevelLabel"):
+		$LevelLabel.text = chapter_data.get("title", "Level 1")
 	
 	# Start ghost recording for this chapter
 	GhostRecorder.start_recording()
@@ -412,18 +427,23 @@ func _spawn_next_wave():
 			_spawn_enemy(enemy_type, pos, stats)
 	
 	# Count enemies in this wave
-	enemies_remaining = 0
-	for child in get_children():
-		if child.is_in_group("enemy") and not child.is_dead:
-			enemies_remaining += 1
+	enemies_remaining = _count_live_enemies()
 	
 	# Update HUD
 	var wave_text = "WAVE %d/%d: %s" % [current_wave + 1, total_waves, wave_label]
-	$Objective.text = wave_text
+	if has_node("Objective"):
+		$Objective.text = wave_text
 	print("[Wave] %s — %d enemies" % [wave_text, enemies_remaining])
 	
 	# Show wave announcement
 	_show_wave_announcement(current_wave + 1, total_waves, wave_label)
+
+func _count_live_enemies() -> int:
+	var live := 0
+	for child in get_children():
+		if child.is_in_group("enemy") and not child.is_dead:
+			live += 1
+	return live
 
 func _process_waves(delta: float):
 	"""Check if current wave is cleared and spawn next wave."""
@@ -431,23 +451,21 @@ func _process_waves(delta: float):
 		return
 	
 	# Count live enemies
-	var live_enemies := 0
-	for child in get_children():
-		if child.is_in_group("enemy") and not child.is_dead:
-			live_enemies += 1
+	var live_enemies := _count_live_enemies()
 	
 	if live_enemies == 0 and wave_spawned:
 		# Current wave cleared
 		current_wave += 1
 		wave_spawned = false
 		
-		if current_wave < total_waves:
-			# Start cooldown before next wave
-			wave_cooldown = WAVE_COOLDOWN_TIME
-			$Objective.text = "WAVE CLEARED! Next wave incoming..."
-		else:
-			# All waves done — chapter completes via the normal check
-			$Objective.text = "ALL WAVES CLEARED!"
+		if has_node("Objective"):
+			if current_wave < total_waves:
+				# Start cooldown before next wave
+				wave_cooldown = WAVE_COOLDOWN_TIME
+				$Objective.text = "WAVE CLEARED! Next wave incoming..."
+			else:
+				# All waves done — chapter completes via the normal check
+				$Objective.text = "ALL WAVES CLEARED!"
 	
 	# Wave cooldown timer
 	if wave_cooldown > 0:
@@ -462,8 +480,9 @@ func _show_wave_announcement(wave_num: int, total: int, label: String):
 	announce.add_theme_color_override("font_color", Color(1.0, 0.85, 0.2))
 	announce.add_theme_font_size_override("font_size", 24)
 	announce.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	announce.anchor_left = 0.0
-	announce.anchor_right = 1.0
+	announce.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	announce.offset_left = -300.0
+	announce.offset_right = 300.0
 	announce.offset_top = 140.0
 	announce.offset_bottom = 200.0
 	announce.z_index = 100
@@ -510,7 +529,11 @@ func _spawn_enemy(type: String, pos: Vector2, stats: Dictionary):
 	if stats.has("speed"):
 		inst.speed = stats.speed
 	if stats.has("damage"):
-		inst.attack_damage = stats.damage
+		# Skeleton archer uses arrow_damage instead of attack_damage
+		if type == "skeleton_archer":
+			inst.arrow_damage = stats.damage
+		else:
+			inst.attack_damage = stats.damage
 	
 	inst.add_to_group("enemy")
 	
@@ -526,23 +549,24 @@ func _apply_daily_modifiers():
 		return
 	
 	var challenge_info := GameState.get_daily_challenge()
-	var mod_labels := []
+	var mod_labels: Array[String] = []
 	for mod_id in modifiers:
-		var mod_data := GameState.DAILY_CHALLENGE_MODIFIERS.get(mod_id, {})
+		var mod_data: Dictionary = GameState.DAILY_CHALLENGE_MODIFIERS.get(mod_id, {})
 		mod_labels.append(mod_data.get("icon", "?") + " " + mod_data.get("label", mod_id))
 	
-	$Objective.text = "⚔ DAILY: " + " | ".join(mod_labels)
+	if has_node("Objective"):
+		$Objective.text = "⚔ DAILY: " + " | ".join(mod_labels)
 	print("DAILY CHALLENGE modifiers: %s" % str(modifiers))
 	
 	# double_enemies: duplicate each enemy
 	if "double_enemies" in modifiers:
-		var enemy_nodes := []
+		var enemy_nodes: Array = []
 		for child in get_children():
 			if child.is_in_group("enemy") and not child.is_dead:
 				enemy_nodes.append(child)
 		for enemy in enemy_nodes:
-			var offset := Vector2(randf_range(-30, 30), randf_range(-30, 30))
-			var new_pos := enemy.position + offset
+			var offset: Vector2 = Vector2(randf_range(-30, 30), randf_range(-30, 30))
+			var new_pos: Vector2 = enemy.position + offset
 			# Determine enemy type from script name
 			var enemy_type := "skeleton"
 			var script_path = enemy.get_script().resource_path if enemy.get_script() else ""
@@ -622,7 +646,8 @@ func _process_daily_modifiers(delta: float):
 			return
 		# Show timer in objective
 		var remaining := 90.0 - _daily_speed_timer
-		$Objective.text = "⚔ DAILY ⏱ %.0fs remaining" % remaining
+		if has_node("Objective"):
+			$Objective.text = "⚔ DAILY ⏱ %.0fs remaining" % remaining
 	
 	# poison_swamp: 1 poison tick every 3 seconds
 	if "poison_swamp" in modifiers:
@@ -654,15 +679,13 @@ func _process(_delta):
 	if total_waves > 0:
 		_process_waves(_delta)
 	
-	if chapter_data.get("type", "combat") == "combat":
-		var live_enemies := 0
-		for child in get_children():
-			if child.is_in_group("enemy") and not child.is_dead:
-				live_enemies += 1
+	var chapter_type: String = chapter_data.get("type", "combat")
+	if chapter_type == "combat" or chapter_type == "boss":
+		var live_enemies := _count_live_enemies()
 		
 		# Wave mode: don't complete chapter until all waves done
 		if total_waves > 0:
-			if live_enemies == 0 and wave_spawned and current_wave >= total_waves:
+			if live_enemies == 0 and current_wave >= total_waves:
 				enemies_remaining = 0
 				_objective_complete()
 		elif live_enemies == 0 and enemies_remaining > 0:
@@ -671,7 +694,8 @@ func _process(_delta):
 			var ch_id = chapter_data.get("chapter_id", "")
 			if ch_id == "act01_ch004":
 				enemies_remaining = 0
-				$Objective.text = "The defenders are dead. Open the gate!"
+				if has_node("Objective"):
+					$Objective.text = "The defenders are dead. Open the gate!"
 			else:
 				enemies_remaining = 0
 				_objective_complete()
@@ -683,7 +707,10 @@ func _on_gate_opened():
 
 func _objective_complete():
 	# Handle "objective_complete" dialogue trigger
-	var dlg = get_node("DialogueManager")
+	if is_completing:
+		return
+	is_completing = true
+	var dlg = get_node_or_null("DialogueManager")
 	var dialogue = chapter_data.get("dialogue", [])
 	var has_completion_dialogue = false
 	for entry in dialogue:
@@ -702,10 +729,15 @@ func _on_objective_dialogue_done():
 	_finish_chapter_complete()
 
 func _finish_chapter_complete():
+	# Guard against double-completion
+	if get_node_or_null("VictoryScreen"):
+		return
+	
 	# Merchant heal if ally present
 	var allies = chapter_data.get("allies", [])
 	if not allies.is_empty():
-		player.heal(25)
+		if player and not player.is_dead:
+			player.heal(25)
 	
 	# Complete daily challenge if this was a challenge run
 	if GameState.is_daily_challenge_run:
@@ -727,11 +759,13 @@ func _finish_chapter_complete():
 	var rested_xp_before := GameState.rested_xp
 	var rested_bonus := mini(rested_xp_before, xp_gained)
 	
+	# Capture current chapter ID BEFORE it advances in complete_current_chapter()
+	var chapter_id_for_ghost: String = chapter_data.get("chapter_id", "act%02d_ch%03d" % [GameState.current_act, GameState.current_chapter])
+	
 	GameState.complete_current_chapter()
 	
 	# Stop ghost recording and save if best time
 	var recording := GhostRecorder.stop_recording()
-	var chapter_id_for_ghost := "act%02d_ch%03d" % [GameState.current_act, GameState.current_chapter]
 	var elapsed := (Time.get_ticks_msec() / 1000.0) - GameState.chapter_start_time
 	
 	# Capture ghost data BEFORE clearing state
@@ -752,15 +786,16 @@ func _finish_chapter_complete():
 	if PlayFab.is_configured():
 		PlayFab.submit_chapter_time(chapter_id_for_ghost, elapsed)
 	
-	# Get stars earned this chapter
-	var chapter_id := "act%02d_ch%03d" % [GameState.current_act, GameState.current_chapter]
-	var stars: int = GameState.get_stars(chapter_id)
+	# Get stars earned this chapter (use the captured chapter ID)
+	var stars: int = GameState.get_stars(chapter_id_for_ghost)
 	
 	# Show victory screen instead of instant reload
 	victory_screen = victory_screen_scene.instantiate()
 	add_child(victory_screen)
 	
-	var has_next = not chapter_data.get("next_chapter", "").is_empty()
+	var next_chapter_id_raw = chapter_data.get("next_chapter", "")
+	var next_chapter_id_for_victory: String = "" if next_chapter_id_raw == null else str(next_chapter_id_raw)
+	var has_next = not next_chapter_id_for_victory.is_empty()
 	victory_screen._has_next_chapter = has_next
 	
 	victory_screen.show_victory(
