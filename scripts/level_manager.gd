@@ -48,8 +48,9 @@ var wave_cooldown := 0.0    # Delay between waves (seconds)
 const WAVE_COOLDOWN_TIME := 2.0  # Seconds between waves
 
 func _ready():
-	# Load chapter 001 by default
-	ChapterDatabase.set_current_chapter("act01_ch001")
+	# Default to chapter 001 only if no chapter is already selected
+	if ChapterDatabase.get_current_chapter().is_empty():
+		ChapterDatabase.set_current_chapter("act01_ch001")
 	chapter_data = ChapterDatabase.get_current_chapter()
 	
 	if chapter_data.is_empty():
@@ -522,7 +523,11 @@ func _spawn_enemy(type: String, pos: Vector2, stats: Dictionary):
 	if stats.has("speed"):
 		inst.speed = stats.speed
 	if stats.has("damage"):
-		inst.attack_damage = stats.damage
+		# Skeleton archer uses arrow_damage instead of attack_damage
+		if type == "skeleton_archer":
+			inst.arrow_damage = stats.damage
+		else:
+			inst.attack_damage = stats.damage
 	
 	inst.add_to_group("enemy")
 	
