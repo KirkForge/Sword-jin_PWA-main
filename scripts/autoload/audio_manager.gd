@@ -105,8 +105,6 @@ func _load_all_bgm():
 		var loaded := false
 		for ext in [".ogg", ".wav"]:
 			var path = BGM_DIR + name + ext
-			if not FileAccess.file_exists(path):
-				continue
 			var stream = load(path)
 			if stream:
 				if stream is AudioStreamOggVorbis:

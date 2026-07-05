@@ -23,6 +23,8 @@ IGNORED_PATTERNS = [
     re.compile(r"No interface 'godot' registered"),
     re.compile(r"push_warning"),
     re.compile(r"platform/web"),
+    re.compile(r"CONTEXT_LOST_WEBGL"),
+    re.compile(r"WebGL: .*"),
 ]
 
 def is_ignored(message: str) -> bool:
