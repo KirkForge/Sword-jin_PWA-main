@@ -78,6 +78,12 @@ jobs:
           ./godot --headless --path . --export-release "HTML5" builds/web/index.html 2>&1
         timeout-minutes: 15
 
+      - name: Godot headless smoke test
+        run: |
+          export GODOT_BIN=./godot
+          bash scripts/ci/smoke_test.sh
+        timeout-minutes: 2
+
       - name: Verify export artifacts
         run: |
           failures=0
