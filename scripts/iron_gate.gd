@@ -53,6 +53,6 @@ func open_gate():
 	tw.tween_callback(queue_free)
 
 	# Notify level manager that gate is open
-	var lm = get_tree().current_scene
+	var lm = get_parent()
 	if lm and lm.has_method("_on_gate_opened"):
 		lm._on_gate_opened()
