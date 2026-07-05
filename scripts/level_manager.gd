@@ -480,8 +480,9 @@ func _show_wave_announcement(wave_num: int, total: int, label: String):
 	announce.add_theme_color_override("font_color", Color(1.0, 0.85, 0.2))
 	announce.add_theme_font_size_override("font_size", 24)
 	announce.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	announce.anchor_left = 0.0
-	announce.anchor_right = 1.0
+	announce.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	announce.offset_left = -300.0
+	announce.offset_right = 300.0
 	announce.offset_top = 140.0
 	announce.offset_bottom = 200.0
 	announce.z_index = 100
