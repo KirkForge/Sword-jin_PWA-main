@@ -718,7 +718,8 @@ func complete_current_chapter():
 	var stars := calculate_stars(chapter_id, chapter_deaths, elapsed)
 	print("Chapter %s complete — %d stars (deaths: %d, time: %.1fs)" % [chapter_id, stars, chapter_deaths, elapsed])
 	
-	var next_chapter_id: String = ChapterDatabase.get_current_chapter().get("next_chapter", "")
+	var next_chapter_id_raw = ChapterDatabase.get_current_chapter().get("next_chapter", "")
+	var next_chapter_id: String = "" if next_chapter_id_raw == null else str(next_chapter_id_raw)
 	if next_chapter_id != "" and ChapterDatabase.chapters.has(next_chapter_id):
 		ChapterDatabase.chapters[next_chapter_id]["is_unlocked"] = true
 	

@@ -792,7 +792,9 @@ func _finish_chapter_complete():
 	victory_screen = victory_screen_scene.instantiate()
 	add_child(victory_screen)
 	
-	var has_next = not chapter_data.get("next_chapter", "").is_empty()
+	var next_chapter_id_raw = chapter_data.get("next_chapter", "")
+	var next_chapter_id_for_victory: String = "" if next_chapter_id_raw == null else str(next_chapter_id_raw)
+	var has_next = not next_chapter_id_for_victory.is_empty()
 	victory_screen._has_next_chapter = has_next
 	
 	victory_screen.show_victory(
