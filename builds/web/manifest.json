@@ -2,25 +2,30 @@
   "name": "Swordjin — Wuxia Action RPG",
   "short_name": "Swordjin",
   "description": "Lightweight fantasy action RPG — mobile PWA edition",
-  "start_url": "/",
+  "start_url": ".",
   "display": "fullscreen",
   "orientation": "landscape",
   "background_color": "#1a1a2e",
   "theme_color": "#c0392b",
   "icons": [
     {
-      "src": "/icon-192.png",
-      "sizes": "192x192",
+      "src": "index.144x144.png",
+      "sizes": "144x144",
       "type": "image/png"
     },
     {
-      "src": "/icon-512.png",
+      "src": "index.180x180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    },
+    {
+      "src": "index.512x512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
   ],
   "categories": ["games", "action", "rpg"],
   "lang": "en",
-  "scope": "/",
+  "scope": ".",
   "prefer_related_applications": false
 }
