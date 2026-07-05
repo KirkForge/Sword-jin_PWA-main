@@ -1,8 +1,6 @@
 extends Node
 ## HomingSmokeDriver — test-only driver that directly defeats enemies and opens gates.
 
-const DIRECT_DAMAGE := 200
-
 var _tick := 0.0
 
 func _ready():
@@ -41,8 +39,8 @@ func _process(delta: float):
 
 	var target: Node = enemies[0]
 	player.global_position = target.global_position
-	if target.has_method("take_damage"):
-		target.take_damage(DIRECT_DAMAGE)
+	if target.has_method("_die"):
+		target._die()
 
 func _live_enemies() -> Array:
 	var result: Array = []
