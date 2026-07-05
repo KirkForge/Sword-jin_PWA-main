@@ -33,6 +33,7 @@ const KNOCKBACK_FRICTION := 400.0  # Heavier, slower friction
 var shield_charges := 0
 var is_shielded := false
 var shield_cooldown := 0.0
+const SHIELD_REGEN_DELAY := 2.0  # Seconds before a lost shield charge regenerates
 var charge_ready := false
 var charge_timer := 0.0
 
@@ -108,6 +109,7 @@ func _physics_process(delta):
 			# Charge dash
 			velocity = dir * speed * 2.5
 			shield_charges -= 1
+			shield_cooldown = SHIELD_REGEN_DELAY
 			_update_shield_visual()
 			charge_ready = false
 			charge_timer = 4.0
@@ -166,6 +168,7 @@ func take_damage(amount: int):
 	# Shield absorbs one hit
 	if shield_charges > 0:
 		shield_charges -= 1
+		shield_cooldown = SHIELD_REGEN_DELAY
 		_update_shield_visual()
 		# Flash gold for blocked
 		modulate = Color.GOLD
