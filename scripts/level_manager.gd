@@ -678,7 +678,8 @@ func _process(_delta):
 	if total_waves > 0:
 		_process_waves(_delta)
 	
-	if chapter_data.get("type", "combat") == "combat":
+	var chapter_type: String = chapter_data.get("type", "combat")
+	if chapter_type == "combat" or chapter_type == "boss":
 		var live_enemies := _count_live_enemies()
 		
 		# Wave mode: don't complete chapter until all waves done
