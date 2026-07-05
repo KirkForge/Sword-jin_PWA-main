@@ -285,7 +285,9 @@ func merchant_heal(amount: int):
 func show_damage_number(amount: int, is_heal := false):
 	var dn = damage_number_scene.instantiate() as Node2D
 	dn.global_position = global_position + Vector2(0, -24)
-	get_tree().current_scene.add_child(dn)
+	var container := get_parent() if get_parent() else get_tree().current_scene
+	if container:
+		container.add_child(dn)
 	if is_heal:
 		dn.setup_heal(amount)
 	else:
@@ -576,7 +578,9 @@ func _on_attack_hitbox_body_entered(body):
 			# Spawn golden crit damage number
 			var crit_dn = damage_number_scene.instantiate() as Node2D
 			crit_dn.global_position = body.global_position + Vector2(0, -24)
-			get_tree().current_scene.add_child(crit_dn)
+			var container := get_parent() if get_parent() else get_tree().current_scene
+			if container:
+				container.add_child(crit_dn)
 			crit_dn.setup_crit(dmg)
 			# Crit counts as combo finisher juice too
 			ScreenShake.shake(4.0, 0.2)

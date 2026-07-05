@@ -72,6 +72,9 @@ func _get_camera() -> Camera2D:
 		return cameras[0]
 	return null
 
+func _get_container() -> Node:
+	return get_tree().current_scene
+
 func _spawn_crit_number(pos: Vector2):
 	"""Spawn a large golden CRIT! damage number."""
 	var label_node := Label.new()
@@ -80,7 +83,9 @@ func _spawn_crit_number(pos: Vector2):
 	label_node.add_theme_font_size_override("font_size", 20)
 	label_node.global_position = pos + Vector2(-20, -48)
 	label_node.z_index = 100
-	get_tree().current_scene.add_child(label_node)
+	var container := _get_container()
+	if container:
+		container.add_child(label_node)
 	
 	var tween := label_node.create_tween().set_parallel()
 	tween.tween_property(label_node, "position:y", label_node.position.y - 50, 1.2)
@@ -92,13 +97,15 @@ func _spawn_crit_number(pos: Vector2):
 
 func _spawn_sparks(pos: Vector2):
 	"""Spawn burst of spark particles at crit position."""
+	var container := _get_container()
 	for i in range(8):
 		var spark := ColorRect.new()
 		spark.size = Vector2(3, 3)
 		spark.color = Color(1.0, 0.9, 0.3, 1.0)  # Gold spark
 		spark.global_position = pos
 		spark.z_index = 99
-		get_tree().current_scene.add_child(spark)
+		if container:
+			container.add_child(spark)
 		
 		var angle = randf() * TAU
 		var dist = randf_range(20, 50)
@@ -117,7 +124,9 @@ func _flash_screen():
 	flash.color = Color(1, 1, 1, 0.3)
 	flash.z_index = 50
 	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	get_tree().current_scene.add_child(flash)
+	var container := _get_container()
+	if container:
+		container.add_child(flash)
 	
 	var tween := flash.create_tween()
 	tween.tween_property(flash, "color:a", 0.0, 0.15)

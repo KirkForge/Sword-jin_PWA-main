@@ -37,6 +37,5 @@ func _process(delta):
 func _on_return():
 	visible = false
 	return_pressed.emit()
-	if get_tree().current_scene:
-		get_tree().paused = false
-		get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
+	get_tree().paused = false
+	get_tree().change_scene_to_file("res://scenes/title_screen.tscn")

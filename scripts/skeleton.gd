@@ -128,10 +128,15 @@ func take_damage(amount: int):
 	if health <= 0:
 		_die()
 
+func _get_container() -> Node:
+	return get_parent() if get_parent() else get_tree().current_scene
+
 func show_damage_number(amount: int):
 	var dn = damage_number_scene.instantiate() as Node2D
 	dn.global_position = global_position + Vector2(0, -24)
-	get_tree().current_scene.add_child(dn)
+	var container := _get_container()
+	if container:
+		container.add_child(dn)
 	dn.setup(amount)
 
 func _update_label():
@@ -154,7 +159,9 @@ func _die():
 	if randf() < 0.20:
 		var potion = potion_scene.instantiate()
 		potion.global_position = global_position
-		get_tree().current_scene.add_child(potion)
+		var container := _get_container()
+		if container:
+			container.add_child(potion)
 		print("Potion dropped!")
 	
 	# Loot drop (15% chance for trash mobs)
@@ -186,9 +193,11 @@ func _show_death_sprite(sprite_name: String):
 			death_sprite.global_position = global_position
 			death_sprite.z_index = 10
 			death_sprite.scale = Vector2(0.5, 0.5)  # 128px -> 64px game units
-			get_tree().current_scene.add_child(death_sprite)
+			var container := _get_container()
+			if container:
+				container.add_child(death_sprite)
 			# Fade out
-			var tween = get_tree().create_tween()
+			var tween = create_tween() if container else get_tree().create_tween()
 			tween.tween_property(death_sprite, "modulate:a", 0.0, 0.8)
 			tween.tween_callback(death_sprite.queue_free)
 
@@ -203,7 +212,9 @@ func _show_loot_popup(loot: Dictionary):
 	label_node.add_theme_font_size_override("font_size", 14)
 	label_node.global_position = global_position + Vector2(-40, -40)
 	label_node.z_index = 100
-	get_tree().current_scene.add_child(label_node)
+	var container := _get_container()
+	if container:
+		container.add_child(label_node)
 	
 	# Float up and fade
 	var tween := label_node.create_tween()
