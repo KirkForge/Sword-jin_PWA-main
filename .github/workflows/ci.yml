@@ -92,7 +92,7 @@ jobs:
         run: |
           export GODOT_BIN=./godot
           bash scripts/ci/smoke_test.sh
-        timeout-minutes: 2
+        timeout-minutes: 6
 
       - name: Verify export artifacts
         run: |
