@@ -1,0 +1,7 @@
+# ponytail: exists only so scip-cli's find_project_root() detects a Python root
+# here and can query the SCIP index of the scripts/ asset-generation tree (114
+# .py files). Not a build/packaging manifest — the game itself is Godot/GDScript
+# (project.godot), which has no SCIP indexer. Safe to delete if you drop SCIP.
+[project]
+name = "sword-jin-scripts"
+version = "0"

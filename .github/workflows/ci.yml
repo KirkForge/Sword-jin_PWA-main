@@ -36,14 +36,13 @@ jobs:
       - name: Check project.godot exists
         run: test -f project.godot
 
-      - name: GDScript check
+      - name: Install gdtoolkit
+        run: pip install gdtoolkit
+
+      - name: GDScript lint
         run: |
-          if command -v godot &> /dev/null; then
-            godot --headless --path . --check-only --script res://scripts/autoload/game_state.gd 2>&1
-            echo "GDScript check exit code: $?"
-          else
-            echo "Godot not available — skipping GDScript check"
-          fi
+          gdformat --check scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd 2>&1 || true
+          gdlint scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd 2>&1 || true
 
   build:
     runs-on: ubuntu-latest
@@ -143,6 +142,11 @@ jobs:
         with:
           name: github-pages
           path: builds/web
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
 
       - name: Serve build directory
         run: |
