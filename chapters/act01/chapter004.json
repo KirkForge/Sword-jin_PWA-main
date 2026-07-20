@@ -93,6 +93,6 @@
     "unlock_weapon": "captain_blade",
     "gold": 50
   },
-  "next_chapter": "",
+  "next_chapter": "act02_ch005",
   "is_unlocked": false
 }

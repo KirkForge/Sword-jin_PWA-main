@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="PackedScene" uid="uid://main_scene" path="res://scenes/main.tscn" id="1"]
-[ext_resource type="Script" path="res://scripts/headless_smoke_driver.gd" id="2"]
+[ext_resource type="Script" uid="uid://c0o7kryb7beq7" path="res://scripts/ci/headless_smoke_driver.gd" id="2"]
 
 [node name="MainWithDriver" type="Node"]
 

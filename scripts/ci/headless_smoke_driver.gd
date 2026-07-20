@@ -2,8 +2,12 @@ extends Node
 ## HeadlessSmokeDriver — test-only driver that defeats enemies and opens gates for all 30 chapters.
 
 var _tick := 0.0
-var _chapters_completed: Array = []
 var _total_chapters := 30
+# _chapters_completed is reset on every reload_current_scene() because the
+# SmokeDriver node is part of the reloaded scene. Use the GameState autoload
+# (which persists across scene reloads) as the authoritative completion count.
+var _chapters_completed: Array = []
+var _advancing := false
 
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -21,13 +25,14 @@ func _process(delta: float):
 		var chapter_id = ChapterDatabase.get_current_chapter().get("chapter_id", "unknown")
 		if not _chapters_completed.has(chapter_id):
 			_chapters_completed.append(chapter_id)
-			print("Chapter complete: %s (%d/%d)" % [chapter_id, _chapters_completed.size(), _total_chapters])
+			print("Chapter complete: %s (%d/%d)" % [chapter_id, _completed_count(), _total_chapters])
 			_print_status()
-		
-		if _chapters_completed.size() >= _total_chapters:
+
+		if _completed_count() >= _total_chapters:
 			print("All %d chapters complete" % _total_chapters)
 			get_tree().quit(0)
-		else:
+		elif not _advancing:
+			_advancing = true
 			_advance_to_next_chapter()
 		return
 
@@ -54,6 +59,13 @@ func _process(delta: float):
 	if target.has_method("_die"):
 		target._die()
 
+func _completed_count() -> int:
+	# GameState (autoload) persists across reload_current_scene(); the local
+	# _chapters_completed array does not. Use the autoload as the source of truth
+	# so the "All N chapters complete" + quit(0) path can actually fire after 30
+	# reloads, and so progress isn't reset to 0/30 on every chapter transition.
+	return GameState.completed_chapters.size()
+
 func _advance_to_next_chapter():
 	var current_data = ChapterDatabase.get_current_chapter()
 	var next_id = current_data.get("next_chapter", "")
@@ -61,15 +73,19 @@ func _advance_to_next_chapter():
 		print("No next chapter available from %s" % current_data.get("chapter_id", "unknown"))
 		get_tree().quit(1)
 		return
-	
+
 	ChapterDatabase.set_current_chapter(next_id)
+	# VictoryScreen pauses the tree on show_victory(); SceneTree.paused persists across
+	# reload_current_scene(), so the next chapter's LevelManager._process (default
+	# PROCESS_MODE_INHERIT) would never run and the run stalls. Unpause before reload.
+	get_tree().paused = false
 	ScreenFader.fade_to_black(0.5)
 	await get_tree().create_timer(0.5).timeout
 	get_tree().reload_current_scene()
 
 func _print_status():
 	var chapter_id = ChapterDatabase.get_current_chapter().get("chapter_id", "unknown")
-	print("Testing: %s (completed: %d/%d)" % [chapter_id, _chapters_completed.size(), _total_chapters])
+	print("Testing: %s (completed: %d/%d)" % [chapter_id, _completed_count(), _total_chapters])
 
 func _live_enemies() -> Array:
 	var result: Array = []

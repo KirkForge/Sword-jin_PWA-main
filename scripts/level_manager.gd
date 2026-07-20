@@ -818,6 +818,11 @@ func _on_victory_next():
 	var next = chapter_data.get("next_chapter", "")
 	if not next.is_empty():
 		ChapterDatabase.set_current_chapter(next)
+		# VictoryScreen pauses the tree on show_victory(); SceneTree.paused persists
+		# across reload_current_scene(), so without unpausing the next chapter loads
+		# frozen (LevelManager._process never runs). hide_victory() is not awaited
+		# here, so unpause explicitly before the transition.
+		get_tree().paused = false
 		ScreenFader.fade_to_black(0.5)
 		await get_tree().create_timer(0.5).timeout
 		get_tree().reload_current_scene()
@@ -827,6 +832,8 @@ func _on_victory_select():
 	# Player can press C to open chapter manager, or continue playing
 
 func _on_victory_title():
+	# VictoryScreen paused the tree; unpause before leaving the scene.
+	get_tree().paused = false
 	ScreenFader.fade_to_black(0.5)
 	await get_tree().create_timer(0.5).timeout
 	get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
