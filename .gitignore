@@ -68,13 +68,17 @@ PROMPT_PACK.md
 .ci-cleandev.yml
 
 # === Session state ===
-state.md
+# NOTE: state.md is TRACKED per AGENTS.md worker contract — do not gitignore it.
 
 # === LLM tooling (never committed) ===
 .claude/
 CLAUDE.md
-AGENTS.md
 REPORULES.md
+
+# --- Agent work files (per-session, not tracked) ---
+# NOTE: AGENTS.md and state.md are TRACKED — do not gitignore them.
+workplan.md
+lessons.md
 
 # --- Security baseline (do not remove) ---
 token.json
