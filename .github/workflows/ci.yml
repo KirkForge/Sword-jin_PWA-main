@@ -5,6 +5,7 @@ on:
     branches: [main, dev]
   pull_request:
     branches: [main]
+  workflow_dispatch:
 
 env:
   GODOT_VERSION: 4.4.1-stable
@@ -41,8 +42,8 @@ jobs:
 
       - name: GDScript lint
         run: |
-          gdformat --check scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd 2>&1 || true
-          gdlint scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd 2>&1 || true
+          gdformat --check scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd
+          gdlint scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd
 
   build:
     runs-on: ubuntu-latest
@@ -156,5 +157,5 @@ jobs:
 
       - name: Run Lighthouse CI
         run: |
-          npx @lhci/cli@0.14.x autorun --config=lighthouserc.json || echo "Lighthouse audit completed (non-fatal)"
+          npx @lhci/cli@0.14.x autorun --config=lighthouserc.json
         timeout-minutes: 5
