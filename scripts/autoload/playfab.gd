@@ -38,12 +38,22 @@ func _ready():
 	add_child(_http)
 	_http.request_completed.connect(_on_request_completed)
 
+	login_failed.connect(_on_login_failed_error_screen)
+
 	# Load saved custom ID or generate one
 	custom_id = _load_or_create_custom_id()
 
 	# Try auto-login if title ID is set
 	if TITLE_ID != "":
 		login()
+
+
+func _on_login_failed_error_screen(error: String):
+	ErrorScreen.show_error(
+		"Cloud Sync Unavailable",
+		"Cloud leaderboard sync failed: " + error + ". Your progress is saved locally.",
+		false
+	)
 
 
 # ─── Public API ──────────────────────────────────────────────────────────────
