@@ -9,6 +9,7 @@ extends Area2D
 
 const POTION_TEXTURE_PATH := "res://assets/art/generated/items/potion_health.webp"
 
+
 func _ready():
 	# Daily challenge: no_potions modifier — self-destruct
 	if GameState.is_daily_challenge_run and "no_potions" in GameState.active_daily_modifiers:
@@ -30,8 +31,13 @@ func _ready():
 	# Gentle bob animation
 	var bob_target = visual if visual.visible else sprite
 	var tween = create_tween().set_loops()
-	tween.tween_property(bob_target, "position:y", -4, 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-	tween.tween_property(bob_target, "position:y", 0, 0.5).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	tween.tween_property(bob_target, "position:y", -4, 0.5).set_trans(Tween.TRANS_SINE).set_ease(
+		Tween.EASE_IN_OUT
+	)
+	tween.tween_property(bob_target, "position:y", 0, 0.5).set_trans(Tween.TRANS_SINE).set_ease(
+		Tween.EASE_IN_OUT
+	)
+
 
 func _on_body_entered(body):
 	if body.is_in_group("player") and body.has_method("heal"):

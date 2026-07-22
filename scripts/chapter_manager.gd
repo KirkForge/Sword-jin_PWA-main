@@ -36,9 +36,10 @@ const THEME_LOCATION_MAP := {
 	"merchant": "res://assets/art/generated/locations/loc_merchant.webp",
 }
 
+
 func _ready():
 	visible = false
-	
+
 	# Chapter select background art — prefer generated concept, fallback to legacy
 	var bg_path := "res://assets/art/generated/screens/chapter_select_bg.webp"
 	if not ResourceLoader.exists(bg_path):
@@ -57,10 +58,11 @@ func _ready():
 			if margin:
 				margin.add_child(bg_art)
 				margin.move_child(bg_art, 0)
-	
+
 	_act_buttons_setup()
 	_refresh_chapters()
 	_update_progress()
+
 
 func _act_buttons_setup():
 	for i in range(1, 11):
@@ -76,17 +78,20 @@ func _act_buttons_setup():
 		else:
 			btn.disabled = true
 
+
 func show_manager():
 	visible = true
 	max_act_buttons = _get_max_unlocked_act()
 	for i in range(1, 11):
-		var btn = act_tabs.get_node("Act%d" % i)  
+		var btn = act_tabs.get_node("Act%d" % i)
 		btn.disabled = i > max_act_buttons
 	_refresh_chapters()
 	_update_progress()
 
+
 func hide_manager():
 	visible = false
+
 
 func _get_max_unlocked_act() -> int:
 	var max_act := 1
@@ -98,6 +103,7 @@ func _get_max_unlocked_act() -> int:
 				max_act = act
 	return max_act
 
+
 func _on_act_selected(act: int):
 	current_act = act
 	# Deselect others
@@ -106,25 +112,26 @@ func _on_act_selected(act: int):
 		btn.set_pressed_no_signal(i == act)
 	_refresh_chapters()
 
+
 func _refresh_chapters():
 	# Clear grid
 	for child in grid.get_children():
 		child.queue_free()
-	
+
 	var act_chapters := []
 	for id in ChapterDatabase.chapters.keys():
 		var ch = ChapterDatabase.chapters[id]
 		if ch.get("act", 1) == current_act:
 			act_chapters.append(ch)
-	
+
 	act_chapters.sort_custom(func(a, b): return a.get("chapter", 0) < b.get("chapter", 0))
-	
+
 	for ch in act_chapters:
 		var id = ch.get("chapter_id", "")
 		var title = ch.get("title", "Untitled")
 		var unlocked = ch.get("is_unlocked", false)
 		var completed = GameState.completed_chapters.has(id)
-		
+
 		var btn = Button.new()
 		btn.text = "%d. %s" % [ch.get("chapter", 0), title]
 		btn.custom_minimum_size = Vector2(160, 44)
@@ -146,6 +153,7 @@ func _refresh_chapters():
 		btn.pressed.connect(_on_chapter_selected.bind(ch))
 		grid.add_child(btn)
 
+
 func _on_chapter_selected(ch: Dictionary):
 	selected_chapter_id = ch.get("chapter_id", "")
 	var title = ch.get("title", "")
@@ -153,6 +161,7 @@ func _on_chapter_selected(ch: Dictionary):
 	var est = ch.get("playtime_estimate_minutes", 0)
 	info_label.text = "🗡 %s\n📜 %s\n⏱ %d min" % [title, obj, est]
 	start_button.disabled = false
+
 
 func _on_start_button_pressed():
 	if selected_chapter_id.is_empty():
@@ -163,14 +172,17 @@ func _on_start_button_pressed():
 	# For now, level_manager reads current_chapter on _ready
 	get_tree().change_scene_to_file("res://scenes/main.tscn")
 
+
 func _on_back_button_pressed():
 	hide_manager()
+
 
 func _update_progress():
 	var total = ChapterDatabase.chapters.size()
 	var done = GameState.completed_chapters.size()
 	progress_bar.value = (float(done) / float(total)) * 100.0 if total > 0 else 0.0
 	progress_bar.tooltip_text = "%d / %d chapters" % [done, total]
+
 
 func _on_continue_button_pressed():
 	# Load most recent unlocked chapter

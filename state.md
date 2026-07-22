@@ -3,9 +3,42 @@
 *Tracked. Updated at session close. What changed, what's pending, what's blocked.*
 
 ## Current state
-- Head: `02675d8` (fix/smoke-driver-victory-detection)
-- Tests: `GODOT_BIN=godot bash scripts/ci/smoke_test.sh` — PASS (30/30 chapters, no script errors)
+- Head: `b0f9359` (chore/ci-quality-and-docs)
+- Tests: GUT unit tests — 15 tests, 26 assertions, all passing
+- Smoke test: 30/30 chapters, no script errors
+- Lint: `gdformat --check . && gdlint .` — PASS (binding in CI)
 - Last updated: 2026-07-22
+
+---
+
+## Session 2026-07-22 — CI quality, docs, tests, PlayFab, save encryption
+
+### Completed tasks
+- **Task 0.1**: FF `main` to `2842be6`, synced `dev`, deleted `fix/smoke-driver-victory-detection` branch
+- **Task 1.1**: Consolidated two deploy workflows into single `ci.yml` (deleted `deploy.yml`, added `workflow_dispatch`)
+- **Task 1.2**: Made lint gating binding — removed `|| true`, added `gdlintrc` with tuned rule overrides, formatted all GDScript files
+- **Task 1.3**: Wrote ADR-004 (smoke driver) and ADR-005 (PlayFab persistence)
+- **Task 2.1**: Vendored GUT 9.3.0, wrote 5 test files (15 tests, 26 asserts) covering combat math, save migration, PlayFab login_failed, save encryption
+- **Task 2.2**: Wrote `docs/testing/offline-mobile-checklist.md` (manual device testing, not automatable in CI)
+- **Task 2.3**: Raised Lighthouse PWA threshold to 0.9 fatal with 3G throttling
+- **Task 3.1**: Wired `PlayFab.login_failed` to `ErrorScreen.show_error()` in `playfab.gd:_ready()`
+- **Task 3.2**: Added XOR-keystream save encryption with per-install key (`user://swordjin_save.key`), envelope versioning `{"enc": 1, "data": "..."}`, legacy plaintext migration
+- ADR-006: Documented save encryption decision
+
+### Pending
+- **Task 3.3** (.pck size reduction): 116 MB → < 80 MB target requires asset audit (32 MB BGM, 77 MB textures in import cache). Not completed this session.
+- **Task 2.2** (real-device offline test): Manual testing on Android/iOS not completed this session. Checklist exists.
+- Lighthouse PWA 0.9 threshold: needs CI verification (may fail on throttled run if PWA score < 0.9 — fix the PWA, don't lower the threshold)
+
+### Gate evidence
+```
+$ gdformat --check scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd test/*.gd
+52 files would be left unchanged
+$ gdlint scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd test/*.gd
+Success: no problems found
+$ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://test -gexit
+Scripts: 5, Tests: 15, Passing: 15, Asserts: 26 — All tests passed!
+```
 
 ---
 

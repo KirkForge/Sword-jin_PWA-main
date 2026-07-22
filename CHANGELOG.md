@@ -10,14 +10,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - CI: Smoke driver now detects chapter completion via GameState fallback when VictoryScreen is unreachable (fixes 0/30 chapters completed in headless CI)
+- PlayFab: `login_failed` signal now routes to `ErrorScreen.show_error()` so players see cloud sync failures
+- Save: Game saves are now encrypted at rest with XOR-keystream envelope (casual tampering protection, legacy saves migrate transparently)
 
 ### Added
 
-- CI: GDScript `--check-only` lint step in workflow
-- CI: HTML5 export artifact validation (wasm, pck, js existence checks)
-- CI: `patch_pwa.sh` auto-runs after build
-- CI: Lighthouse CI audit step (PWA category ≥ 80 threshold)
-- CI: `godot --import` step before export (regenerates `.godot/imported/` in fresh CI)
+- CI: GDScript lint is now binding (removed `|| true`), with `gdlintrc` config for rule tuning
+- CI: Single deploy workflow (deleted duplicate `deploy.yml`, consolidated into `ci.yml` with `workflow_dispatch`)
+- CI: GUT unit test job (15 tests, 26 assertions — combat math, save migration, PlayFab signal, save encryption)
+- CI: Lighthouse PWA threshold raised to 0.9 fatal with 3G throttling simulation
+- Test: `test/test_player_combat.gd`, `test/test_enemy_combat.gd`, `test/test_save_migration.gd`, `test/test_playfab_login_error.gd`, `test/test_save_encryption.gd`
+- Docs: ADR-004 headless smoke driver strategy, ADR-005 PlayFab persistence, ADR-006 save encryption
+- Docs: Offline mobile PWA checklist (`docs/testing/offline-mobile-checklist.md`)
+- Vendored: GUT 9.3.0 as `addons/gut/`
+
+### Changed
+
+- CI: Lint step no longer advisory — `gdformat --check` and `gdlint` now fail the build on violations
+- CI: Lighthouse audit no longer non-fatal — PWA score below 0.9 fails the job
 - Deploy: GitHub Pages workflow via `actions/deploy-pages@v4`
 - Build: PCK compression via `file_format/compress=true` (Zstandard)
 - Build: Removed 78 MB of unused BGM files (only 17 tracks kept)

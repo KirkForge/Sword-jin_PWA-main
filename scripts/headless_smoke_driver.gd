@@ -3,9 +3,11 @@ extends Node
 
 var _tick := 0.0
 
+
 func _ready():
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	await get_tree().create_timer(0.8).timeout
+
 
 func _process(delta: float):
 	_tick += delta
@@ -42,12 +44,14 @@ func _process(delta: float):
 	if target.has_method("_die"):
 		target._die()
 
+
 func _live_enemies() -> Array:
 	var result: Array = []
 	for n in get_tree().get_nodes_in_group("enemy"):
 		if not n.is_dead:
 			result.append(n)
 	return result
+
 
 func _open_gate_if_present():
 	for n in get_tree().get_nodes_in_group("gate"):
@@ -59,17 +63,20 @@ func _open_gate_if_present():
 			n.open_gate()
 			return
 
+
 func _get_player() -> Node:
 	var scene := get_tree().current_scene
 	if not scene:
 		return null
 	return scene.get_node_or_null("Main/Player")
 
+
 func _get_victory_screen() -> Node:
 	var scene := get_tree().current_scene
 	if not scene:
 		return null
 	return scene.get_node_or_null("Main/VictoryScreen")
+
 
 func _get_dialogue_manager() -> Node:
 	var scene := get_tree().current_scene

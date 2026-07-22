@@ -6,6 +6,7 @@ extends CharacterBody2D
 func _get_container() -> Node:
 	return get_parent() if get_parent() else get_tree().current_scene
 
+
 var damage_number_scene = preload("res://scenes/ui/damage_number.tscn")
 
 @export var max_health := 180
@@ -38,56 +39,60 @@ const STUN_DURATION := 0.5
 @onready var label = $Label
 @onready var health_bar = $HealthBar
 
+
 func _ready():
 	health = max_health
 	attack_hitbox.set_deferred("disabled", true)
 	_update_label()
 	sprite.play("idle")
-	
+
 	await get_tree().process_frame
 	player = get_tree().get_first_node_in_group("player")
+
 
 func _physics_process(delta):
 	if is_dead:
 		return
-	
+
 	# Knockback (very heavy — reduced effect)
 	if knockback_velocity.length() > 1.0:
 		velocity = knockback_velocity
-		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, KNOCKBACK_FRICTION * delta)
+		knockback_velocity = knockback_velocity.move_toward(
+			Vector2.ZERO, KNOCKBACK_FRICTION * delta
+		)
 		move_and_slide()
 		return
-	
+
 	# Stun recovery
 	if stun_timer > 0:
 		stun_timer -= delta
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
-	
+
 	# Timers
 	if attack_timer > 0:
 		attack_timer -= delta
 		if attack_timer <= 0:
 			_end_attack()
-	
+
 	if cooldown_timer > 0:
 		cooldown_timer -= delta
-	
+
 	if not player or player.is_dead:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
-	
+
 	var to_player = player.global_position - global_position
 	var dist = to_player.length()
-	
+
 	# Face player slowly
 	if to_player.x > 0:
 		sprite.scale.x = abs(sprite.scale.x)
 	elif to_player.x < 0:
 		sprite.scale.x = -abs(sprite.scale.x)
-	
+
 	# Chase — slow but steady
 	if dist <= detection_range and dist > attack_range:
 		velocity = to_player.normalized() * speed
@@ -100,8 +105,9 @@ func _physics_process(delta):
 		velocity = Vector2.ZERO
 		if not is_attacking:
 			sprite.play("idle")
-	
+
 	move_and_slide()
+
 
 func _start_attack():
 	is_attacking = true
@@ -110,19 +116,21 @@ func _start_attack():
 	attack_hitbox.disabled = false
 	sprite.play("attack")
 	AudioManager.play_random_pitch("captain_charge", 0.5, 0.7)
-	
+
 	# Ground pound — heavy screen shake for telegraph
 	ScreenShake.shake(4.0, 0.5)
-	
+
 	if player:
 		velocity = Vector2.ZERO
 	print("GOLEM SMASH!")
+
 
 func _end_attack():
 	is_attacking = false
 	attack_hitbox.disabled = true
 	velocity = Vector2.ZERO
 	sprite.play("idle")
+
 
 func show_damage_number(amount: int, is_heal := false):
 	var dn = damage_number_scene.instantiate() as Node2D
@@ -135,32 +143,35 @@ func show_damage_number(amount: int, is_heal := false):
 	else:
 		dn.setup(amount)
 
+
 func take_damage(amount: int):
 	if is_dead:
 		return
-	
+
 	# Armor reduces damage
 	var actual_damage = max(1, amount - armor)
 	health -= actual_damage
 	stun_timer = STUN_DURATION  # Brief stun on hit
-	
+
 	_update_label()
 	show_damage_number(actual_damage)
 	AudioManager.play_random_pitch("shield_block", 0.4, 0.6)
-	
+
 	modulate = Color(0.7, 0.5, 0.3)
 	await get_tree().create_timer(0.15).timeout
 	if not is_dead:
 		modulate = Color.WHITE
-	
+
 	if health <= 0:
 		_die()
+
 
 func _update_label():
 	if label:
 		label.text = "GOLEM\nHP:%d/%d\n🛡%d" % [health, max_health, armor]
 	if health_bar:
 		health_bar.update_health(health, max_health)
+
 
 func _die():
 	is_dead = true
@@ -172,12 +183,12 @@ func _die():
 	velocity = Vector2.ZERO
 	$CollisionShape2D.set_deferred("disabled", true)
 	attack_hitbox.set_deferred("disabled", true)
-	
+
 	# Boss loot drop (guaranteed, better rarity)
 	var loot = GameState.roll_loot_drop("golem", true)
 	if not loot.is_empty():
 		_show_loot_popup(loot)
-	
+
 	# Golem crumbles slowly
 	var tween = create_tween()
 	tween.tween_property(self, "scale", Vector2(0.5, 0.3), 1.5)
@@ -185,19 +196,23 @@ func _die():
 	await tween.finished
 	queue_free()
 
+
 func _on_attack_hitbox_body_entered(body):
 	if body.has_method("take_damage") and body != self:
 		body.take_damage(attack_damage)
 		HitStop.trigger_heavy()
 		ScreenShake.shake(3.0, 0.3)
 
+
 func _on_detection_area_body_entered(body):
 	if body.is_in_group("player"):
 		player = body
 
+
 func _on_detection_area_body_exited(body):
 	if body.is_in_group("player") and body == player:
 		player = null
+
 
 func apply_knockback(direction: Vector2, force: float):
 	# Golem is massive — reduce knockback by 70%
@@ -206,6 +221,7 @@ func apply_knockback(direction: Vector2, force: float):
 	await get_tree().create_timer(0.08).timeout
 	if not is_dead:
 		modulate = Color.WHITE
+
 
 func apply_shaman_buff(damage_mult: float, speed_mult: float, duration: float):
 	var orig_damage := attack_damage
@@ -217,13 +233,20 @@ func apply_shaman_buff(damage_mult: float, speed_mult: float, duration: float):
 		attack_damage = orig_damage
 		speed = orig_speed
 
+
 func _show_loot_popup(loot: Dictionary):
 	"""Show a brief loot notification above the enemy."""
 	var label_node := Label.new()
 	var rarity: String = loot.get("rarity", "common")
 	var weapon_id: String = loot.get("weapon_id", "?")
 	var color_hex: String = GameState.RARITY.get(rarity, {}).get("color", "#FFFFFF")
-	label_node.text = "⚔ %s [%s]" % [weapon_id.replace("_", " ").capitalize(), GameState.RARITY.get(rarity, {}).get("label", rarity)]
+	label_node.text = (
+		"⚔ %s [%s]"
+		% [
+			weapon_id.replace("_", " ").capitalize(),
+			GameState.RARITY.get(rarity, {}).get("label", rarity)
+		]
+	)
 	label_node.add_theme_color_override("font_color", Color.from_string(color_hex, Color.WHITE))
 	label_node.add_theme_font_size_override("font_size", 16)
 	label_node.global_position = global_position + Vector2(-40, -40)

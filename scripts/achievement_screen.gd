@@ -18,47 +18,49 @@ var badge_buttons: Dictionary = {}
 # Map achievement ids to generated MiniMax badge art when available.
 # Falls back to the legacy badge_path defined in GameState.ACHIEVEMENTS.
 const GENERATED_BADGE_MAP := {
-	"first_blood":     "res://assets/art/generated/achievements/ach_first_blood.webp",
-	"combo_master":    "res://assets/art/generated/achievements/ach_champion.webp",
-	"body_count_50":   "res://assets/art/generated/achievements/ach_champion.webp",
-	"body_count_200":  "res://assets/art/generated/achievements/ach_champion.webp",
-	"flawless_chapter":"res://assets/art/generated/achievements/ach_untouchable.webp",
-	"first_step":      "res://assets/art/generated/achievements/ach_first_step.webp",
-	"half_way":        "res://assets/art/generated/achievements/ach_first_step.webp",
-	"act2_reacher":    "res://assets/art/generated/achievements/ach_first_step.webp",
-	"act3_reacher":    "res://assets/art/generated/achievements/ach_first_step.webp",
-	"act3_complete":   "res://assets/art/generated/achievements/ach_ruins_conqueror.webp",
-	"act4_reacher":    "res://assets/art/generated/achievements/ach_ruins_conqueror.webp",
-	"act4_complete":   "res://assets/art/generated/achievements/ach_ruins_conqueror.webp",
-	"act5_complete":   "res://assets/art/generated/achievements/ach_ruins_conqueror.webp",
-	"act6_reacher":    "res://assets/art/generated/achievements/ach_true_ending.webp",
-	"act6_complete":   "res://assets/art/generated/achievements/ach_true_ending.webp",
-	"armory_3":        "res://assets/art/generated/achievements/ach_treasure_hunter.webp",
-	"armory_all":      "res://assets/art/generated/achievements/ach_treasure_hunter.webp",
-	"bestiary_half":   "res://assets/art/generated/achievements/ach_completionist.webp",
-	"bestiary_all":    "res://assets/art/generated/achievements/ach_completionist.webp",
-	"legendary_find":  "res://assets/art/generated/achievements/ach_treasure_hunter.webp",
-	"speed_demon":     "res://assets/art/generated/achievements/ach_champion.webp",
-	"perfectionist":   "res://assets/art/generated/achievements/ach_champion.webp",
-	"crit_50":         "res://assets/art/generated/achievements/ach_boss_slayer.webp",
-	"enraged_kill":    "res://assets/art/generated/achievements/ach_boss_slayer.webp",
-	"summon_slayer":   "res://assets/art/generated/achievements/ach_boss_slayer.webp",
-	"daily_challenger":"res://assets/art/generated/achievements/ach_daily_warrior.webp",
-	"daily_veteran":   "res://assets/art/generated/achievements/ach_daily_warrior.webp",
-	"streak_3":        "res://assets/art/generated/achievements/ach_daily_warrior.webp",
-	"streak_7":        "res://assets/art/generated/achievements/ach_daily_warrior.webp",
-	"ghost_hunter":    "res://assets/art/generated/achievements/ach_shadow_walker.webp",
-	"speed_demon_5":   "res://assets/art/generated/achievements/ach_shadow_walker.webp",
-	"veteran":         "res://assets/art/generated/achievements/ach_veteran.webp",
-	"master_of_arms":  "res://assets/art/generated/achievements/ach_master_of_arms.webp",
-	"lorekeeper":      "res://assets/art/generated/achievements/ach_lorekeeper.webp",
-	"philanthropist":  "res://assets/art/generated/achievements/ach_philanthropist.webp",
+	"first_blood": "res://assets/art/generated/achievements/ach_first_blood.webp",
+	"combo_master": "res://assets/art/generated/achievements/ach_champion.webp",
+	"body_count_50": "res://assets/art/generated/achievements/ach_champion.webp",
+	"body_count_200": "res://assets/art/generated/achievements/ach_champion.webp",
+	"flawless_chapter": "res://assets/art/generated/achievements/ach_untouchable.webp",
+	"first_step": "res://assets/art/generated/achievements/ach_first_step.webp",
+	"half_way": "res://assets/art/generated/achievements/ach_first_step.webp",
+	"act2_reacher": "res://assets/art/generated/achievements/ach_first_step.webp",
+	"act3_reacher": "res://assets/art/generated/achievements/ach_first_step.webp",
+	"act3_complete": "res://assets/art/generated/achievements/ach_ruins_conqueror.webp",
+	"act4_reacher": "res://assets/art/generated/achievements/ach_ruins_conqueror.webp",
+	"act4_complete": "res://assets/art/generated/achievements/ach_ruins_conqueror.webp",
+	"act5_complete": "res://assets/art/generated/achievements/ach_ruins_conqueror.webp",
+	"act6_reacher": "res://assets/art/generated/achievements/ach_true_ending.webp",
+	"act6_complete": "res://assets/art/generated/achievements/ach_true_ending.webp",
+	"armory_3": "res://assets/art/generated/achievements/ach_treasure_hunter.webp",
+	"armory_all": "res://assets/art/generated/achievements/ach_treasure_hunter.webp",
+	"bestiary_half": "res://assets/art/generated/achievements/ach_completionist.webp",
+	"bestiary_all": "res://assets/art/generated/achievements/ach_completionist.webp",
+	"legendary_find": "res://assets/art/generated/achievements/ach_treasure_hunter.webp",
+	"speed_demon": "res://assets/art/generated/achievements/ach_champion.webp",
+	"perfectionist": "res://assets/art/generated/achievements/ach_champion.webp",
+	"crit_50": "res://assets/art/generated/achievements/ach_boss_slayer.webp",
+	"enraged_kill": "res://assets/art/generated/achievements/ach_boss_slayer.webp",
+	"summon_slayer": "res://assets/art/generated/achievements/ach_boss_slayer.webp",
+	"daily_challenger": "res://assets/art/generated/achievements/ach_daily_warrior.webp",
+	"daily_veteran": "res://assets/art/generated/achievements/ach_daily_warrior.webp",
+	"streak_3": "res://assets/art/generated/achievements/ach_daily_warrior.webp",
+	"streak_7": "res://assets/art/generated/achievements/ach_daily_warrior.webp",
+	"ghost_hunter": "res://assets/art/generated/achievements/ach_shadow_walker.webp",
+	"speed_demon_5": "res://assets/art/generated/achievements/ach_shadow_walker.webp",
+	"veteran": "res://assets/art/generated/achievements/ach_veteran.webp",
+	"master_of_arms": "res://assets/art/generated/achievements/ach_master_of_arms.webp",
+	"lorekeeper": "res://assets/art/generated/achievements/ach_lorekeeper.webp",
+	"philanthropist": "res://assets/art/generated/achievements/ach_philanthropist.webp",
 }
+
 
 func _ready():
 	visible = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	close_btn.pressed.connect(_on_close)
+
 
 func show_achievements():
 	get_tree().paused = true
@@ -68,25 +70,29 @@ func show_achievements():
 	_show_category("Combat")
 	_update_progress()
 
+
 func hide_achievements():
 	visible = false
 	get_tree().paused = false
 	closed.emit()
 
+
 func _on_close():
 	hide_achievements()
+
 
 func _input(event):
 	if visible and event.is_action_pressed("ui_cancel"):
 		hide_achievements()
 
+
 func _build_category_tabs():
 	for child in category_tabs.get_children():
 		child.queue_free()
-	
+
 	var categories := ["Combat", "Exploration", "Collection", "Mastery"]
 	var icons := {"Combat": "🗡", "Exploration": "🗺", "Collection": "⚔", "Mastery": "💎"}
-	
+
 	for cat in categories:
 		var btn := Button.new()
 		btn.text = "  %s %s  " % [icons.get(cat, ""), cat]
@@ -95,60 +101,64 @@ func _build_category_tabs():
 		btn.pressed.connect(_show_category.bind(cat))
 		category_tabs.add_child(btn)
 
+
 func _show_category(category: String):
 	current_category = category
 	_populate_badge_list(category)
 	_show_empty_detail()
 
+
 func _populate_badge_list(category: String):
 	for child in badge_list.get_children():
 		child.queue_free()
 	badge_buttons.clear()
-	
+
 	var categories_data := GameState.get_achievements_by_category()
 	var badges: Array = categories_data.get(category, [])
-	
+
 	for badge in badges:
 		var btn := Button.new()
 		var icon: String = badge.get("icon", "?")
 		var name: String = badge.get("name", "???")
 		var unlocked: bool = badge.get("unlocked", false)
-		
+
 		if unlocked:
 			btn.text = "  %s %s  " % [icon, name]
 		else:
 			btn.text = "  🔒 ???  "
-		
+
 		btn.custom_minimum_size = Vector2(160, 36)
 		btn.alignment = HorizontalAlignment.HORIZONTAL_ALIGNMENT_LEFT
-		
+
 		if unlocked:
 			btn.modulate = Color(1.0, 1.0, 1.0)
 		else:
 			btn.modulate = Color(0.5, 0.5, 0.5)
-		
+
 		var badge_id: String = badge.get("id", "")
 		btn.pressed.connect(_on_badge_selected.bind(badge_id))
 		badge_list.add_child(btn)
 		badge_buttons[badge_id] = btn
+
 
 func _on_badge_selected(badge_id: String):
 	var categories_data := GameState.get_achievements_by_category()
 	var all_badges: Array = []
 	for cat in categories_data.values():
 		all_badges.append_array(cat)
-	
+
 	var badge_data: Dictionary = {}
 	for b in all_badges:
 		if b.get("id", "") == badge_id:
 			badge_data = b
 			break
-	
+
 	if badge_data.is_empty():
 		_show_empty_detail()
 		return
-	
+
 	_show_badge_detail(badge_data)
+
 
 func _show_badge_detail(badge: Dictionary):
 	for child in detail_panel.get_children():
@@ -178,7 +188,7 @@ func _show_badge_detail(badge: Dictionary):
 			if not unlocked:
 				badge_rect.modulate = Color(0.3, 0.3, 0.3, 0.6)
 			detail_panel.add_child(badge_rect)
-	
+
 	# Icon + Name
 	var title := Label.new()
 	if unlocked:
@@ -189,19 +199,19 @@ func _show_badge_detail(badge: Dictionary):
 		title.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
 	title.add_theme_font_size_override("font_size", 16)
 	detail_panel.add_child(title)
-	
+
 	# Category tag
 	var cat_label := Label.new()
 	cat_label.text = "[%s]" % category
 	cat_label.add_theme_font_size_override("font_size", 11)
 	cat_label.add_theme_color_override("font_color", Color(0.6, 0.6, 0.8))
 	detail_panel.add_child(cat_label)
-	
+
 	# Spacer
 	var spacer := Control.new()
 	spacer.custom_minimum_size = Vector2(0, 12)
 	detail_panel.add_child(spacer)
-	
+
 	# Description
 	var desc_label := Label.new()
 	desc_label.text = desc
@@ -212,7 +222,7 @@ func _show_badge_detail(badge: Dictionary):
 	else:
 		desc_label.add_theme_color_override("font_color", Color(0.4, 0.4, 0.4))
 	detail_panel.add_child(desc_label)
-	
+
 	# Unlock time
 	if unlocked:
 		var time_label := Label.new()
@@ -226,10 +236,11 @@ func _show_badge_detail(badge: Dictionary):
 		time_label.add_theme_color_override("font_color", Color(0.4, 0.8, 0.4))
 		detail_panel.add_child(time_label)
 
+
 func _show_empty_detail():
 	for child in detail_panel.get_children():
 		child.queue_free()
-	
+
 	var hint := Label.new()
 	hint.text = "Select a badge to view details"
 	hint.add_theme_font_size_override("font_size", 12)
@@ -237,9 +248,10 @@ func _show_empty_detail():
 	hint.horizontal_alignment = HorizontalAlignment.HORIZONTAL_ALIGNMENT_CENTER
 	detail_panel.add_child(hint)
 
+
 func _update_progress():
 	var progress := GameState.get_achievement_progress()
-	progress_label.text = "🏆 %d / %d Badges (%.0f%%)" % [
-		progress.unlocked, progress.total, progress.percentage
-	]
+	progress_label.text = (
+		"🏆 %d / %d Badges (%.0f%%)" % [progress.unlocked, progress.total, progress.percentage]
+	)
 	progress_label.add_theme_color_override("font_color", Color(1.0, 0.843, 0.0))

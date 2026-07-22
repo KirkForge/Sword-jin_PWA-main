@@ -18,10 +18,11 @@ var ghost_enabled := true
 var selected_chapter := ""
 var showing_online := false
 
+
 func _ready():
 	visible = false
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	
+
 	# Leaderboard background art
 	var bg_path = "res://assets/art/screens/leaderboard_bg.webp"
 	if ResourceLoader.exists(bg_path):
@@ -36,18 +37,19 @@ func _ready():
 			bg_art.z_index = -1
 			panel.add_child(bg_art)
 			panel.move_child(bg_art, 0)
-	
+
 	ghost_toggle.pressed.connect(_on_ghost_toggle)
 	run_ghost_btn.pressed.connect(_on_run_ghost)
 	back_btn.pressed.connect(_on_back)
-	
+
 	if online_btn:
 		online_btn.pressed.connect(_on_online_toggle)
-	
+
 	# Connect PlayFab signals
 	if PlayFab.is_configured():
 		PlayFab.leaderboard_received.connect(_on_leaderboard_received)
 		PlayFab.leaderboard_failed.connect(_on_leaderboard_failed)
+
 
 func show_leaderboard():
 	"""Populate and show the leaderboard screen."""
@@ -63,34 +65,35 @@ func show_leaderboard():
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tween.tween_property(panel, "modulate", Color.WHITE, 0.3)
 
+
 func _populate_chapters():
 	"""Populate the chapter list with best times and ghost status."""
 	for child in chapter_list.get_children():
 		child.queue_free()
-	
+
 	var chapters = ChapterDatabase.chapters
 	var sorted_ids = chapters.keys()
 	sorted_ids.sort()
-	
+
 	if showing_online and not PlayFab.is_logged_in:
 		_show_online_not_logged_in()
 		return
-	
+
 	for chapter_id in sorted_ids:
 		var ch = chapters[chapter_id]
 		if not ch.get("is_unlocked", false):
 			continue
-		
+
 		var hbox = HBoxContainer.new()
 		hbox.add_theme_constant_override("separation", 8)
-		
+
 		# Chapter name
 		var name_label = Label.new()
 		name_label.text = ch.get("title", chapter_id)
 		name_label.custom_minimum_size.x = 200
 		name_label.add_theme_font_size_override("font_size", 14)
 		hbox.add_child(name_label)
-		
+
 		if showing_online:
 			# Online leaderboard entry
 			var rank_label = Label.new()
@@ -98,7 +101,7 @@ func _populate_chapters():
 			rank_label.custom_minimum_size.x = 40
 			rank_label.add_theme_font_size_override("font_size", 14)
 			hbox.add_child(rank_label)
-			
+
 			var online_label = Label.new()
 			online_label.text = "Loading..."
 			online_label.custom_minimum_size.x = 120
@@ -117,7 +120,7 @@ func _populate_chapters():
 			time_label.custom_minimum_size.x = 80
 			time_label.add_theme_font_size_override("font_size", 14)
 			hbox.add_child(time_label)
-			
+
 			# Stars
 			var stars = GameState.get_stars(chapter_id)
 			var stars_label = Label.new()
@@ -128,7 +131,7 @@ func _populate_chapters():
 			stars_label.custom_minimum_size.x = 60
 			stars_label.add_theme_font_size_override("font_size", 14)
 			hbox.add_child(stars_label)
-			
+
 			# Ghost indicator
 			var ghost_label = Label.new()
 			if GhostRecorder.has_ghost(chapter_id):
@@ -138,7 +141,7 @@ func _populate_chapters():
 			ghost_label.custom_minimum_size.x = 30
 			ghost_label.add_theme_font_size_override("font_size", 14)
 			hbox.add_child(ghost_label)
-		
+
 		# Select button
 		var select_btn = Button.new()
 		select_btn.text = "▶"
@@ -146,12 +149,13 @@ func _populate_chapters():
 		select_btn.add_theme_font_size_override("font_size", 12)
 		select_btn.pressed.connect(_on_chapter_select.bind(chapter_id))
 		hbox.add_child(select_btn)
-		
+
 		chapter_list.add_child(hbox)
-	
+
 	# If online, fetch leaderboards for all unlocked chapters
 	if showing_online and PlayFab.is_logged_in:
 		_fetch_online_leaderboards()
+
 
 func _show_online_not_logged_in():
 	"""Show a message when PlayFab is not configured/logged in."""
@@ -164,6 +168,7 @@ func _show_online_not_logged_in():
 	label.custom_minimum_size.y = 100
 	chapter_list.add_child(label)
 
+
 func _fetch_online_leaderboards():
 	"""Fetch online leaderboards for all unlocked chapters."""
 	var chapters = ChapterDatabase.chapters
@@ -171,17 +176,18 @@ func _fetch_online_leaderboards():
 		if chapters[chapter_id].get("is_unlocked", false):
 			PlayFab.get_leaderboard_around_player(chapter_id, 5)
 
+
 func _on_leaderboard_received(chapter_id: String, entries: Array):
 	"""Update the chapter list entry with online leaderboard data."""
 	if not showing_online:
 		return
-	
+
 	# Find the chapter entry in the list and update it
 	var idx := 0
 	var chapters = ChapterDatabase.chapters
 	var sorted_ids = chapters.keys()
 	sorted_ids.sort()
-	
+
 	for cid in sorted_ids:
 		if not chapters[cid].get("is_unlocked", false):
 			continue
@@ -192,19 +198,21 @@ func _on_leaderboard_received(chapter_id: String, entries: Array):
 				if hbox.get_child_count() >= 3:
 					var rank_label = hbox.get_child(1)
 					var online_label = hbox.get_child(2)
-					
+
 					if entries.size() > 0:
 						var my_entry := {}
 						for e in entries:
 							if e.get("is_self", false):
 								my_entry = e
 								break
-						
+
 						if not my_entry.is_empty():
 							rank_label.text = "#%d" % my_entry.rank
 							rank_label.add_theme_color_override("font_color", Color(1.0, 0.84, 0.0))
 							online_label.text = "%.1fs" % my_entry.time
-							online_label.add_theme_color_override("font_color", Color(0.3, 1.0, 0.3))
+							online_label.add_theme_color_override(
+								"font_color", Color(0.3, 1.0, 0.3)
+							)
 						else:
 							rank_label.text = "—"
 							online_label.text = "No score"
@@ -214,11 +222,13 @@ func _on_leaderboard_received(chapter_id: String, entries: Array):
 			break
 		idx += 1
 
+
 func _on_leaderboard_failed(chapter_id: String, error: String):
 	"""Handle leaderboard fetch failure."""
 	if not showing_online:
 		return
 	print("[Leaderboard] Failed to fetch online data for %s: %s" % [chapter_id, error])
+
 
 func _on_chapter_select(chapter_id: String):
 	selected_chapter = chapter_id
@@ -248,6 +258,7 @@ func _on_chapter_select(chapter_id: String):
 			break
 		idx += 1
 
+
 func _update_ghost_button():
 	if selected_chapter != "" and GhostRecorder.has_ghost(selected_chapter):
 		run_ghost_btn.disabled = false
@@ -255,6 +266,7 @@ func _update_ghost_button():
 	else:
 		run_ghost_btn.disabled = true
 		run_ghost_btn.text = "No Ghost"
+
 
 func _update_online_button():
 	if online_btn:
@@ -269,10 +281,14 @@ func _update_online_button():
 				online_btn.text = "🌐 Setup"
 				online_btn.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
 
+
 func _on_ghost_toggle():
 	ghost_enabled = not ghost_enabled
 	ghost_toggle.text = "👻 Ghosts: " + ("ON" if ghost_enabled else "OFF")
-	ghost_toggle.add_theme_color_override("font_color", Color(0.3, 1.0, 0.3) if ghost_enabled else Color(1.0, 0.3, 0.3))
+	ghost_toggle.add_theme_color_override(
+		"font_color", Color(0.3, 1.0, 0.3) if ghost_enabled else Color(1.0, 0.3, 0.3)
+	)
+
 
 func _on_online_toggle():
 	showing_online = not showing_online
@@ -280,20 +296,24 @@ func _on_online_toggle():
 	_populate_chapters()
 	_update_online_button()
 
+
 func _on_run_ghost():
 	if selected_chapter != "":
 		hide_leaderboard()
 		ghost_run_requested.emit(selected_chapter)
 
+
 func _on_back():
 	hide_leaderboard()
 	back_pressed.emit()
+
 
 func hide_leaderboard():
 	var tween = create_tween()
 	tween.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
 	tween.tween_property(panel, "modulate", Color.TRANSPARENT, 0.2)
 	tween.tween_callback(_on_hide_anim_done)
+
 
 func _on_hide_anim_done():
 	visible = false

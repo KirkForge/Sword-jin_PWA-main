@@ -14,6 +14,7 @@ extends Control
 @onready var playfab_status = $VBoxContainer/PlayFabStatus
 @onready var close_btn = $CloseButton
 
+
 func _ready():
 	# Settings background art — prefer generated concept, fallback to legacy
 	var bg_path := "res://assets/art/generated/screens/settings_bg.webp"
@@ -31,10 +32,10 @@ func _ready():
 			bg_art.z_index = -1
 			add_child(bg_art)
 			move_child(bg_art, 0)
-	
+
 	_load_from_settings()
 	close_btn.pressed.connect(_on_close)
-	
+
 	master_slider.value_changed.connect(_on_master_changed)
 	sfx_slider.value_changed.connect(_on_sfx_changed)
 	bgm_slider.value_changed.connect(_on_bgm_changed)
@@ -43,11 +44,11 @@ func _ready():
 	dmg_check.toggled.connect(_on_dmg_toggled)
 	autoaim_check.toggled.connect(_on_autoaim_toggled)
 	text_speed_slider.value_changed.connect(_on_text_speed_changed)
-	
+
 	if playfab_input:
 		playfab_input.text_submitted.connect(_on_playfab_submitted)
 		playfab_input.text_changed.connect(_on_playfab_changed)
-	
+
 	# Connect PlayFab signals
 	if PlayFab.login_succeeded.is_connected(_on_playfab_login_ok):
 		pass
@@ -57,8 +58,9 @@ func _ready():
 		pass
 	else:
 		PlayFab.login_failed.connect(_on_playfab_login_fail)
-	
+
 	_update_playfab_status()
+
 
 func _load_from_settings():
 	var s = GameState.settings
@@ -70,51 +72,62 @@ func _load_from_settings():
 	dmg_check.button_pressed = s.show_damage_numbers
 	autoaim_check.button_pressed = s.auto_aim
 	text_speed_slider.value = s.text_speed
-	
+
 	# Load PlayFab title ID
 	if playfab_input:
 		if PlayFab.TITLE_ID != "":
 			playfab_input.text = PlayFab.TITLE_ID
 
+
 func _save_and_apply():
 	GameState.save_game()
 	GameState.apply_settings()
+
 
 func _on_master_changed(value: float):
 	GameState.settings["master_volume"] = value
 	_save_and_apply()
 
+
 func _on_sfx_changed(value: float):
 	GameState.settings["sfx_volume"] = value
 	_save_and_apply()
+
 
 func _on_bgm_changed(value: float):
 	GameState.settings["bgm_volume"] = value
 	_save_and_apply()
 
+
 func _on_shake_toggled(on: bool):
 	GameState.settings["screen_shake"] = on
 	_save_and_apply()
+
 
 func _on_hitstop_toggled(on: bool):
 	GameState.settings["hit_stop"] = on
 	_save_and_apply()
 
+
 func _on_dmg_toggled(on: bool):
 	GameState.settings["show_damage_numbers"] = on
 	_save_and_apply()
+
 
 func _on_autoaim_toggled(on: bool):
 	GameState.settings["auto_aim"] = on
 	_save_and_apply()
 
+
 func _on_text_speed_changed(value: float):
 	GameState.settings["text_speed"] = value
 	_save_and_apply()
 
+
 func _on_playfab_changed(text: String):
 	"""Live preview — no action until submitted."""
 	pass
+
 
 func _on_playfab_submitted(text: String):
 	"""Set PlayFab title ID when user presses Enter."""
@@ -126,6 +139,7 @@ func _on_playfab_submitted(text: String):
 	else:
 		playfab_status.text = "ID too short (min 3 chars)"
 		playfab_status.add_theme_color_override("font_color", Color.RED)
+
 
 func _update_playfab_status():
 	if playfab_status:
@@ -139,11 +153,14 @@ func _update_playfab_status():
 			playfab_status.text = "Not connected — enter Title ID above"
 			playfab_status.add_theme_color_override("font_color", Color(0.5, 0.5, 0.5))
 
+
 func _on_playfab_login_ok(_ticket: String, _id: String):
 	_update_playfab_status()
 
+
 func _on_playfab_login_fail(_error: String):
 	_update_playfab_status()
+
 
 func _on_close():
 	queue_free()

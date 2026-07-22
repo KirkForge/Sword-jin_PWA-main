@@ -12,10 +12,12 @@ signal return_pressed
 var _auto_hide_timer: float = 0.0
 const AUTO_HIDE_SECONDS := 15.0
 
+
 func _ready():
 	visible = false
 	process_mode = PROCESS_MODE_ALWAYS
 	return_btn.pressed.connect(_on_return)
+
 
 func show_error(title: String, message: String, show_return: bool = true):
 	title_label.text = title
@@ -27,12 +29,14 @@ func show_error(title: String, message: String, show_return: bool = true):
 	tween.tween_property(overlay, "modulate", Color(0, 0, 0, 0.75), 0.3)
 	_auto_hide_timer = AUTO_HIDE_SECONDS
 
+
 func _process(delta):
 	if not visible:
 		return
 	_auto_hide_timer -= delta
 	if _auto_hide_timer <= 0:
 		visible = false
+
 
 func _on_return():
 	visible = false
