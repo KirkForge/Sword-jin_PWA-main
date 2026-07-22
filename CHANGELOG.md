@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- CI: Smoke driver now detects chapter completion via GameState fallback when VictoryScreen is unreachable (fixes 0/30 chapters completed in headless CI)
+
 ### Added
 
 - CI: GDScript `--check-only` lint step in workflow
