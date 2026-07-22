@@ -60,6 +60,7 @@ var is_playing := false
 var typing_speed := 0.03  # seconds per character
 var typing_tween: Tween
 
+
 func _ready():
 	hide_dialogue()
 	# Create portrait TextureRect (wired into panel)
@@ -76,13 +77,14 @@ func _ready():
 	else:
 		panel.add_child(portrait_rect)
 
+
 func show_dialogue(speaker: String, text: String):
 	is_playing = true
 	panel.show()
 	advance_hint.hide()
 	speaker_label.text = speaker
 	text_label.text = ""  # Typewriter effect starts empty
-	
+
 	# Load speaker portrait
 	var portrait_path = SPEAKER_PORTRAITS.get(speaker, "")
 	if portrait_path != "" and ResourceLoader.exists(portrait_path):
@@ -90,7 +92,7 @@ func show_dialogue(speaker: String, text: String):
 		portrait_rect.visible = true
 	else:
 		portrait_rect.visible = false
-	
+
 	# Typewriter effect
 	var chars = text.length()
 	typing_tween = create_tween()
@@ -99,12 +101,17 @@ func show_dialogue(speaker: String, text: String):
 		typing_tween.tween_callback(_append_char.bind(text[i]))
 	typing_tween.finished.connect(_on_typing_done)
 
+
 func _append_char(c: String):
 	text_label.text += c
 
+
 func _on_typing_done():
 	advance_hint.show()
-	advance_hint.text = "[TAP TO CONTINUE]" if DisplayServer.is_touchscreen_available() else "[PRESS SPACE / CLICK]"
+	advance_hint.text = (
+		"[TAP TO CONTINUE]" if DisplayServer.is_touchscreen_available() else "[PRESS SPACE / CLICK]"
+	)
+
 
 func hide_dialogue():
 	panel.hide()
@@ -115,9 +122,11 @@ func hide_dialogue():
 	if portrait_rect:
 		portrait_rect.visible = false
 
+
 func load_dialogue(chapter_dialogue: Array):
 	current_queue = chapter_dialogue.duplicate(true)
 	current_index = 0
+
 
 func play_dialogue_for_trigger(trigger: String):
 	var filtered := []
@@ -130,6 +139,7 @@ func play_dialogue_for_trigger(trigger: String):
 	current_index = 0
 	_show_current()
 
+
 func _show_current():
 	if current_index < current_queue.size():
 		var entry = current_queue[current_index]
@@ -138,6 +148,7 @@ func _show_current():
 		show_dialogue(speaker, text)
 	else:
 		finish_dialogue()
+
 
 func advance():
 	if typing_tween and typing_tween.is_running():
@@ -149,14 +160,16 @@ func advance():
 		current_index += 1
 		_show_current()
 
+
 func finish_dialogue():
 	hide_dialogue()
 	dialogue_ended.emit()
 
+
 func _input(event):
 	if not is_playing:
 		return
-	
+
 	# Touch tap or mouse click or space or attack button
 	var should_advance = false
 	if event is InputEventScreenTouch and event.pressed:
@@ -167,9 +180,10 @@ func _input(event):
 		should_advance = true
 	elif event is InputEventAction and event.pressed and event.action == "attack":
 		should_advance = true
-	
+
 	if should_advance:
 		advance()
+
 
 # Legacy: trigger a mid-combat line
 func trigger_mid_combat(dialogue_entry: Dictionary):

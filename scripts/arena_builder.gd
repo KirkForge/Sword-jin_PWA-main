@@ -6,8 +6,8 @@ extends Node2D
 ## Tile types: 0=void, 1=ground, 2=wall, 3=wall_top, 4=decoration, 5=path, 6=hazard
 
 const TILE_SIZE := 16
-const ARENA_W := 40   # 40 tiles × 16px = 640px
-const ARENA_H := 22   # 22 tiles × 16px = 352px (leaves 8px for UI at bottom)
+const ARENA_W := 40  # 40 tiles × 16px = 640px
+const ARENA_H := 22  # 22 tiles × 16px = 352px (leaves 8px for UI at bottom)
 
 # Theme mapping from chapter_id to tileset + background
 const CHAPTER_THEMES := {
@@ -103,7 +103,7 @@ func _init():
 
 func setup(chapter_id: String, parent: Node2D) -> void:
 	current_theme = CHAPTER_THEMES.get(chapter_id, "field")
-	
+
 	# Add chapter background image (behind tilemap)
 	var bg_path = CHAPTER_BACKGROUNDS.get(chapter_id, "")
 	if bg_path != "" and ResourceLoader.exists(bg_path):
@@ -117,7 +117,7 @@ func setup(chapter_id: String, parent: Node2D) -> void:
 			bg_sprite.scale = Vector2(640.0 / bg_tex.get_width(), 360.0 / bg_tex.get_height())
 			parent.add_child(bg_sprite)
 			parent.move_child(bg_sprite, 0)
-	
+
 	# Add atmospheric overlay (above tilemap, below entities)
 	var atm_path = ATMOSPHERE_OVERLAYS.get(current_theme, "")
 	if atm_path != "" and ResourceLoader.exists(atm_path):
@@ -132,7 +132,7 @@ func setup(chapter_id: String, parent: Node2D) -> void:
 			atm_rect.z_index = -5  # Above tilemap (-10), below entities (0+)
 			atm_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 			parent.add_child(atm_rect)
-	
+
 	# Load tileset
 	var tileset_path = "res://assets/tileset_%s.png" % current_theme
 	var tex = load(tileset_path)
@@ -140,20 +140,20 @@ func setup(chapter_id: String, parent: Node2D) -> void:
 		push_warning("ArenaBuilder: tileset not found at %s, using flat ground" % tileset_path)
 		_add_flat_ground(parent)
 		return
-	
+
 	# Build Godot TileSet resource
 	var tileset = _build_tileset(tex)
 	tilemap.tile_set = tileset
-	
+
 	# Generate layout
 	var layout = _generate_layout(current_theme, chapter_id)
-	
+
 	# Paint tiles
 	_paint_layout(layout)
-	
+
 	# Add collision for wall tiles
 	_add_wall_collision(layout, parent)
-	
+
 	parent.add_child(tilemap)
 	parent.move_child(tilemap, 0)  # Behind everything
 
@@ -161,54 +161,53 @@ func setup(chapter_id: String, parent: Node2D) -> void:
 func _build_tileset(tex: Texture2D) -> TileSet:
 	var ts = TileSet.new()
 	ts.tile_size = Vector2i(TILE_SIZE, TILE_SIZE)
-	
+
 	# Create one source for all tiles (horizontal strip)
 	var source = TileSetAtlasSource.new()
 	source.texture = tex
 	source.texture_region_size = Vector2i(TILE_SIZE, TILE_SIZE)
 	source.margins = Vector2i(0, 0)
 	source.separation = Vector2i(0, 0)
-	
+
 	# Ensure atlas tiles are exposed for the 7-tile strip before modifying TileData
 	for x in range(7):
 		source.create_tile(Vector2i(x, 0))
-	
+
 	ts.add_source(source, 0)
-	
+
 	# Add physics layer *after* source is attached so TileData sees it
 	ts.add_physics_layer(0)
 	ts.set_physics_layer_collision_mask(0, 1)  # Collide with layer 1
-	
+
 	# Define collision for wall tiles (tile types 2 and 3)
-	var wall_poly := PackedVector2Array([
-		Vector2(0, 0), Vector2(TILE_SIZE, 0),
-		Vector2(TILE_SIZE, TILE_SIZE), Vector2(0, TILE_SIZE)
-	])
+	var wall_poly := PackedVector2Array(
+		[Vector2(0, 0), Vector2(TILE_SIZE, 0), Vector2(TILE_SIZE, TILE_SIZE), Vector2(0, TILE_SIZE)]
+	)
 	for i in [2, 3]:  # wall + wall_top
 		var coords := Vector2i(i, 0)
 		var data := source.get_tile_data(coords, 0)
 		data.add_collision_polygon(0)
 		data.set_collision_polygon_points(0, 0, wall_poly)
-	
+
 	# Hazard tiles (6) — also solid, blocks movement
 	var hazard_coords := Vector2i(6, 0)
 	var hazard_data := source.get_tile_data(hazard_coords, 0)
 	hazard_data.add_collision_polygon(0)
 	hazard_data.set_collision_polygon_points(0, 0, wall_poly)
-	
+
 	return ts
 
 
 func _generate_layout(theme: String, chapter_id: String) -> Array:
 	var layout = []
-	
+
 	# Start with all ground
 	for y in range(ARENA_H):
 		var row = []
 		for x in range(ARENA_W):
 			row.append(1)  # ground
 		layout.append(row)
-	
+
 	# Border walls (2 tiles thick for visual depth)
 	for y in range(ARENA_H):
 		for x in range(ARENA_W):
@@ -221,7 +220,7 @@ func _generate_layout(theme: String, chapter_id: String) -> Array:
 			elif x == 2 or x == ARENA_W - 3 or y == 2 or y == ARENA_H - 3:
 				if theme in ["fortress", "dark_fortress"]:
 					layout[y][x] = 3  # wall_top (stone edge)
-	
+
 	# Theme-specific features
 	match theme:
 		"field":
@@ -232,7 +231,7 @@ func _generate_layout(theme: String, chapter_id: String) -> Array:
 			_layout_fortress(layout, chapter_id)
 		"dark_fortress":
 			_layout_dark_fortress(layout, chapter_id)
-	
+
 	return layout
 
 
@@ -243,17 +242,29 @@ func _layout_field(layout: Array, _chapter_id: String) -> void:
 		for x in range(3, ARENA_W - 3):
 			if layout[y][x] == 1:
 				layout[y][x] = 5  # path
-	
+
 	# Grass tufts (decoration)
 	var tufts = [
-		[4, 5], [6, 14], [8, 22], [5, 30], [7, 8],
-		[15, 6], [17, 18], [14, 28], [16, 35], [18, 12],
-		[12, 20], [11, 33], [19, 25], [13, 9], [9, 36],
+		[4, 5],
+		[6, 14],
+		[8, 22],
+		[5, 30],
+		[7, 8],
+		[15, 6],
+		[17, 18],
+		[14, 28],
+		[16, 35],
+		[18, 12],
+		[12, 20],
+		[11, 33],
+		[19, 25],
+		[13, 9],
+		[9, 36],
 	]
 	for t in tufts:
 		if t[1] < ARENA_W - 3 and t[0] < ARENA_H - 3:
 			layout[t[0]][t[1]] = 4
-	
+
 	# Small pond (water)
 	for y in range(16, 19):
 		for x in range(30, 34):
@@ -265,8 +276,13 @@ func _layout_forest(layout: Array, _chapter_id: String) -> void:
 	# Dense tree walls forming corridors
 	# Tree clusters (wall blocks)
 	var tree_clusters = [
-		[4, 5, 3, 3], [4, 32, 4, 2], [10, 8, 2, 4], [14, 25, 3, 3],
-		[6, 18, 2, 2], [16, 12, 2, 2], [12, 34, 3, 2],
+		[4, 5, 3, 3],
+		[4, 32, 4, 2],
+		[10, 8, 2, 4],
+		[14, 25, 3, 3],
+		[6, 18, 2, 2],
+		[16, 12, 2, 2],
+		[12, 34, 3, 2],
 	]
 	for cluster in tree_clusters:
 		var cy = cluster[0]
@@ -277,16 +293,24 @@ func _layout_forest(layout: Array, _chapter_id: String) -> void:
 			for x in range(cx, cx + cw):
 				if y < ARENA_H - 3 and x < ARENA_W - 3 and y > 2 and x > 2:
 					layout[y][x] = 2
-	
+
 	# Bushes (decoration)
 	var bushes = [
-		[5, 10], [7, 15], [9, 20], [11, 5], [13, 30],
-		[15, 8], [17, 22], [8, 28], [6, 35], [19, 15],
+		[5, 10],
+		[7, 15],
+		[9, 20],
+		[11, 5],
+		[13, 30],
+		[15, 8],
+		[17, 22],
+		[8, 28],
+		[6, 35],
+		[19, 15],
 	]
 	for b in bushes:
 		if b[1] < ARENA_W - 3 and b[0] < ARENA_H - 3:
 			layout[b[0]][b[1]] = 4
-	
+
 	# Forest path
 	for y in range(8, 14):
 		for x in range(3, 7):
@@ -305,7 +329,7 @@ func _layout_fortress(layout: Array, chapter_id: String) -> void:
 	for y in range(7, 16):
 		layout[y][24] = 2
 		layout[y][25] = 3  # wall_top edge
-	
+
 	# Pillar clusters
 	var pillars = [[5, 30], [5, 33], [10, 30], [10, 33], [15, 30], [15, 33]]
 	for p in pillars:
@@ -314,13 +338,13 @@ func _layout_fortress(layout: Array, chapter_id: String) -> void:
 			layout[p[0]][p[1] + 1] = 2
 			layout[p[0] + 1][p[1]] = 2
 			layout[p[0] + 1][p[1] + 1] = 2
-	
+
 	# Blood/cracks (decoration)
 	var cracks = [[8, 12], [12, 18], [16, 8], [9, 28], [14, 35]]
 	for c in cracks:
 		if c[1] < ARENA_W - 3 and c[0] < ARENA_H - 3:
 			layout[c[0]][c[1]] = 4
-	
+
 	# Worn stone path
 	for y in range(3, 6):
 		for x in range(12, 18):
@@ -332,18 +356,18 @@ func _layout_dark_fortress(layout: Array, chapter_id: String) -> void:
 	# Same base as fortress but with lava channels and darker feel
 	# Reuse fortress layout first
 	_layout_fortress(layout, chapter_id)
-	
+
 	# Add lava channels along bottom
 	for x in range(6, 20):
 		layout[ARENA_H - 4][x] = 6  # lava
 		layout[ARENA_H - 5][x] = 6
-	
+
 	# Lava pool top-right
 	for y in range(3, 6):
 		for x in range(32, 37):
 			if y < ARENA_H - 3 and x < ARENA_W - 3:
 				layout[y][x] = 6
-	
+
 	# Extra wall for gate area
 	for y in range(5, 10):
 		layout[y][ARENA_W - 4] = 2
@@ -392,5 +416,7 @@ func get_walkable_positions() -> Array:
 				var atlas = tilemap.get_cell_atlas_coords(0, Vector2i(x, y))
 				var tile_type = atlas.x
 				if tile_type in [1, 5]:  # ground or path
-					positions.append(Vector2(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2))
+					positions.append(
+						Vector2(x * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2)
+					)
 	return positions

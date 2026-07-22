@@ -19,11 +19,13 @@ var mute_btn: Button
 var bestiar_btn: Button
 var quit_btn: Button
 
+
 # Called by parent scene
 func setup(parent: Node):
 	parent.add_child(self)
 	_build_ui()
 	visible = false
+
 
 func _build_ui():
 	# Full-screen overlay behind UI
@@ -32,7 +34,7 @@ func _build_ui():
 	grow_horizontal = Control.GROW_DIRECTION_BOTH
 	grow_vertical = Control.GROW_DIRECTION_BOTH
 	mouse_filter = Control.MOUSE_FILTER_STOP  # Block clicks behind
-	
+
 	# Semi-transparent background with optional art
 	bg = ColorRect.new()
 	bg.anchor_right = 1.0
@@ -41,7 +43,7 @@ func _build_ui():
 	bg.grow_vertical = Control.GROW_DIRECTION_BOTH
 	bg.color = Color(0.05, 0.06, 0.08, 0.85)
 	add_child(bg)
-	
+
 	# Pause screen background art
 	var pause_bg_path = "res://assets/art/screens/pause_bg.webp"
 	if ResourceLoader.exists(pause_bg_path):
@@ -58,7 +60,7 @@ func _build_ui():
 			pause_bg_sprite.modulate = Color(1, 1, 1, 0.25)  # Subtle, behind UI
 			pause_bg_sprite.z_index = -1
 			add_child(pause_bg_sprite)
-	
+
 	# Container hierarchy
 	var center = CenterContainer.new()
 	center.anchor_right = 1.0
@@ -66,51 +68,51 @@ func _build_ui():
 	center.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	center.grow_vertical = Control.GROW_DIRECTION_BOTH
 	add_child(center)
-	
+
 	vbox = VBoxContainer.new()
 	vbox.add_theme_constant_override("separation", 12)
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	center.add_child(vbox)
-	
+
 	# Title
 	var title = Label.new()
 	title.add_theme_font_size_override("font_size", 28)
 	title.text = "|| PAUSED"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	vbox.add_child(title)
-	
+
 	var spacer = Control.new()
 	spacer.custom_minimum_size = Vector2(0, 16)
 	vbox.add_child(spacer)
-	
+
 	# Resume
 	resume_btn = _make_btn("▶  Resume", "_on_resume")
 	vbox.add_child(resume_btn)
-	
+
 	# Restart
 	restart_btn = _make_btn("↻  Restart Chapter", "_on_restart")
 	vbox.add_child(restart_btn)
-	
+
 	# Settings
 	settings_btn = _make_btn("⚙  Settings", "_on_settings")
 	vbox.add_child(settings_btn)
-	
+
 	# Inventory
 	inventory_btn = _make_btn("🎒  Inventory", "_on_inventory")
 	vbox.add_child(inventory_btn)
-	
+
 	# Mute toggle
 	mute_btn = _make_btn("🔇  Mute", "_on_mute")
 	vbox.add_child(mute_btn)
-	
+
 	# Bestiary
 	bestiar_btn = _make_btn("📖  Bestiary", "_on_bestiary")
 	vbox.add_child(bestiar_btn)
-	
+
 	# Quit to title
 	quit_btn = _make_btn("✕  Quit to Title", "_on_quit")
 	vbox.add_child(quit_btn)
-	
+
 	# Bottom hint
 	var hint = Label.new()
 	hint.add_theme_font_size_override("font_size", 9)
@@ -118,6 +120,7 @@ func _build_ui():
 	hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	hint.text = "ESC = Pause | R = Restart | M = Mute"
 	vbox.add_child(hint)
+
 
 func _make_btn(text: String, callback: String) -> Button:
 	var btn = Button.new()
@@ -127,6 +130,7 @@ func _make_btn(text: String, callback: String) -> Button:
 	btn.pressed.connect(Callable(self, callback))
 	return btn
 
+
 func toggle():
 	if is_changing_scene:
 		return
@@ -134,6 +138,7 @@ func toggle():
 		_resume()
 	else:
 		_pause()
+
 
 func _pause():
 	is_paused = true
@@ -143,19 +148,23 @@ func _pause():
 	_update_mute_label()
 	z_index = 100
 
+
 func _resume():
 	is_paused = false
 	Engine.time_scale = 1
 	visible = false
 
+
 func _on_resume():
 	_resume()
+
 
 func _on_restart():
 	is_changing_scene = true
 	Engine.time_scale = 1
 	AudioManager.play_sfx("ui_click")
 	get_tree().reload_current_scene()
+
 
 func _on_settings():
 	AudioManager.play_sfx("ui_click")
@@ -165,10 +174,12 @@ func _on_settings():
 		add_child(settings_screen)
 	settings_screen.visible = true
 
+
 func _on_settings_closed():
 	if settings_screen:
 		settings_screen.visible = false
 	resume_btn.grab_focus()
+
 
 func _on_inventory():
 	AudioManager.play_sfx("ui_click")
@@ -180,14 +191,17 @@ func _on_inventory():
 		inventory_screen._refresh()
 	inventory_screen.visible = true
 
+
 func _on_inventory_closed():
 	if inventory_screen:
 		inventory_screen.visible = false
 	resume_btn.grab_focus()
 
+
 func _on_mute():
 	AudioManager.set_volume(0.0 if AudioManager.master_volume > 0.0 else 0.8)
 	_update_mute_label()
+
 
 func _on_bestiary():
 	AudioManager.play_sfx("ui_click")
@@ -197,11 +211,14 @@ func _on_bestiary():
 		add_child(bestiary_screen)
 	bestiary_screen.show_bestiary()
 
+
 func _on_bestiary_closed():
 	pass  # Bestiary handles its own hiding
 
+
 func _update_mute_label():
 	mute_btn.text = "🔇  Mute" if AudioManager.master_volume > 0.0 else "🔊  Unmute"
+
 
 func _on_quit():
 	is_changing_scene = true
@@ -211,6 +228,7 @@ func _on_quit():
 	# Clear game session state
 	GameState.reset_chapter_state()
 	get_tree().change_scene_to_file("res://scenes/title_screen.tscn")
+
 
 # Input handling — catch ESC while paused to prevent double-toggle
 func _input(event):

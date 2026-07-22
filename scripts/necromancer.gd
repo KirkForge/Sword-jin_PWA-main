@@ -6,6 +6,7 @@ extends CharacterBody2D
 func _get_container() -> Node:
 	return get_parent() if get_parent() else get_tree().current_scene
 
+
 var damage_number_scene = preload("res://scenes/ui/damage_number.tscn")
 
 @export var max_health := 60
@@ -40,58 +41,62 @@ var preferred_distance := 180.0  # Tries to stay this far from player
 @onready var label = $Label
 @onready var health_bar = $HealthBar
 
+
 func _ready():
 	health = max_health
 	attack_hitbox.set_deferred("disabled", true)
 	_update_label()
 	sprite.play("idle")
-	
+
 	await get_tree().process_frame
 	player = get_tree().get_first_node_in_group("player")
+
 
 func _physics_process(delta):
 	if is_dead:
 		return
-	
+
 	# Knockback
 	if knockback_velocity.length() > 1.0:
 		velocity = knockback_velocity
-		knockback_velocity = knockback_velocity.move_toward(Vector2.ZERO, KNOCKBACK_FRICTION * delta)
+		knockback_velocity = knockback_velocity.move_toward(
+			Vector2.ZERO, KNOCKBACK_FRICTION * delta
+		)
 		move_and_slide()
 		return
-	
+
 	# Timers
 	if attack_timer > 0:
 		attack_timer -= delta
 		if attack_timer <= 0:
 			_end_attack()
-	
+
 	if cooldown_timer > 0:
 		cooldown_timer -= delta
-	
+
 	# Summon timer
 	summon_timer -= delta
 	if summon_timer <= 0 and active_summons < max_summons:
 		_summon_skeleton()
 		summon_timer = summon_cooldown
-	
+
 	# Count living summons
 	_count_summons()
-	
+
 	if not player or player.is_dead:
 		velocity = Vector2.ZERO
 		move_and_slide()
 		return
-	
+
 	var to_player = player.global_position - global_position
 	var dist = to_player.length()
-	
+
 	# Face player
 	if to_player.x > 0:
 		sprite.scale.x = 1
 	elif to_player.x < 0:
 		sprite.scale.x = -1
-	
+
 	# AI: maintain preferred distance
 	if dist <= detection_range:
 		if dist < preferred_distance - 30:
@@ -116,14 +121,15 @@ func _physics_process(delta):
 		velocity = Vector2.ZERO
 		if not is_attacking:
 			sprite.play("idle")
-	
+
 	move_and_slide()
+
 
 func _summon_skeleton():
 	"""Summon a skeleton minion near the necromancer."""
 	var skeleton_scene = preload("res://scenes/skeleton.tscn")
 	var skel = skeleton_scene.instantiate()
-	
+
 	# Spawn near the necromancer
 	var offset = Vector2(randf_range(-40, 40), randf_range(-40, 40))
 	skel.global_position = global_position + offset
@@ -133,17 +139,18 @@ func _summon_skeleton():
 	skel.speed = 70
 	skel.add_to_group("enemy")
 	skel.add_to_group("summon")
-	
+
 	get_parent().add_child(skel)
 	active_summons += 1
-	
+
 	# Visual: green summon flash
 	modulate = Color(0.3, 1.0, 0.3)
 	await get_tree().create_timer(0.2).timeout
 	if not is_dead:
 		modulate = Color.WHITE
-	
+
 	print("Necromancer summons a skeleton! (%d active)" % active_summons)
+
 
 func _count_summons():
 	"""Recount living summons."""
@@ -152,24 +159,27 @@ func _count_summons():
 		if child.is_in_group("summon") and not child.is_dead:
 			active_summons += 1
 
+
 func _start_attack():
 	is_attacking = true
 	attack_timer = attack_duration
 	cooldown_timer = attack_duration + attack_cooldown
 	attack_hitbox.disabled = false
 	sprite.play("attack")
-	
+
 	# Dark bolt visual — brief flash
 	modulate = Color(0.5, 0.2, 0.8)
 	await get_tree().create_timer(0.15).timeout
 	if not is_dead:
 		modulate = Color.WHITE
 
+
 func _end_attack():
 	is_attacking = false
 	attack_hitbox.disabled = true
 	velocity = Vector2.ZERO
 	sprite.play("idle")
+
 
 func show_damage_number(amount: int, is_heal := false):
 	var dn = damage_number_scene.instantiate() as Node2D
@@ -182,28 +192,31 @@ func show_damage_number(amount: int, is_heal := false):
 	else:
 		dn.setup(amount)
 
+
 func take_damage(amount: int):
 	if is_dead:
 		return
-	
+
 	health -= amount
 	_update_label()
 	show_damage_number(amount)
 	AudioManager.play_sfx("sword_hit")
-	
+
 	modulate = Color.RED
 	await get_tree().create_timer(0.1).timeout
 	if not is_dead:
 		modulate = Color.WHITE
-	
+
 	if health <= 0:
 		_die()
+
 
 func _update_label():
 	if label:
 		label.text = "NECROMANCER\nHP:%d/%d" % [health, max_health]
 	if health_bar:
 		health_bar.update_health(health, max_health)
+
 
 func _die():
 	is_dead = true
@@ -213,12 +226,12 @@ func _die():
 	velocity = Vector2.ZERO
 	$CollisionShape2D.set_deferred("disabled", true)
 	attack_hitbox.set_deferred("disabled", true)
-	
+
 	# Dark explosion on death — kill remaining summons
 	for child in get_parent().get_children():
 		if child.is_in_group("summon") and not child.is_dead:
 			child.take_damage(999)  # Summons die with master
-	
+
 	if randf() < 0.25:
 		var potion_scene = preload("res://scenes/potion_pickup.tscn")
 		var potion = potion_scene.instantiate()
@@ -226,28 +239,32 @@ func _die():
 		var container := _get_container()
 		if container:
 			container.add_child(potion)
-	
+
 	# Loot drop
 	var loot = GameState.roll_loot_drop("necromancer", false)
 	if not loot.is_empty():
 		_show_loot_popup(loot)
-	
+
 	modulate = Color(0.3, 0.1, 0.5)
 	await get_tree().create_timer(0.5).timeout
 	queue_free()
+
 
 func _on_attack_hitbox_body_entered(body):
 	if body.has_method("take_damage") and body != self:
 		body.take_damage(attack_damage)
 		HitStop.trigger_light()
 
+
 func _on_detection_area_body_entered(body):
 	if body.is_in_group("player"):
 		player = body
 
+
 func _on_detection_area_body_exited(body):
 	if body.is_in_group("player") and body == player:
 		player = null
+
 
 func apply_knockback(direction: Vector2, force: float):
 	knockback_velocity = direction * force * 0.7  # Necromancers are light
@@ -255,6 +272,7 @@ func apply_knockback(direction: Vector2, force: float):
 	await get_tree().create_timer(0.08).timeout
 	if not is_dead:
 		modulate = Color.WHITE
+
 
 func apply_shaman_buff(damage_mult: float, speed_mult: float, duration: float):
 	var orig_damage := attack_damage
@@ -266,12 +284,19 @@ func apply_shaman_buff(damage_mult: float, speed_mult: float, duration: float):
 		attack_damage = orig_damage
 		speed = orig_speed
 
+
 func _show_loot_popup(loot: Dictionary):
 	var label_node := Label.new()
 	var rarity: String = loot.get("rarity", "common")
 	var weapon_id: String = loot.get("weapon_id", "?")
 	var color_hex: String = GameState.RARITY.get(rarity, {}).get("color", "#FFFFFF")
-	label_node.text = "⚔ %s [%s]" % [weapon_id.replace("_", " ").capitalize(), GameState.RARITY.get(rarity, {}).get("label", rarity)]
+	label_node.text = (
+		"⚔ %s [%s]"
+		% [
+			weapon_id.replace("_", " ").capitalize(),
+			GameState.RARITY.get(rarity, {}).get("label", rarity)
+		]
+	)
 	label_node.add_theme_color_override("font_color", Color.from_string(color_hex, Color.WHITE))
 	label_node.add_theme_font_size_override("font_size", 14)
 	label_node.global_position = global_position + Vector2(-40, -40)
@@ -284,6 +309,7 @@ func _show_loot_popup(loot: Dictionary):
 	tween.parallel().tween_property(label_node, "position:y", label_node.position.y - 30, 1.5)
 	tween.parallel().tween_property(label_node, "modulate:a", 0.0, 1.5).set_delay(0.5)
 	tween.tween_callback(label_node.queue_free)
+
 
 func _show_death_sprite(sprite_name: String):
 	var path = "res://assets/art/enemies/%s.webp" % sprite_name

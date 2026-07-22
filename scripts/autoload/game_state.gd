@@ -6,28 +6,96 @@ const SAVE_FILE := "user://swordjin_save.json"
 
 # Rarity tiers — color coding & drop weights
 const RARITY := {
-	"common":    {"color": "#AAAAAA", "weight": 60, "label": "Common"},
-	"uncommon":  {"color": "#55FF55", "weight": 25, "label": "Uncommon"},
-	"rare":      {"color": "#5555FF", "weight": 12, "label": "Rare"},
-	"legendary": {"color": "#FFAA00", "weight": 3,  "label": "Legendary"},
+	"common": {"color": "#AAAAAA", "weight": 60, "label": "Common"},
+	"uncommon": {"color": "#55FF55", "weight": 25, "label": "Uncommon"},
+	"rare": {"color": "#5555FF", "weight": 12, "label": "Rare"},
+	"legendary": {"color": "#FFAA00", "weight": 3, "label": "Legendary"},
 }
 
 # Weapon definitions — unlocked weapons auto-equip if better
 const WEAPON_STATS := {
-	"broken_sword":    {"damage": 8,  "cooldown": 0.40, "rarity": "common",    "description": "A rusted relic. Barely sharp.", "icon": "res://assets/art/items/broken_sword.webp"},
-	"steel_dagger":    {"damage": 12, "cooldown": 0.30, "rarity": "common",    "description": "Merchant's gift. Light and lethal.", "icon": "res://assets/art/items/steel_dagger.webp"},
-	"captains_blade":  {"damage": 15, "cooldown": 0.50, "rarity": "uncommon",  "description": "A commander's weapon. Heavy but ruthless.", "icon": "res://assets/art/items/captains_blade.webp"},
-	"spirit_edge":     {"damage": 18, "cooldown": 0.35, "rarity": "uncommon",  "description": "Ghost-forged blade. Cuts ethereal and flesh alike.", "icon": "res://assets/art/items/steel_sword.webp"},
-	"crimson_edge":    {"damage": 22, "cooldown": 0.45, "rarity": "rare",      "description": "Fang officer's saber. Wickedly fast.", "icon": "res://assets/art/items/weapon_greatsword.webp"},
-	"wardens_halberd": {"damage": 28, "cooldown": 0.60, "rarity": "legendary", "description": "Gate Warden's polearm. Devastating reach.", "icon": "res://assets/art/items/weapon_staff.webp"},
+	"broken_sword":
+	{
+		"damage": 8,
+		"cooldown": 0.40,
+		"rarity": "common",
+		"description": "A rusted relic. Barely sharp.",
+		"icon": "res://assets/art/items/broken_sword.webp"
+	},
+	"steel_dagger":
+	{
+		"damage": 12,
+		"cooldown": 0.30,
+		"rarity": "common",
+		"description": "Merchant's gift. Light and lethal.",
+		"icon": "res://assets/art/items/steel_dagger.webp"
+	},
+	"captains_blade":
+	{
+		"damage": 15,
+		"cooldown": 0.50,
+		"rarity": "uncommon",
+		"description": "A commander's weapon. Heavy but ruthless.",
+		"icon": "res://assets/art/items/captains_blade.webp"
+	},
+	"spirit_edge":
+	{
+		"damage": 18,
+		"cooldown": 0.35,
+		"rarity": "uncommon",
+		"description": "Ghost-forged blade. Cuts ethereal and flesh alike.",
+		"icon": "res://assets/art/items/steel_sword.webp"
+	},
+	"crimson_edge":
+	{
+		"damage": 22,
+		"cooldown": 0.45,
+		"rarity": "rare",
+		"description": "Fang officer's saber. Wickedly fast.",
+		"icon": "res://assets/art/items/weapon_greatsword.webp"
+	},
+	"wardens_halberd":
+	{
+		"damage": 28,
+		"cooldown": 0.60,
+		"rarity": "legendary",
+		"description": "Gate Warden's polearm. Devastating reach.",
+		"icon": "res://assets/art/items/weapon_staff.webp"
+	},
 }
 
 # Skill definitions
 const SKILL_STATS := {
-	"whirlwind_slash": {"damage_mult": 1.5, "cooldown": 2.0, "radius": 60, "description": "Spin attack hitting all nearby enemies.", "icon": "res://assets/art/generated/skills/skill_whirlwind.webp"},
-	"shadow_step":     {"distance": 150, "cooldown": 3.0, "damage": 10, "description": "Teleport behind target + stab.", "icon": "res://assets/art/generated/skills/skill_smoke_bomb.webp"},
-	"battle_cry":      {"heal_pct": 0.15, "cooldown": 5.0, "buff_duration": 3.0, "description": "War cry: heals 15% HP + damage buff.", "icon": "res://assets/art/generated/skills/skill_rally.webp"},
-	"dodge_roll":      {"cooldown": 1.2, "description": "Dash in facing direction with i-frames.", "icon": "res://assets/art/generated/skills/skill_parry.webp"},
+	"whirlwind_slash":
+	{
+		"damage_mult": 1.5,
+		"cooldown": 2.0,
+		"radius": 60,
+		"description": "Spin attack hitting all nearby enemies.",
+		"icon": "res://assets/art/generated/skills/skill_whirlwind.webp"
+	},
+	"shadow_step":
+	{
+		"distance": 150,
+		"cooldown": 3.0,
+		"damage": 10,
+		"description": "Teleport behind target + stab.",
+		"icon": "res://assets/art/generated/skills/skill_smoke_bomb.webp"
+	},
+	"battle_cry":
+	{
+		"heal_pct": 0.15,
+		"cooldown": 5.0,
+		"buff_duration": 3.0,
+		"description": "War cry: heals 15% HP + damage buff.",
+		"icon": "res://assets/art/generated/skills/skill_rally.webp"
+	},
+	"dodge_roll":
+	{
+		"cooldown": 1.2,
+		"description": "Dash in facing direction with i-frames.",
+		"icon": "res://assets/art/generated/skills/skill_parry.webp"
+	},
 }
 
 # Inventory
@@ -92,113 +160,172 @@ var chapter_stars: Dictionary = {}
 
 # Bestiary definitions — enemy type catalog with lore unlocks at kill milestones
 const BESTIARY := {
-	"skeleton": {
+	"skeleton":
+	{
 		"name": "Skeleton",
 		"description": "Reanimated bones of fallen soldiers. Shambling but relentless.",
-		"lore": {
+		"lore":
+		{
 			10: "Skeletons are the weakest of the undead, animated by residual battlefield malice.",
-			50: "A skeleton's bones rattle with ancient war memories. Some still clutch rusted weapons.",
-			100: "The oldest skeletons can reform after destruction — only fire or holy blades end them permanently.",
+			50:
+			"A skeleton's bones rattle with ancient war memories. Some still clutch rusted weapons.",
+			100:
+			"The oldest skeletons can reform after destruction — only fire or holy blades end them permanently.",
 		},
 		"stats": {"hp": 30, "damage": 8, "speed": 80, "type": "Undead"},
 	},
-	"skeleton_archer": {
+	"skeleton_archer":
+	{
 		"name": "Skeleton Archer",
 		"description": "Bone archers that keep their distance and rain arrows from afar.",
-		"lore": {
-			10: "Skeleton archers retain enough muscle memory to aim, but their arrows fly erratically.",
-			50: "Some archer skeletons still carry quivers from their living days — arrows marked with regiment sigils.",
-			100: "The finest skeleton archers were once imperial marksmen. Their undead accuracy is terrifying.",
+		"lore":
+		{
+			10:
+			"Skeleton archers retain enough muscle memory to aim, but their arrows fly erratically.",
+			50:
+			"Some archer skeletons still carry quivers from their living days — arrows marked with regiment sigils.",
+			100:
+			"The finest skeleton archers were once imperial marksmen. Their undead accuracy is terrifying.",
 		},
 		"stats": {"hp": 25, "damage": 7, "speed": 70, "type": "Undead"},
 	},
-	"skeleton_captain": {
+	"skeleton_captain":
+	{
 		"name": "Skeleton Captain",
-		"description": "Armored commander of the undead. Shield blocks attacks. Charges when enraged.",
-		"lore": {
-			5: "Captains were military officers in life. Death hasn't diminished their tactical instinct.",
+		"description":
+		"Armored commander of the undead. Shield blocks attacks. Charges when enraged.",
+		"lore":
+		{
+			5:
+			"Captains were military officers in life. Death hasn't diminished their tactical instinct.",
 			25: "The captain's shield bears the crest of a kingdom that no longer exists.",
-			50: "Skeleton captains can command lesser undead. Destroying one often causes nearby skeletons to falter.",
+			50:
+			"Skeleton captains can command lesser undead. Destroying one often causes nearby skeletons to falter.",
 		},
 		"stats": {"hp": 80, "damage": 15, "speed": 65, "type": "Undead • Boss"},
 	},
-	"ghost": {
+	"ghost":
+	{
 		"name": "Ghost",
-		"description": "Spectral entity that phases between tangible and intangible. Attacks pierce armor.",
-		"lore": {
-			10: "Ghosts are souls trapped between worlds. They flicker when they phase, briefly vulnerable.",
-			50: "The ghost's wail isn't just eerie — it's a resonance attack that weakens the living's will to fight.",
-			100: "Ancient ghosts can possess the living. The spectral blade 'Spirit Edge' is forged from their essence.",
+		"description":
+		"Spectral entity that phases between tangible and intangible. Attacks pierce armor.",
+		"lore":
+		{
+			10:
+			"Ghosts are souls trapped between worlds. They flicker when they phase, briefly vulnerable.",
+			50:
+			"The ghost's wail isn't just eerie — it's a resonance attack that weakens the living's will to fight.",
+			100:
+			"Ancient ghosts can possess the living. The spectral blade 'Spirit Edge' is forged from their essence.",
 		},
 		"stats": {"hp": 35, "damage": 18, "speed": 60, "type": "Spectral"},
 	},
-	"bandit": {
+	"bandit":
+	{
 		"name": "Bandit",
 		"description": "Fast flanking fighter. Circles behind targets and strikes quickly.",
-		"lore": {
+		"lore":
+		{
 			10: "Bandits are deserters and outlaws who prey on travelers along the Iron Road.",
-			50: "The Crimson Fang recruits bandits with promises of gold and power. Most don't live to collect.",
-			100: "Some bandits were once imperial soldiers — their military training makes them dangerous even without armor.",
+			50:
+			"The Crimson Fang recruits bandits with promises of gold and power. Most don't live to collect.",
+			100:
+			"Some bandits were once imperial soldiers — their military training makes them dangerous even without armor.",
 		},
 		"stats": {"hp": 50, "damage": 12, "speed": 90, "type": "Human"},
 	},
-	"assassin": {
+	"assassin":
+	{
 		"name": "Assassin",
-		"description": "Crimson Fang elite. Vanishes and reappears behind targets. Poisoned blades.",
-		"lore": {
+		"description":
+		"Crimson Fang elite. Vanishes and reappears behind targets. Poisoned blades.",
+		"lore":
+		{
 			5: "Assassins are Crimson Fang operatives trained in shadow techniques and venomcraft.",
-			25: "An assassin's poison slows the heart and clouds the mind. Without an antidote, death follows within hours.",
-			50: "The Crimson Fang's assassination order has toppled three kingdoms. Their symbol: a red fang in shadow.",
+			25:
+			"An assassin's poison slows the heart and clouds the mind. Without an antidote, death follows within hours.",
+			50:
+			"The Crimson Fang's assassination order has toppled three kingdoms. Their symbol: a red fang in shadow.",
 		},
 		"stats": {"hp": 45, "damage": 20, "speed": 140, "type": "Human • Elite"},
 	},
-	"golem": {
+	"golem":
+	{
 		"name": "Golem",
-		"description": "Massive stone construct. Armor absorbs damage. Devastating but slow attacks.",
-		"lore": {
-			5: "Golems are ancient constructs built to guard fortresses. Their stone skin deflects most blades.",
-			25: "A golem's core is a geode of compressed earth magic. Destroying it is the only way to stop one.",
-			50: "The Gate Warden golem has stood for a thousand years. Its halberd is the legendary Wardens_halberd.",
+		"description":
+		"Massive stone construct. Armor absorbs damage. Devastating but slow attacks.",
+		"lore":
+		{
+			5:
+			"Golems are ancient constructs built to guard fortresses. Their stone skin deflects most blades.",
+			25:
+			"A golem's core is a geode of compressed earth magic. Destroying it is the only way to stop one.",
+			50:
+			"The Gate Warden golem has stood for a thousand years. Its halberd is the legendary Wardens_halberd.",
 		},
 		"stats": {"hp": 180, "damage": 30, "speed": 40, "type": "Construct"},
 	},
-	"necromancer": {
+	"necromancer":
+	{
 		"name": "Necromancer",
-		"description": "Dark caster that raises skeleton minions. Stays at range — priority kill target.",
-		"lore": {
-			5: "Necromancers bind residual battlefield malice into new skeletons. Kill the caster and the summons fall.",
-			25: "The most powerful necromancers can raise entire graveyards. The Siege of Ashmont saw 10,000 undead.",
-			50: "Necromancy was once a sacred art — preserving heroes to fight again. The Crimson Fang corrupted it.",
+		"description":
+		"Dark caster that raises skeleton minions. Stays at range — priority kill target.",
+		"lore":
+		{
+			5:
+			"Necromancers bind residual battlefield malice into new skeletons. Kill the caster and the summons fall.",
+			25:
+			"The most powerful necromancers can raise entire graveyards. The Siege of Ashmont saw 10,000 undead.",
+			50:
+			"Necromancy was once a sacred art — preserving heroes to fight again. The Crimson Fang corrupted it.",
 		},
 		"stats": {"hp": 60, "damage": 10, "speed": 50, "type": "Undead • Caster"},
 	},
-	"berserker": {
+	"berserker":
+	{
 		"name": "Berserker",
-		"description": "Dual-wielding brute that gets faster and stronger as HP drops. Enrages at 50% health.",
-		"lore": {
-			5: "Berserkers fight with reckless fury. As wounds accumulate, their rage amplifies rather than weakens them.",
-			25: "Crimson Fang berserkers drink a battle elixir before combat — it removes pain but shortens their lives.",
-			50: "The berserker's red fury is a blood magic technique. At full enrage, they can shatter stone with bare fists.",
+		"description":
+		"Dual-wielding brute that gets faster and stronger as HP drops. Enrages at 50% health.",
+		"lore":
+		{
+			5:
+			"Berserkers fight with reckless fury. As wounds accumulate, their rage amplifies rather than weakens them.",
+			25:
+			"Crimson Fang berserkers drink a battle elixir before combat — it removes pain but shortens their lives.",
+			50:
+			"The berserker's red fury is a blood magic technique. At full enrage, they can shatter stone with bare fists.",
 		},
 		"stats": {"hp": 90, "damage": 18, "speed": 75, "type": "Human • Brute"},
 	},
-	"shaman": {
+	"shaman":
+	{
 		"name": "Shaman",
-		"description": "Support caster that buffs nearby allies with damage and speed aura. Kill first.",
-		"lore": {
-			5: "Shamans channel elemental spirits to empower their allies. Their aura makes every nearby enemy deadlier.",
-			25: "A shaman's totem is the source of their power. Breaking it dispels all active buffs instantly.",
-			50: "The greatest shaman could empower an entire army. The Battle of Red Plains was won by three shamans.",
+		"description":
+		"Support caster that buffs nearby allies with damage and speed aura. Kill first.",
+		"lore":
+		{
+			5:
+			"Shamans channel elemental spirits to empower their allies. Their aura makes every nearby enemy deadlier.",
+			25:
+			"A shaman's totem is the source of their power. Breaking it dispels all active buffs instantly.",
+			50:
+			"The greatest shaman could empower an entire army. The Battle of Red Plains was won by three shamans.",
 		},
 		"stats": {"hp": 55, "damage": 8, "speed": 55, "type": "Human • Support"},
 	},
-	"wraith": {
+	"wraith":
+	{
 		"name": "Wraith",
-		"description": "Elite spectral entity. Teleports short distances, life drain AoE. Intangible during phase.",
-		"lore": {
-			5: "Wraiths are ascended ghosts — souls that consumed others to gain power. Their life drain is insatiable.",
-			25: "A wraith's teleport is a short leap through the spirit realm. They're vulnerable for a moment after reappearing.",
-			50: "The Wraith King beneath the capital commands thousands. His crown is forged from consumed souls.",
+		"description":
+		"Elite spectral entity. Teleports short distances, life drain AoE. Intangible during phase.",
+		"lore":
+		{
+			5:
+			"Wraiths are ascended ghosts — souls that consumed others to gain power. Their life drain is insatiable.",
+			25:
+			"A wraith's teleport is a short leap through the spirit realm. They're vulnerable for a moment after reappearing.",
+			50:
+			"The Wraith King beneath the capital commands thousands. His crown is forged from consumed souls.",
 		},
 		"stats": {"hp": 70, "damage": 15, "speed": 65, "type": "Spectral • Elite"},
 	},
@@ -213,28 +340,32 @@ var bestiary: Dictionary = {}  # enemy_type → {"kills": int, "lore_unlocked": 
 
 const ACHIEVEMENTS := {
 	# Combat
-	"first_blood": {
+	"first_blood":
+	{
 		"name": "First Blood",
 		"icon": "🗡",
 		"badge_path": "res://assets/art/badges/first_blood.webp",
 		"description": "Defeat your first enemy.",
 		"category": "Combat",
 	},
-	"body_count_50": {
+	"body_count_50":
+	{
 		"name": "Body Count",
 		"icon": "💀",
 		"badge_path": "res://assets/art/badges/body_count_50.webp",
 		"description": "Defeat 50 enemies total.",
 		"category": "Combat",
 	},
-	"body_count_200": {
+	"body_count_200":
+	{
 		"name": "Massacre",
 		"icon": "☠",
 		"badge_path": "res://assets/art/badges/body_count_200.webp",
 		"description": "Defeat 200 enemies total.",
 		"category": "Combat",
 	},
-	"flawless_chapter": {
+	"flawless_chapter":
+	{
 		"name": "Untouchable",
 		"icon": "🛡",
 		"badge_path": "res://assets/art/badges/flawless_chapter.webp",
@@ -242,77 +373,88 @@ const ACHIEVEMENTS := {
 		"category": "Combat",
 	},
 	# Exploration
-	"first_step": {
+	"first_step":
+	{
 		"name": "First Step",
 		"icon": "👣",
 		"badge_path": "res://assets/art/badges/first_step.webp",
 		"description": "Complete your first chapter.",
 		"category": "Exploration",
 	},
-	"half_way": {
+	"half_way":
+	{
 		"name": "Halfway There",
 		"icon": "🗺",
 		"badge_path": "res://assets/art/badges/half_way.webp",
 		"description": "Complete 5 chapters.",
 		"category": "Exploration",
 	},
-	"act2_reacher": {
+	"act2_reacher":
+	{
 		"name": "Beyond the Gate",
 		"icon": "🏰",
 		"badge_path": "res://assets/art/badges/act2_reacher.webp",
 		"description": "Reach Act 2.",
 		"category": "Exploration",
 	},
-	"act3_reacher": {
+	"act3_reacher":
+	{
 		"name": "The Prophecy's Subject",
 		"icon": "👁",
 		"badge_path": "res://assets/art/badges/act3_reacher.webp",
 		"description": "Reach Act 3.",
 		"category": "Exploration",
 	},
-	"act3_complete": {
+	"act3_complete":
+	{
 		"name": "Fang Breaker",
 		"icon": "⚔",
 		"badge_path": "res://assets/art/badges/act3_complete.webp",
 		"description": "Defeat the Crimson Fang's priest and break the cult's eastern network.",
 		"category": "Exploration",
 	},
-	"act4_reacher": {
+	"act4_reacher":
+	{
 		"name": "The Alliance Forms",
 		"icon": "🚩",
 		"badge_path": "res://assets/art/badges/act4_reacher.webp",
 		"description": "Reach Act 4 and form a three-banner alliance.",
 		"category": "Exploration",
 	},
-	"act4_complete": {
+	"act4_complete":
+	{
 		"name": "Storming the Capital",
 		"icon": "🏯",
 		"badge_path": "res://assets/art/badges/act4_complete.webp",
 		"description": "Breach the southern capital's outer wall with the alliance.",
 		"category": "Exploration",
 	},
-	"act5_reacher": {
+	"act5_reacher":
+	{
 		"name": "The War Begins",
 		"icon": "⚔",
 		"badge_path": "res://assets/art/badges/act5_reacher.webp",
 		"description": "Reach Act 5 and lead the alliance as an army.",
 		"category": "Exploration",
 	},
-	"act5_complete": {
+	"act5_complete":
+	{
 		"name": "Fang's End",
 		"icon": "🗡",
 		"badge_path": "res://assets/art/badges/act5_complete.webp",
 		"description": "Defeat the master of the Crimson Fang in his own tower.",
 		"category": "Exploration",
 	},
-	"act6_reacher": {
+	"act6_reacher":
+	{
 		"name": "The Sword Remembers",
 		"icon": "👁",
 		"badge_path": "res://assets/art/badges/act6_reacher.webp",
 		"description": "Reach Act 6 and learn the sword's true name.",
 		"category": "Exploration",
 	},
-	"act6_complete": {
+	"act6_complete":
+	{
 		"name": "The Prophecy Refused",
 		"icon": "🕊",
 		"badge_path": "res://assets/art/badges/act6_complete.webp",
@@ -320,28 +462,32 @@ const ACHIEVEMENTS := {
 		"category": "Exploration",
 	},
 	# Collection
-	"armory_3": {
+	"armory_3":
+	{
 		"name": "Armed and Ready",
 		"icon": "⚔",
 		"badge_path": "res://assets/art/badges/armory_3.webp",
 		"description": "Collect 3 different weapons.",
 		"category": "Collection",
 	},
-	"armory_all": {
+	"armory_all":
+	{
 		"name": "Living Arsenal",
 		"icon": "🔧",
 		"badge_path": "res://assets/art/badges/armory_all.webp",
 		"description": "Collect all 6 weapons.",
 		"category": "Collection",
 	},
-	"bestiary_half": {
+	"bestiary_half":
+	{
 		"name": "Field Researcher",
 		"icon": "📖",
 		"badge_path": "res://assets/art/badges/bestiary_half.webp",
 		"description": "Discover 4 enemy types in the bestiary.",
 		"category": "Collection",
 	},
-	"bestiary_all": {
+	"bestiary_all":
+	{
 		"name": "Monster Scholar",
 		"icon": "🎓",
 		"badge_path": "res://assets/art/badges/bestiary_all.webp",
@@ -349,56 +495,64 @@ const ACHIEVEMENTS := {
 		"category": "Collection",
 	},
 	# Mastery
-	"speed_demon": {
+	"speed_demon":
+	{
 		"name": "Speed Demon",
 		"icon": "⚡",
 		"badge_path": "res://assets/art/badges/speed_demon.webp",
 		"description": "Earn a 3-star rating on any chapter.",
 		"category": "Mastery",
 	},
-	"perfectionist": {
+	"perfectionist":
+	{
 		"name": "Perfectionist",
 		"icon": "💎",
 		"badge_path": "res://assets/art/badges/perfectionist.webp",
 		"description": "Earn 3 stars on 5 chapters.",
 		"category": "Mastery",
 	},
-	"legendary_find": {
+	"legendary_find":
+	{
 		"name": "Jackpot",
 		"icon": "🌟",
 		"badge_path": "res://assets/art/badges/legendary_find.webp",
 		"description": "Find a legendary-rarity weapon drop.",
 		"category": "Mastery",
 	},
-	"combo_master": {
+	"combo_master":
+	{
 		"name": "Combo King",
 		"icon": "🔥",
 		"badge_path": "res://assets/art/badges/combo_master.webp",
 		"description": "Land a 3-hit combo finisher.",
 		"category": "Combat",
 	},
-	"first_crit": {
+	"first_crit":
+	{
 		"name": "Critical Eye",
 		"icon": "💫",
 		"badge_path": "res://assets/art/badges/first_crit.webp",
 		"description": "Land your first critical hit.",
 		"category": "Combat",
 	},
-	"crit_50": {
+	"crit_50":
+	{
 		"name": "Death Precision",
 		"icon": "🎯",
 		"badge_path": "res://assets/art/badges/crit_50.webp",
 		"description": "Land 50 critical hits total.",
 		"category": "Mastery",
 	},
-	"enraged_kill": {
+	"enraged_kill":
+	{
 		"name": "Rage Against the Dying",
 		"icon": "😡",
 		"badge_path": "res://assets/art/badges/enraged_kill.webp",
 		"description": "Kill a berserker while it's enraged.",
 		"category": "Combat",
 	},
-	"summon_slayer": {
+	"summon_slayer":
+	{
 		"name": "Necromancer's Bane",
 		"icon": "💀",
 		"badge_path": "res://assets/art/badges/summon_slayer.webp",
@@ -406,14 +560,16 @@ const ACHIEVEMENTS := {
 		"category": "Combat",
 	},
 	# Streak (Retention)
-	"streak_3": {
+	"streak_3":
+	{
 		"name": "Committed",
 		"icon": "🔥",
 		"badge_path": "res://assets/art/badges/streak_3.webp",
 		"description": "Log in 3 days in a row.",
 		"category": "Mastery",
 	},
-	"streak_7": {
+	"streak_7":
+	{
 		"name": "Unstoppable",
 		"icon": "🔥",
 		"badge_path": "res://assets/art/badges/streak_7.webp",
@@ -421,14 +577,16 @@ const ACHIEVEMENTS := {
 		"category": "Mastery",
 	},
 	# Daily Challenge (Retention)
-	"daily_challenger": {
+	"daily_challenger":
+	{
 		"name": "Daily Challenger",
 		"icon": "⚔",
 		"badge_path": "res://assets/art/badges/daily_challenger.webp",
 		"description": "Complete your first daily challenge.",
 		"category": "Mastery",
 	},
-	"daily_veteran": {
+	"daily_veteran":
+	{
 		"name": "Daily Veteran",
 		"icon": "🏅",
 		"badge_path": "res://assets/art/badges/daily_veteran.webp",
@@ -436,14 +594,16 @@ const ACHIEVEMENTS := {
 		"category": "Mastery",
 	},
 	# Ghost Runs (Social)
-	"ghost_hunter": {
+	"ghost_hunter":
+	{
 		"name": "Ghost Hunter",
 		"icon": "👻",
 		"badge_path": "res://assets/art/badges/ghost_hunter.webp",
 		"description": "Beat your own ghost in a chapter.",
 		"category": "Mastery",
 	},
-	"speed_demon_5": {
+	"speed_demon_5":
+	{
 		"name": "Speed Demon",
 		"icon": "⚡",
 		"badge_path": "res://assets/art/badges/speed_demon_5.webp",
@@ -462,17 +622,17 @@ signal achievement_unlocked(achievement_id: String, achievement_data: Dictionary
 # Streak caps at 7 days, then cycles (day 8 = day 1 rewards again, streak counter keeps going)
 
 const STREAK_REWARDS := {
-	1: {"gold": 10,  "potions": 0, "label": "Day 1 — 10g"},
-	2: {"gold": 20,  "potions": 1, "label": "Day 2 — 20g + 1🧪"},
-	3: {"gold": 30,  "potions": 1, "label": "Day 3 — 30g + 1🧪"},
-	4: {"gold": 50,  "potions": 2, "label": "Day 4 — 50g + 2🧪"},
-	5: {"gold": 75,  "potions": 2, "label": "Day 5 — 75g + 2🧪"},
+	1: {"gold": 10, "potions": 0, "label": "Day 1 — 10g"},
+	2: {"gold": 20, "potions": 1, "label": "Day 2 — 20g + 1🧪"},
+	3: {"gold": 30, "potions": 1, "label": "Day 3 — 30g + 1🧪"},
+	4: {"gold": 50, "potions": 2, "label": "Day 4 — 50g + 2🧪"},
+	5: {"gold": 75, "potions": 2, "label": "Day 5 — 75g + 2🧪"},
 	6: {"gold": 100, "potions": 3, "label": "Day 6 — 100g + 3🧪"},
 	7: {"gold": 150, "potions": 3, "label": "Day 7 — 150g + 3🧪 🔥"},
 }
 
-var daily_streak: int = 0          # Consecutive days
-var last_login_date: String = ""   # YYYY-MM-DD format (UTC date)
+var daily_streak: int = 0  # Consecutive days
+var last_login_date: String = ""  # YYYY-MM-DD format (UTC date)
 var streak_claimed_today: bool = false  # Whether today's reward was claimed
 signal streak_claimed(streak_day: int, rewards: Dictionary)
 
@@ -482,56 +642,64 @@ signal streak_claimed(streak_day: int, rewards: Dictionary)
 # Bonus gold reward + achievement tracking
 
 const DAILY_CHALLENGE_MODIFIERS := {
-	"double_enemies": {
+	"double_enemies":
+	{
 		"icon": "👥",
 		"label": "Double Trouble",
 		"description": "2× enemy count",
 		"color": "#FF5555",
 		"icon_path": "res://assets/art/generated/ui/mod_enemy_swarm.webp",
 	},
-	"no_potions": {
+	"no_potions":
+	{
 		"icon": "🚫",
 		"label": "No Heal",
 		"description": "No potions drop",
 		"color": "#FF8800",
 		"icon_path": "res://assets/art/generated/ui/mod_no_potions.webp",
 	},
-	"speed_run": {
+	"speed_run":
+	{
 		"icon": "⏱",
 		"label": "Speed Run",
 		"description": "Complete in 90 seconds",
 		"color": "#55FFFF",
 		"icon_path": "res://assets/art/generated/ui/mod_speed_run.webp",
 	},
-	"glass_cannon": {
+	"glass_cannon":
+	{
 		"icon": "💀",
 		"label": "Glass Cannon",
 		"description": "50% HP, 2× damage",
 		"color": "#FF55FF",
 		"icon_path": "res://assets/art/generated/ui/mod_glass_cannon.webp",
 	},
-	"armored_foes": {
+	"armored_foes":
+	{
 		"icon": "🛡",
 		"label": "Armored Foes",
 		"description": "Enemies have +50% HP",
 		"color": "#AAAAFF",
 		"icon_path": "res://assets/art/generated/ui/mod_armored_foes.webp",
 	},
-	"no_dodge": {
+	"no_dodge":
+	{
 		"icon": "⚡",
 		"label": "No Dodge",
 		"description": "Dodge roll disabled",
 		"color": "#FFFF55",
 		"icon_path": "res://assets/art/generated/ui/mod_no_dodge.webp",
 	},
-	"elite_patrol": {
+	"elite_patrol":
+	{
 		"icon": "👑",
 		"label": "Elite Patrol",
 		"description": "All enemies are captains",
 		"color": "#FFAA55",
 		"icon_path": "res://assets/art/generated/ui/mod_elite_patrol.webp",
 	},
-	"poison_swamp": {
+	"poison_swamp":
+	{
 		"icon": "☠",
 		"label": "Poison Swamp",
 		"description": "1 poison tick/3sec",
@@ -570,22 +738,38 @@ const RESTED_XP_CAP := 1000
 var rested_xp: int = 0  # Accumulated rested bonus XP
 var last_logout_time: float = 0.0  # Unix timestamp of last save/close
 
+
 func _ready():
 	load_game()
 	_check_daily_streak()
 	_calculate_rested_xp()
 	if OS.has_feature("web"):
 		_start_autosave()
-	print("GameState loaded — Act %d, Ch %d, Level %d, Weapon: %s, Skills: %s, Streak: %d, Rested XP: %d" % [current_act, current_chapter, player_level, equipped_weapon, str(equipped_skills), daily_streak, rested_xp])
+	print(
+		(
+			"GameState loaded — Act %d, Ch %d, Level %d, Weapon: %s, Skills: %s, Streak: %d, Rested XP: %d"
+			% [
+				current_act,
+				current_chapter,
+				player_level,
+				equipped_weapon,
+				str(equipped_skills),
+				daily_streak,
+				rested_xp
+			]
+		)
+	)
+
 
 func _notification(what):
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
 		save_game()
 
+
 func _migrate_save(data: Dictionary) -> Dictionary:
 	"""Migrate save data from older versions to current format."""
 	var ver: String = data.get("version", "0.0")
-	
+
 	if ver < "2.6":
 		if not data.has("rested_xp"):
 			data["rested_xp"] = 0
@@ -599,9 +783,10 @@ func _migrate_save(data: Dictionary) -> Dictionary:
 			data["daily_challenge_total_completed"] = 0
 		if not data.has("collected_weapons"):
 			data["collected_weapons"] = {}
-	
+
 	data["version"] = "2.6"
 	return data
+
 
 func save_game():
 	var data := {
@@ -636,7 +821,7 @@ func save_game():
 		"rested_xp": rested_xp,
 		"last_logout_time": Time.get_unix_time_from_system(),
 	}
-	
+
 	var file := FileAccess.open(SAVE_FILE, FileAccess.WRITE)
 	if file:
 		file.store_string(JSON.stringify(data, "\t"))
@@ -646,25 +831,26 @@ func save_game():
 	else:
 		push_error("Failed to save game")
 
+
 func load_game():
 	if not FileAccess.file_exists(SAVE_FILE):
 		print("No save file — starting fresh")
 		return
-	
+
 	var file := FileAccess.open(SAVE_FILE, FileAccess.READ)
 	if file == null:
 		push_error("Cannot read save file")
 		return
-	
+
 	var text := file.get_as_text()
 	file.close()
-	
+
 	var json = JSON.new()
 	var err := json.parse(text)
 	if err != OK:
 		push_error("Save file corrupt — starting fresh")
 		return
-	
+
 	var data = json.data
 	if data is Dictionary:
 		data = _migrate_save(data)
@@ -696,38 +882,61 @@ func load_game():
 		ghost_runs_enabled = data.get("ghost_runs_enabled", true)
 		rested_xp = data.get("rested_xp", 0)
 		last_logout_time = data.get("last_logout_time", 0.0)
-		settings = data.get("settings", {
-			"master_volume": 1.0, "sfx_volume": 1.0, "bgm_volume": 0.7,
-			"screen_shake": true, "hit_stop": true, "show_damage_numbers": true,
-			"auto_aim": false, "text_speed": 1.0,
-		})
-		print("Save loaded — HP %d/%d, weapon: %s, skills: %s" % [saved_health, saved_max_health, equipped_weapon, str(equipped_skills)])
+		settings = (
+			data
+			. get(
+				"settings",
+				{
+					"master_volume": 1.0,
+					"sfx_volume": 1.0,
+					"bgm_volume": 0.7,
+					"screen_shake": true,
+					"hit_stop": true,
+					"show_damage_numbers": true,
+					"auto_aim": false,
+					"text_speed": 1.0,
+				}
+			)
+		)
+		print(
+			(
+				"Save loaded — HP %d/%d, weapon: %s, skills: %s"
+				% [saved_health, saved_max_health, equipped_weapon, str(equipped_skills)]
+			)
+		)
+
 
 func apply_settings():
 	AudioManager.set_master_volume(settings.master_volume)
 	AudioManager.set_sfx_volume(settings.sfx_volume)
 	AudioManager.set_bgm_volume(settings.bgm_volume)
 
+
 func complete_current_chapter():
 	var chapter_id := "act%02d_ch%03d" % [current_act, current_chapter]
 	if not completed_chapters.has(chapter_id):
 		completed_chapters.append(chapter_id)
-	
+
 	# Calculate stars based on performance
 	var elapsed := (Time.get_ticks_msec() / 1000.0) - chapter_start_time
 	var stars := calculate_stars(chapter_id, chapter_deaths, elapsed)
-	print("Chapter %s complete — %d stars (deaths: %d, time: %.1fs)" % [chapter_id, stars, chapter_deaths, elapsed])
-	
+	print(
+		(
+			"Chapter %s complete — %d stars (deaths: %d, time: %.1fs)"
+			% [chapter_id, stars, chapter_deaths, elapsed]
+		)
+	)
+
 	var next_chapter_id_raw = ChapterDatabase.get_current_chapter().get("next_chapter", "")
 	var next_chapter_id: String = "" if next_chapter_id_raw == null else str(next_chapter_id_raw)
 	if next_chapter_id != "" and ChapterDatabase.chapters.has(next_chapter_id):
 		ChapterDatabase.chapters[next_chapter_id]["is_unlocked"] = true
-	
+
 	var rewards = ChapterDatabase.get_current_chapter().get("rewards", {})
 	player_xp += rewards.get("xp", 0)
 	player_gold += rewards.get("gold", 0)
 	inventory["gold"] = player_gold
-	
+
 	if rewards.has("unlock_weapon"):
 		var w = rewards.unlock_weapon
 		if w not in unlocked_weapons:
@@ -739,13 +948,14 @@ func complete_current_chapter():
 			unlocked_skills.append(s)
 		if equipped_skills.size() < 3:
 			equipped_skills.append(s)
-	
+
 	saved_health = mini(saved_health + 25, saved_max_health)
-	
+
 	# Check chapter-based achievements
 	check_chapter_achievements(chapter_deaths, stars)
-	
+
 	save_game()
+
 
 func calculate_stars(chapter_id: String, deaths: int, elapsed_time: float) -> int:
 	# ⭐ = complete (always at least 1)
@@ -756,17 +966,36 @@ func calculate_stars(chapter_id: String, deaths: int, elapsed_time: float) -> in
 		stars = 2
 	# Par time per chapter (seconds) — generous targets
 	var par_times := {
-		"act01_ch001": 60, "act01_ch002": 75, "act01_ch003": 90, "act01_ch004": 120,
-		"act02_ch005": 75, "act02_ch006": 90, "act02_ch007": 90, "act02_ch008": 120,
-		"act02_ch009": 120, "act02_ch010": 150,
-		"act03_ch011": 90, "act03_ch012": 150, "act03_ch013": 120,
-		"act03_ch014": 180, "act03_ch015": 150,
-		"act04_ch016": 120, "act04_ch017": 150, "act04_ch018": 120,
-		"act04_ch019": 180, "act04_ch020": 240,
-		"act05_ch021": 150, "act05_ch022": 180, "act05_ch023": 200,
-		"act05_ch024": 240, "act05_ch025": 360,
-		"act06_ch026": 180, "act06_ch027": 200, "act06_ch028": 220,
-		"act06_ch029": 260, "act06_ch030": 360,
+		"act01_ch001": 60,
+		"act01_ch002": 75,
+		"act01_ch003": 90,
+		"act01_ch004": 120,
+		"act02_ch005": 75,
+		"act02_ch006": 90,
+		"act02_ch007": 90,
+		"act02_ch008": 120,
+		"act02_ch009": 120,
+		"act02_ch010": 150,
+		"act03_ch011": 90,
+		"act03_ch012": 150,
+		"act03_ch013": 120,
+		"act03_ch014": 180,
+		"act03_ch015": 150,
+		"act04_ch016": 120,
+		"act04_ch017": 150,
+		"act04_ch018": 120,
+		"act04_ch019": 180,
+		"act04_ch020": 240,
+		"act05_ch021": 150,
+		"act05_ch022": 180,
+		"act05_ch023": 200,
+		"act05_ch024": 240,
+		"act05_ch025": 360,
+		"act06_ch026": 180,
+		"act06_ch027": 200,
+		"act06_ch028": 220,
+		"act06_ch029": 260,
+		"act06_ch030": 360,
 	}
 	var par_time: float = par_times.get(chapter_id, 120.0)
 	if deaths == 0 and elapsed_time <= par_time:
@@ -776,8 +1005,10 @@ func calculate_stars(chapter_id: String, deaths: int, elapsed_time: float) -> in
 		chapter_stars[chapter_id] = stars
 	return stars
 
+
 func get_stars(chapter_id: String) -> int:
 	return chapter_stars.get(chapter_id, 0)
+
 
 func get_total_stars() -> int:
 	var total := 0
@@ -785,11 +1016,14 @@ func get_total_stars() -> int:
 		total += stars
 	return total
 
+
 func get_max_possible_stars() -> int:
 	return ChapterDatabase.chapters.size() * 3
 
+
 func get_level_xp_requirement(level: int) -> int:
 	return level * level * 100
+
 
 func add_xp(amount: int):
 	var actual_xp := amount
@@ -799,7 +1033,7 @@ func add_xp(amount: int):
 		actual_xp += bonus
 		rested_xp -= bonus
 		print("RESTED XP BONUS: +%d XP (rested remaining: %d)" % [bonus, rested_xp])
-	
+
 	player_xp += actual_xp
 	var required := get_level_xp_requirement(player_level)
 	while player_xp >= required:
@@ -812,11 +1046,13 @@ func add_xp(amount: int):
 			AudioManager.play_voice("level_up")
 		required = get_level_xp_requirement(player_level)
 
+
 func is_chapter_unlocked(act: int, chapter: int) -> bool:
 	var id := "act%02d_ch%03d" % [act, chapter]
 	if ChapterDatabase.chapters.has(id):
 		return ChapterDatabase.chapters[id].get("is_unlocked", false)
 	return false
+
 
 func reset_chapter_state():
 	chapter_kills = 0
@@ -829,7 +1065,9 @@ func reset_chapter_state():
 	chapter_deaths = 0
 	chapter_loot.clear()
 
+
 var _autosave_timer: Timer = null
+
 
 func _start_autosave():
 	_autosave_timer = Timer.new()
@@ -838,30 +1076,42 @@ func _start_autosave():
 	_autosave_timer.timeout.connect(_on_autosave_timeout)
 	add_child(_autosave_timer)
 
+
 func _on_autosave_timeout():
 	save_game()
 
+
 func _save_indexeddb():
 	if OS.has_feature("web"):
-		JavaScriptBridge.eval("""
+		(
+			JavaScriptBridge
+			. eval(
+				"""
 			if (typeof Module !== 'undefined' && Module.FS && Module.FS.syncfs) {
 				Module.FS.syncfs(false, function(err) {
 					if (err) console.error('GameState: syncfs error:', err);
 				});
 			}
-		""")
+		"""
+			)
+		)
+
 
 func add_potion(count: int = 1):
 	inventory["potions"] += count
 	print("Potions: %d" % inventory["potions"])
+
 
 func use_potion() -> bool:
 	if inventory["potions"] <= 0:
 		return false
 	inventory["potions"] -= 1
 	saved_health = mini(saved_health + 30, saved_max_health)
-	print("Used potion! HP: %d/%d (%d left)" % [saved_health, saved_max_health, inventory["potions"]])
+	print(
+		"Used potion! HP: %d/%d (%d left)" % [saved_health, saved_max_health, inventory["potions"]]
+	)
 	return true
+
 
 func _auto_equip_best_weapon():
 	var best_weapon := "broken_sword"
@@ -874,17 +1124,29 @@ func _auto_equip_best_weapon():
 				best_weapon = weapon_id
 	if best_weapon != equipped_weapon:
 		equipped_weapon = best_weapon
-		print("Auto-equipped: %s (DMG %d, CD %.2fs)" % [equipped_weapon, WEAPON_STATS[equipped_weapon].damage, WEAPON_STATS[equipped_weapon].cooldown])
+		print(
+			(
+				"Auto-equipped: %s (DMG %d, CD %.2fs)"
+				% [
+					equipped_weapon,
+					WEAPON_STATS[equipped_weapon].damage,
+					WEAPON_STATS[equipped_weapon].cooldown
+				]
+			)
+		)
+
 
 func get_weapon_stats(weapon_id: String = equipped_weapon) -> Dictionary:
 	if weapon_id in WEAPON_STATS:
 		return WEAPON_STATS[weapon_id]
 	return WEAPON_STATS["broken_sword"]
 
+
 func get_skill_stats(skill_id: String) -> Dictionary:
 	if skill_id in SKILL_STATS:
 		return SKILL_STATS[skill_id]
 	return {}
+
 
 func equip_weapon(weapon_id: String) -> bool:
 	if weapon_id in unlocked_weapons:
@@ -892,6 +1154,7 @@ func equip_weapon(weapon_id: String) -> bool:
 		save_game()
 		return true
 	return false
+
 
 func equip_skill(skill_id: String, slot: int) -> bool:
 	if skill_id not in unlocked_skills:
@@ -902,44 +1165,47 @@ func equip_skill(skill_id: String, slot: int) -> bool:
 	save_game()
 	return true
 
+
 class ChapterProgress:
 	var chapter_id: String
 	var best_time: float
 	var stars: int = 0
 	var completed: bool = false
 
+
 # ─── Loot Drop System ───────────────────────────────────
 # Variable ratio reinforcement: enemies drop loot on death
 # Boss/champion kills = guaranteed drop + rare chance
 # Trash mob kills = 5% uncommon drop chance
 
+
 func roll_loot_drop(enemy_type: String, is_boss: bool = false) -> Dictionary:
 	"""Roll for a loot drop when an enemy dies. Returns {} if no drop."""
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
-	
+
 	# Drop chance: trash 15%, boss/champion 100%
 	var drop_chance := 1.0 if is_boss else 0.15
 	if rng.randf() > drop_chance:
 		return {}
-	
+
 	# Roll rarity: weighted random from RARITY
 	var rarity := _roll_rarity(is_boss)
-	
+
 	# Pick a weapon of that rarity (or nearest lower)
 	var weapon_id := _pick_weapon_by_rarity(rarity)
 	if weapon_id.is_empty():
 		return {}
-	
+
 	var loot := {
 		"weapon_id": weapon_id,
 		"rarity": rarity,
 		"gold_value": _gold_value_for_rarity(rarity),
 	}
-	
+
 	# Track in chapter loot
 	chapter_loot.append(loot)
-	
+
 	# If weapon not yet owned, unlock it
 	if weapon_id not in unlocked_weapons:
 		unlocked_weapons.append(weapon_id)
@@ -949,7 +1215,7 @@ func roll_loot_drop(enemy_type: String, is_boss: bool = false) -> Dictionary:
 			AudioManager.play_voice("weapon_unlocked")
 	else:
 		loot["is_new"] = false
-	
+
 	# Update collection tracking
 	if not collected_weapons.has(weapon_id):
 		collected_weapons[weapon_id] = {"count": 0, "best_rarity": rarity}
@@ -959,39 +1225,45 @@ func roll_loot_drop(enemy_type: String, is_boss: bool = false) -> Dictionary:
 	var new_rank := rarity_order.find(rarity)
 	if new_rank > current_rank:
 		collected_weapons[weapon_id]["best_rarity"] = rarity
-	
+
 	# Add gold value
 	player_gold += loot.gold_value
 	inventory["gold"] = player_gold
-	
-	print("LOOT DROP: %s [%s] (gold: %d)%s" % [weapon_id, rarity, loot.gold_value, " NEW!" if loot.get("is_new") else " dup"])
-	
+
+	print(
+		(
+			"LOOT DROP: %s [%s] (gold: %d)%s"
+			% [weapon_id, rarity, loot.gold_value, " NEW!" if loot.get("is_new") else " dup"]
+		)
+	)
+
 	# Check loot achievements
 	check_loot_achievements(rarity)
-	
+
 	save_game()
 	return loot
+
 
 func _roll_rarity(is_boss: bool) -> String:
 	"""Weighted random rarity roll. Bosses get +15% to rare/legendary."""
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
-	
+
 	var weights := {}
 	for r in RARITY.keys():
 		weights[r] = RARITY[r].weight
-	
+
 	# Boss bonus: shift weight from common up to rare/legendary
 	if is_boss:
 		weights["common"] = max(10, weights["common"] - 30)
 		weights["uncommon"] += 10
 		weights["rare"] += 12
 		weights["legendary"] += 8
-	
+
 	var total := 0.0
 	for w in weights.values():
 		total += w
-	
+
 	var roll := rng.randf() * total
 	var cumulative := 0.0
 	for r in ["legendary", "rare", "uncommon", "common"]:
@@ -1000,11 +1272,12 @@ func _roll_rarity(is_boss: bool) -> String:
 			return r
 	return "common"
 
+
 func _pick_weapon_by_rarity(rarity: String) -> String:
 	"""Pick a weapon matching the rolled rarity. Falls back to lower rarity."""
 	var rarity_order := ["legendary", "rare", "uncommon", "common"]
 	var target_idx := rarity_order.find(rarity)
-	
+
 	# Try exact rarity first, then fall back to lower
 	for i in range(target_idx, rarity_order.size()):
 		var r: String = rarity_order[i]
@@ -1019,13 +1292,20 @@ func _pick_weapon_by_rarity(rarity: String) -> String:
 			return candidates[rng.randi() % candidates.size()]
 	return ""
 
+
 func _gold_value_for_rarity(rarity: String) -> int:
 	match rarity:
-		"common":    return 5
-		"uncommon":  return 15
-		"rare":      return 40
-		"legendary": return 100
-		_:           return 5
+		"common":
+			return 5
+		"uncommon":
+			return 15
+		"rare":
+			return 40
+		"legendary":
+			return 100
+		_:
+			return 5
+
 
 func get_loot_summary() -> Dictionary:
 	"""Get summary of chapter loot for victory screen."""
@@ -1044,6 +1324,7 @@ func get_loot_summary() -> Dictionary:
 		"by_rarity": by_rarity,
 	}
 
+
 func get_collection_progress() -> Dictionary:
 	"""Get weapon collection stats for UI."""
 	var total_weapons := WEAPON_STATS.size()
@@ -1054,41 +1335,51 @@ func get_collection_progress() -> Dictionary:
 		"percentage": (collected * 100.0 / total_weapons) if total_weapons > 0 else 0.0,
 	}
 
+
 # ─── Bestiary ─────────────────────────────────────────────────────────────────
+
 
 func record_kill(enemy_type: String) -> void:
 	"""Record a kill in the bestiary. Call from enemy death handlers."""
 	if not BESTIARY.has(enemy_type):
 		print("BESTIARY: Unknown enemy type '%s'" % enemy_type)
 		return
-	
+
 	if not bestiary.has(enemy_type):
 		bestiary[enemy_type] = {"kills": 0, "lore_unlocked": []}
-	
+
 	bestiary[enemy_type]["kills"] += 1
 	chapter_kills += 1
-	
+
 	# Check for lore unlock milestones
 	var entry: Dictionary = BESTIARY[enemy_type]
 	var lore_milestones: Array = entry.get("lore", {}).keys()
 	lore_milestones.sort()
-	
+
 	for milestone in lore_milestones:
-		if bestiary[enemy_type]["kills"] >= milestone and milestone not in bestiary[enemy_type]["lore_unlocked"]:
+		if (
+			bestiary[enemy_type]["kills"] >= milestone
+			and milestone not in bestiary[enemy_type]["lore_unlocked"]
+		):
 			bestiary[enemy_type]["lore_unlocked"].append(milestone)
-			print("BESTIARY LORE UNLOCK: %s at %d kills — %s" % [
-				entry.name, milestone, entry.lore[milestone].left(60) + "..."
-			])
+			print(
+				(
+					"BESTIARY LORE UNLOCK: %s at %d kills — %s"
+					% [entry.name, milestone, entry.lore[milestone].left(60) + "..."]
+				)
+			)
+
 
 func record_crit() -> void:
 	"""Record a critical hit. Call from player on crit."""
 	total_crits += 1
 	if total_crits >= 50:
 		unlock_achievement("crit_50")
-	
+
 	# Check kill-based achievements
 	check_achievements()
 	save_game()
+
 
 func get_bestiary_entry(enemy_type: String) -> Dictionary:
 	"""Get bestiary entry for an enemy type, including kill count and unlocked lore."""
@@ -1100,6 +1391,7 @@ func get_bestiary_entry(enemy_type: String) -> Dictionary:
 	entry["discovered"] = kills > 0
 	return entry
 
+
 func get_bestiary_progress() -> Dictionary:
 	"""Get overall bestiary completion stats."""
 	var total_types := BESTIARY.size()
@@ -1107,7 +1399,7 @@ func get_bestiary_progress() -> Dictionary:
 	var total_kills := 0
 	var lore_unlocked_count := 0
 	var total_lore := 0
-	
+
 	for enemy_type in BESTIARY:
 		var kills: int = bestiary.get(enemy_type, {}).get("kills", 0)
 		if kills > 0:
@@ -1117,7 +1409,7 @@ func get_bestiary_progress() -> Dictionary:
 		total_lore += lore.size()
 		var unlocked: Array = bestiary.get(enemy_type, {}).get("lore_unlocked", [])
 		lore_unlocked_count += unlocked.size()
-	
+
 	return {
 		"total_types": total_types,
 		"discovered": discovered,
@@ -1127,7 +1419,9 @@ func get_bestiary_progress() -> Dictionary:
 		"total_lore": total_lore,
 	}
 
+
 # ─── Achievement System ─────────────────────────────────────────────────────
+
 
 func unlock_achievement(achievement_id: String) -> bool:
 	"""Try to unlock an achievement. Returns true if newly unlocked, false if already had it."""
@@ -1136,7 +1430,7 @@ func unlock_achievement(achievement_id: String) -> bool:
 		return false
 	if achievements_unlocked.has(achievement_id):
 		return false  # Already unlocked
-	
+
 	achievements_unlocked[achievement_id] = Time.get_unix_time_from_system()
 	var data: Dictionary = ACHIEVEMENTS[achievement_id]
 	print("🏆 ACHIEVEMENT UNLOCKED: %s %s — %s" % [data.icon, data.name, data.description])
@@ -1148,27 +1442,29 @@ func unlock_achievement(achievement_id: String) -> bool:
 	save_game()
 	return true
 
+
 func is_achievement_unlocked(achievement_id: String) -> bool:
 	return achievements_unlocked.has(achievement_id)
+
 
 func check_achievements() -> void:
 	"""Check all achievement conditions and unlock any that are met. Call at key moments."""
 	var total_kills := 0
 	for enemy_type in bestiary:
 		total_kills += bestiary[enemy_type].get("kills", 0)
-	
+
 	var completed_count := completed_chapters.size()
 	var weapons_count := collected_weapons.size()
 	var discovered_enemies := 0
 	for enemy_type in BESTIARY:
 		if bestiary.get(enemy_type, {}).get("kills", 0) > 0:
 			discovered_enemies += 1
-	
+
 	var three_star_count := 0
 	for stars in chapter_stars.values():
 		if stars >= 3:
 			three_star_count += 1
-	
+
 	# Combat
 	if total_kills >= 1:
 		unlock_achievement("first_blood")
@@ -1176,7 +1472,7 @@ func check_achievements() -> void:
 		unlock_achievement("body_count_50")
 	if total_kills >= 200:
 		unlock_achievement("body_count_200")
-	
+
 	# Exploration
 	if completed_count >= 1:
 		unlock_achievement("first_step")
@@ -1200,7 +1496,7 @@ func check_achievements() -> void:
 		unlock_achievement("act6_reacher")
 	if completed_count >= 30:
 		unlock_achievement("act6_complete")
-	
+
 	# Collection
 	if weapons_count >= 3:
 		unlock_achievement("armory_3")
@@ -1210,12 +1506,13 @@ func check_achievements() -> void:
 		unlock_achievement("bestiary_half")
 	if discovered_enemies >= BESTIARY.size():
 		unlock_achievement("bestiary_all")
-	
+
 	# Mastery
 	if three_star_count >= 1:
 		unlock_achievement("speed_demon")
 	if three_star_count >= 5:
 		unlock_achievement("perfectionist")
+
 
 func check_chapter_achievements(deaths: int, stars: int) -> void:
 	"""Check achievements that depend on chapter performance. Call after chapter completion."""
@@ -1223,7 +1520,7 @@ func check_chapter_achievements(deaths: int, stars: int) -> void:
 		unlock_achievement("flawless_chapter")
 	if stars >= 3:
 		unlock_achievement("speed_demon")
-	
+
 	# Speed Demon: 3-star 5 different chapters
 	var three_star_count := 0
 	for chapter_id in chapter_stars:
@@ -1231,9 +1528,10 @@ func check_chapter_achievements(deaths: int, stars: int) -> void:
 			three_star_count += 1
 	if three_star_count >= 5:
 		unlock_achievement("speed_demon_5")
-	
+
 	# Re-check general achievements too
 	check_achievements()
+
 
 func check_ghost_achievement(chapter_id: String, completion_time: float) -> void:
 	"""Check if player beat their ghost. Called after chapter completion if ghost was active."""
@@ -1241,11 +1539,13 @@ func check_ghost_achievement(chapter_id: String, completion_time: float) -> void
 	if best_time > 0 and completion_time < best_time:
 		unlock_achievement("ghost_hunter")
 
+
 func check_loot_achievements(rarity: String) -> void:
 	"""Check achievements that depend on loot drops. Call after loot roll."""
 	if rarity == "legendary":
 		unlock_achievement("legendary_find")
 	check_achievements()
+
 
 func get_achievement_progress() -> Dictionary:
 	"""Get achievement stats for UI."""
@@ -1256,6 +1556,7 @@ func get_achievement_progress() -> Dictionary:
 		"unlocked": unlocked,
 		"percentage": (unlocked * 100.0 / total) if total > 0 else 0.0,
 	}
+
 
 func get_achievements_by_category() -> Dictionary:
 	"""Get achievements organized by category for the achievement screen."""
@@ -1272,12 +1573,14 @@ func get_achievements_by_category() -> Dictionary:
 		categories[cat].append(entry)
 	return categories
 
+
 # ─── Daily Login Streak System ──────────────────────────────────────────────
+
 
 func _check_daily_streak() -> void:
 	"""Check and update daily login streak. Call on game startup."""
 	var today := Time.get_datetime_string_from_system().split(" ")[0]  # YYYY-MM-DD
-	
+
 	# Guard against malformed/empty saved dates
 	if last_login_date.is_empty() or not _is_valid_date_string(last_login_date):
 		# First ever login (or corrupted save)
@@ -1287,15 +1590,15 @@ func _check_daily_streak() -> void:
 		daily_challenge_completed_today = false  # New day = fresh challenge
 		print("STREAK: First login! Day 1")
 		return
-	
+
 	if last_login_date == today:
 		# Same day — already logged in today
 		print("STREAK: Already logged in today (day %d)" % daily_streak)
 		return
-	
+
 	# New day — reset daily challenge
 	daily_challenge_completed_today = false
-	
+
 	# Check if yesterday was the last login (consecutive)
 	var yesterday := _get_yesterday_date(last_login_date)
 	if today == yesterday or _is_next_day(last_login_date, today):
@@ -1311,29 +1614,31 @@ func _check_daily_streak() -> void:
 		streak_claimed_today = false
 		print("STREAK: Broken! Reset to day 1")
 
+
 func claim_daily_streak() -> Dictionary:
 	"""Claim today's streak reward. Returns reward dict or empty if already claimed."""
 	if streak_claimed_today:
 		return {}
-	
+
 	var reward_day := ((daily_streak - 1) % 7) + 1  # Cycle 1-7
 	var rewards: Dictionary = STREAK_REWARDS.get(reward_day, STREAK_REWARDS[1]).duplicate()
-	
+
 	# Apply rewards
 	player_gold += rewards.get("gold", 0)
 	inventory["gold"] = player_gold
 	add_potion(rewards.get("potions", 0))
-	
+
 	streak_claimed_today = true
 	print("STREAK CLAIMED: Day %d → %s" % [daily_streak, rewards.get("label", "")])
 	AudioManager.play_sfx("streak_claim")
 	streak_claimed.emit(daily_streak, rewards)
-	
+
 	# Check streak achievements
 	_check_streak_achievements()
-	
+
 	save_game()
 	return rewards
+
 
 func get_streak_info() -> Dictionary:
 	"""Get streak status for UI display."""
@@ -1347,12 +1652,14 @@ func get_streak_info() -> Dictionary:
 		"days_to_cycle": 7 - reward_day,
 	}
 
+
 func _check_streak_achievements() -> void:
 	"""Check streak-related achievements."""
 	if daily_streak >= 3:
 		unlock_achievement("streak_3")
 	if daily_streak >= 7:
 		unlock_achievement("streak_7")
+
 
 func _is_valid_date_string(date_str: String) -> bool:
 	"""Validate YYYY-MM-DD format and sane values."""
@@ -1366,6 +1673,7 @@ func _is_valid_date_string(date_str: String) -> bool:
 		return false
 	return true
 
+
 func _get_yesterday_date(date_str: String) -> String:
 	"""Get the date string for the day before the given date."""
 	if not _is_valid_date_string(date_str):
@@ -1374,28 +1682,47 @@ func _get_yesterday_date(date_str: String) -> String:
 	var year := int(parts[0])
 	var month := int(parts[1])
 	var day := int(parts[2])
-	
+
 	# Convert to unix timestamp and subtract 86400
-	var epoch := Time.get_unix_time_from_datetime_dict({"year": year, "month": month, "day": day, "hour": 12, "minute": 0, "second": 0})
+	var epoch := Time.get_unix_time_from_datetime_dict(
+		{"year": year, "month": month, "day": day, "hour": 12, "minute": 0, "second": 0}
+	)
 	var yesterday_epoch := epoch - 86400
 	var yesterday_dict := Time.get_datetime_dict_from_unix_time(yesterday_epoch)
-	return "%04d-%02d-%02d" % [yesterday_dict["year"], yesterday_dict["month"], yesterday_dict["day"]]
+	return (
+		"%04d-%02d-%02d" % [yesterday_dict["year"], yesterday_dict["month"], yesterday_dict["day"]]
+	)
+
 
 func _is_next_day(date1: String, date2: String) -> bool:
 	"""Check if date2 is the day after date1."""
 	var parts1 := date1.split("-")
 	var parts2 := date2.split("-")
-	var epoch1 := Time.get_unix_time_from_datetime_dict({
-		"year": int(parts1[0]), "month": int(parts1[1]), "day": int(parts1[2]),
-		"hour": 12, "minute": 0, "second": 0
-	})
-	var epoch2 := Time.get_unix_time_from_datetime_dict({
-		"year": int(parts2[0]), "month": int(parts2[1]), "day": int(parts2[2]),
-		"hour": 12, "minute": 0, "second": 0
-	})
+	var epoch1 := Time.get_unix_time_from_datetime_dict(
+		{
+			"year": int(parts1[0]),
+			"month": int(parts1[1]),
+			"day": int(parts1[2]),
+			"hour": 12,
+			"minute": 0,
+			"second": 0
+		}
+	)
+	var epoch2 := Time.get_unix_time_from_datetime_dict(
+		{
+			"year": int(parts2[0]),
+			"month": int(parts2[1]),
+			"day": int(parts2[2]),
+			"hour": 12,
+			"minute": 0,
+			"second": 0
+		}
+	)
 	return (epoch2 - epoch1) <= 86400 and epoch2 > epoch1
 
+
 # ─── Rested XP System ───────────────────────────────────────────────────────
+
 
 func _calculate_rested_xp() -> void:
 	"""Calculate rested XP accumulated since last logout."""
@@ -1403,20 +1730,26 @@ func _calculate_rested_xp() -> void:
 		# First time or no prior logout — no rested XP
 		last_logout_time = Time.get_unix_time_from_system()
 		return
-	
+
 	var now := Time.get_unix_time_from_system()
 	var offline_minutes := (now - last_logout_time) / 60.0
-	
+
 	if offline_minutes < 1.0:
 		return  # Less than 1 minute offline — no bonus
-	
+
 	var earned := int(offline_minutes * RESTED_XP_RATE)
 	rested_xp = mini(rested_xp + earned, RESTED_XP_CAP)
 	last_logout_time = now
-	
+
 	if earned > 0:
 		var hours := offline_minutes / 60.0
-		print("RESTED XP: Away %.1fh → +%d rested XP (total: %d/%d)" % [hours, earned, rested_xp, RESTED_XP_CAP])
+		print(
+			(
+				"RESTED XP: Away %.1fh → +%d rested XP (total: %d/%d)"
+				% [hours, earned, rested_xp, RESTED_XP_CAP]
+			)
+		)
+
 
 func get_rested_xp_info() -> Dictionary:
 	"""Get rested XP status for UI display."""
@@ -1430,24 +1763,26 @@ func get_rested_xp_info() -> Dictionary:
 		"has_bonus": rested_xp > 0,
 	}
 
+
 # ─── Daily Challenge System ───────────────────────────────────────────────────
+
 
 func get_daily_challenge() -> Dictionary:
 	"""Generate today's daily challenge. Deterministic from date seed."""
 	var today := Time.get_datetime_string_from_system().split(" ")[0]  # YYYY-MM-DD
 	var seed_val := _date_to_seed(today)
-	
+
 	# Seeded random for deterministic daily challenge
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_val
-	
+
 	# Pick chapter (from unlocked chapters, or any if none unlocked)
 	var available_chapters := ChapterDatabase.chapters.keys()
 	if available_chapters.is_empty():
 		available_chapters = ["act01_ch001"]
 	var chapter_idx := rng.randi() % available_chapters.size()
 	var chapter_id: String = available_chapters[chapter_idx]
-	
+
 	# Pick 2-3 modifiers
 	var modifier_keys := DAILY_CHALLENGE_MODIFIERS.keys()
 	var num_modifiers := rng.randi_range(2, 3)
@@ -1459,10 +1794,10 @@ func get_daily_challenge() -> Dictionary:
 			idx = rng.randi() % modifier_keys.size()
 		used_indices.append(idx)
 		selected_modifiers.append(modifier_keys[idx])
-	
+
 	# Calculate bonus gold (base 50 + 25 per modifier)
 	var bonus_gold := 50 + (25 * num_modifiers)
-	
+
 	return {
 		"date": today,
 		"chapter_id": chapter_id,
@@ -1471,29 +1806,31 @@ func get_daily_challenge() -> Dictionary:
 		"completed": daily_challenge_completed_today,
 	}
 
+
 func complete_daily_challenge() -> void:
 	"""Mark today's daily challenge as completed and award rewards."""
 	if daily_challenge_completed_today:
 		return
-	
+
 	var challenge := get_daily_challenge()
 	var bonus_gold: int = challenge.get("bonus_gold", 50)
-	
+
 	player_gold += bonus_gold
 	daily_challenge_completed_today = true
 	daily_challenge_total_completed += 1
 	if bonus_gold > daily_challenge_best_gold:
 		daily_challenge_best_gold = bonus_gold
-	
+
 	print("DAILY CHALLENGE COMPLETE! +%dg bonus" % bonus_gold)
 	AudioManager.play_sfx("daily_challenge")
 	if AudioManager.voice_cache.has("daily_complete"):
 		AudioManager.play_voice("daily_complete")
 	daily_challenge_completed.emit({"gold": bonus_gold})
-	
+
 	# Check achievements
 	_check_daily_challenge_achievements()
 	save_game()
+
 
 func _check_daily_challenge_achievements() -> void:
 	"""Check daily challenge achievements."""
@@ -1501,6 +1838,7 @@ func _check_daily_challenge_achievements() -> void:
 		unlock_achievement("daily_challenger")
 	if daily_challenge_total_completed >= 7:
 		unlock_achievement("daily_veteran")
+
 
 func _date_to_seed(date_str: String) -> int:
 	"""Convert YYYY-MM-DD date to a deterministic integer seed."""
@@ -1511,9 +1849,11 @@ func _date_to_seed(date_str: String) -> int:
 	# Simple hash: year*10000 + month*100 + day (deterministic per day)
 	return year * 10000 + month * 100 + day
 
+
 func is_daily_challenge_available() -> bool:
 	"""Check if today's daily challenge hasn't been completed yet."""
 	return not daily_challenge_completed_today
+
 
 func reset_daily_challenge_if_new_day() -> void:
 	"""Reset daily challenge completion if it's a new day. Called on login."""
@@ -1521,6 +1861,7 @@ func reset_daily_challenge_if_new_day() -> void:
 	# If we have a last_login_date and it's different from today, the challenge resets
 	# (The streak system already handles last_login_date updates)
 	# daily_challenge_completed_today resets naturally since it's date-keyed
+
 
 func get_leaderboard_data() -> Array:
 	"""Get leaderboard data for all chapters: chapter_id, title, best_time, stars, has_ghost."""
