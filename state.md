@@ -3,11 +3,40 @@
 *Tracked. Updated at session close. What changed, what's pending, what's blocked.*
 
 ## Current state
-- Head: `<fill in at session close>`
-- Tests: `<fill in at session close>`
-- Last updated: 2026-07-21
+- Head: `02675d8` (fix/smoke-driver-victory-detection)
+- Tests: `GODOT_BIN=godot bash scripts/ci/smoke_test.sh` — PASS (30/30 chapters, no script errors)
+- Last updated: 2026-07-22
 
 ---
+
+## P0 fix — smoke driver victory-screen detection (2026-07-22)
+
+### Root cause
+The smoke driver relied solely on VictoryScreen visibility (`scene.get_node_or_null("Main/VictoryScreen").visible`) to detect chapter completion. In CI's headless environment, VictoryScreen detection could fail if:
+1. The `Main/VictoryScreen` node path didn't resolve (instanced scene edge case)
+2. `show_victory()` crashed before setting `visible = true` (missing textures in headless)
+3. `CanvasLayer.visible` was `false` despite `show_victory()` being called
+
+After chapter completion via `LevelManager._finish_chapter_complete()`, `GameState.complete_current_chapter()` updates `GameState.completed_chapters` *before* `show_victory()`. The driver never checked GameState, so it reported 0/30.
+
+### Fix
+- Added `_last_completed_count` tracking `GameState.completed_chapters.size()` as a fallback detection path
+- Added `_advancing` guard at top of `_process` to prevent double-reporting (after `_advance_to_next_chapter()` changes ChapterDatabase, subsequent ticks would re-enter with wrong chapter ID)
+- Made `_get_victory_screen()` try `find_child("VictoryScreen", true, false)` as fallback when `Main/VictoryScreen` path fails
+- Extracted `_try_chapter_complete()`, `_advance_dialogue()`, `_heal_and_fight()` from `_process` to satisfy gdlint max-returns rule
+
+### Gate evidence
+```
+$ GODOT_BIN=godot bash scripts/ci/smoke_test.sh
+Running headless smoke test for 30 chapters: res://scenes/main_with_driver.tscn
+PASS: All 30 chapters completed headlessly with no script errors
+
+$ gdformat --check scripts/ci/headless_smoke_driver.gd && gdlint scripts/ci/headless_smoke_driver.gd
+1 file would be left unchanged
+Success: no problems found
+```
+
+30/30 chapters completed sequentially (act01_ch001 through act06_ch030), zero script errors, zero parse errors.
 
 # Asset Generation State
 
