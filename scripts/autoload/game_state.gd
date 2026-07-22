@@ -1,8 +1,10 @@
 extends Node
 # GameState — Persistent save/load + progression tracking
-# v0.86 — 11 enemy types, shaman buff system, new achievements
+# v0.87 — save encryption at rest, 11 enemy types, shaman buff system, new achievements
 
 const SAVE_FILE := "user://swordjin_save.json"
+const SAVE_KEY_FILE := "user://swordjin_save.key"
+const SAVE_ENC_VERSION := 1
 
 # Rarity tiers — color coding & drop weights
 const RARITY := {
@@ -788,6 +790,56 @@ func _migrate_save(data: Dictionary) -> Dictionary:
 	return data
 
 
+func _get_save_key() -> PackedByteArray:
+	if FileAccess.file_exists(SAVE_KEY_FILE):
+		var kf := FileAccess.open(SAVE_KEY_FILE, FileAccess.READ)
+		if kf:
+			var key := kf.get_buffer(32)
+			kf.close()
+			if key.size() == 32:
+				return key
+	var crypto := Crypto.new()
+	var key := crypto.generate_random_bytes(32)
+	var kf := FileAccess.open(SAVE_KEY_FILE, FileAccess.WRITE)
+	if kf:
+		kf.store_buffer(key)
+		kf.close()
+	return key
+
+
+func _encrypt(plaintext: String) -> String:
+	var key := _get_save_key()
+	var data_bytes := plaintext.to_utf8_buffer()
+	var encrypted := PackedByteArray()
+	encrypted.resize(data_bytes.size())
+	for i in range(data_bytes.size()):
+		encrypted[i] = data_bytes[i] ^ key[i % key.size()]
+	var base64 := Marshalls.raw_to_base64(encrypted)
+	return JSON.stringify({"enc": SAVE_ENC_VERSION, "data": base64})
+
+
+func _decrypt(ciphertext: String) -> String:
+	var json := JSON.new()
+	if json.parse(ciphertext) != OK:
+		return ciphertext
+	var data = json.data
+	if not data is Dictionary or not data.has("enc"):
+		return ciphertext
+	var enc_version: int = data.get("enc", 0)
+	if enc_version != SAVE_ENC_VERSION:
+		return ciphertext
+	var base64: String = data.get("data", "")
+	var encrypted := Marshalls.base64_to_raw(base64)
+	if encrypted.is_empty():
+		return ciphertext
+	var key := _get_save_key()
+	var decrypted := PackedByteArray()
+	decrypted.resize(encrypted.size())
+	for i in range(encrypted.size()):
+		decrypted[i] = encrypted[i] ^ key[i % key.size()]
+	return decrypted.get_string_from_utf8()
+
+
 func save_game():
 	var data := {
 		"version": "2.6",
@@ -824,7 +876,7 @@ func save_game():
 
 	var file := FileAccess.open(SAVE_FILE, FileAccess.WRITE)
 	if file:
-		file.store_string(JSON.stringify(data, "\t"))
+		file.store_string(_encrypt(JSON.stringify(data, "\t")))
 		file.close()
 		_save_indexeddb()
 		print("Game saved")
@@ -842,7 +894,7 @@ func load_game():
 		push_error("Cannot read save file")
 		return
 
-	var text := file.get_as_text()
+	var text := _decrypt(file.get_as_text())
 	file.close()
 
 	var json = JSON.new()
