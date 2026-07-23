@@ -729,7 +729,10 @@ var chapter_start_time: float = 0.0
 var chapter_deaths: int = 0
 
 # Ghost run settings (persisted)
-var ghost_runs_enabled: bool = true  # Whether to show ghost replays
+var ghost_runs_enabled: bool = true  # Whether to show ghost replys
+
+# Game data namespace (v2 save expansion — achievements, bestiary, daily, etc.)
+var game_data: Dictionary = {}
 
 # ─── Rested XP System ──────────────────────────────────────────────────────
 # Offline time accumulates bonus XP: 1 rested XP per 2 minutes offline
@@ -785,6 +788,9 @@ func _migrate_save(data: Dictionary) -> Dictionary:
 			data["daily_challenge_total_completed"] = 0
 		if not data.has("collected_weapons"):
 			data["collected_weapons"] = {}
+
+	if not data.has("game_data"):
+		data["game_data"] = {}
 
 	data["version"] = "2.6"
 	return data
@@ -872,6 +878,7 @@ func save_game():
 		"ghost_runs_enabled": ghost_runs_enabled,
 		"rested_xp": rested_xp,
 		"last_logout_time": Time.get_unix_time_from_system(),
+		"game_data": game_data,
 	}
 
 	var file := FileAccess.open(SAVE_FILE, FileAccess.WRITE)
@@ -934,6 +941,7 @@ func load_game():
 		ghost_runs_enabled = data.get("ghost_runs_enabled", true)
 		rested_xp = data.get("rested_xp", 0)
 		last_logout_time = data.get("last_logout_time", 0.0)
+		game_data = data.get("game_data", {})
 		settings = (
 			data
 			. get(
@@ -1216,6 +1224,16 @@ func equip_skill(skill_id: String, slot: int) -> bool:
 	equipped_skills[slot] = skill_id
 	save_game()
 	return true
+
+
+func get_game_data(key: String, default_value = null):
+	if game_data.has(key):
+		return game_data[key]
+	return default_value
+
+
+func set_game_data(key: String, value) -> void:
+	game_data[key] = value
 
 
 class ChapterProgress:
