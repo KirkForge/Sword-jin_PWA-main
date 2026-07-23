@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Test: 14 new GUT unit tests — combat depth (5), PlayFab login error (3), save depth (3), ghost replay (3) — total now 29 tests / 61 assertions
+- Save: `game_data` namespace in save format for future features (achievements, bestiary, daily challenges); `get_game_data(key)` / `set_game_data(key, value)` methods on GameState
+- Save: `_migrate_save` adds `game_data: {}` for v1→v2 migration (forward-compatible)
+
 ### Fixed
 
 - CI: Smoke driver now detects chapter completion via GameState fallback when VictoryScreen is unreachable (fixes 0/30 chapters completed in headless CI)
