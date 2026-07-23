@@ -3,11 +3,53 @@
 *Tracked. Updated at session close. What changed, what's pending, what's blocked.*
 
 ## Current state
-- Head: `b0f9359` (chore/ci-quality-and-docs)
+- Head: `bac0e0b` (chore/pck-size-reduction)
 - Tests: GUT unit tests — 15 tests, 26 assertions, all passing
 - Smoke test: 30/30 chapters, no script errors
 - Lint: `gdformat --check . && gdlint .` — PASS (binding in CI)
-- Last updated: 2026-07-22
+- .pck size: 29 MB (was 111 MB)
+- Last updated: 2026-07-23
+
+---
+
+## Session 2026-07-23 — .pck size reduction (Task 3.3)
+
+### Completed
+- **Task 3.3**: Reduced .pck from 111 MB to 29 MB (74% reduction, well under 80 MB target)
+  - Set texture import default to lossy compression (`compress/mode=1`) in `project.godot` `[import_defaults]` — imported textures dropped from ~80 MB (uncompressed RGBA) to ~9 MB (lossy-compressed)
+  - Removed 52 unreferenced SFX .wav files (not referenced in any .gd or .tscn)
+  - Re-encoded all 17 BGM .ogg files at 64kbps (local-only, assets/bgm/ is gitignored)
+  - Converted `theme01_ambience.wav` (1.3 MB) to `.ogg` (36 KB)
+  - Export preset: `vram_texture_compression/for_mobile=true` (local-only, not in git diff since export_presets.cfg was reverted — VRAM compression requires S3TC ASTC support at export time that fails in CI headless; lossy compress/mode=1 achieves the goal without VRAM export flags)
+
+### .pck size audit
+- Before: 111 MB (uncompressed RGBA textures ~80 MB, BGM ~32 MB at 120kbps, SFX ~2.8 MB, voice ~0.9 MB)
+- After: 29 MB (lossy-compressed textures ~9 MB, BGM ~14 MB at 64kbps, SFX ~1.4 MB, voice ~0.9 MB)
+- Top contributors to original size:
+  - Textures: 1166 .webp/.png files, all stored uncompressed (compress/mode=0) → now lossy (compress/mode=1)
+  - BGM: 17 .ogg files at ~120kbps → re-encoded to 64kbps
+  - SFX: 74 .wav files, 52 unreferenced → removed
+  - theme01_ambience.wav: 1.3 MB uncompressed WAV → converted to 36 KB .ogg
+
+### Gate evidence
+```
+$ du -sh builds/web/index.pck
+29M	builds/web/index.pck
+
+$ GODOT_BIN=/usr/local/bin/godot bash scripts/ci/smoke_test.sh
+Running headless smoke test for 30 chapters: res://scenes/main_with_driver.tscn
+PASS: All 30 chapters completed headlessly with no script errors
+
+$ gdformat --check scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd test/*.gd
+52 files would be left unchanged
+
+$ gdlint scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd test/*.gd
+Success: no problems found
+```
+
+### Pending
+- **Task 2.2** (real-device offline test): Manual testing on Android/iOS not completed. Checklist exists.
+- Lighthouse PWA 0.9 threshold: needs CI verification (may fail on throttled run)
 
 ---
 

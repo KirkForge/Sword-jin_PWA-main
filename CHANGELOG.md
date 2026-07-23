@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Reduced .pck size from 111 MB to 29 MB: texture lossy compression (compress/mode=1), removed 52 unreferenced SFX, re-encoded BGM at 64kbps, converted theme01_ambience.wav to .ogg
+
 ### Fixed
 
 - CI: Smoke driver now detects chapter completion via GameState fallback when VictoryScreen is unreachable (fixes 0/30 chapters completed in headless CI)
