@@ -6,7 +6,6 @@
       "numberOfRuns": 3,
       "settings": {
         "onlyCategories": ["performance", "pwa", "accessibility"],
-        "preset": "mobile",
         "throttlingMethod": "simulate",
         "throttling": {
           "rttMs": 150,
