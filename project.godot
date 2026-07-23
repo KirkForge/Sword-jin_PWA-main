@@ -52,3 +52,9 @@ compress=true
 [rendering]
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
+
+[import_defaults]
+
+texture = {
+"compress/mode": 1
+}
