@@ -133,26 +133,23 @@ func test_game_state_weapon_stats():
 
 
 func test_game_state_rarity_tiers():
-	var gs = autofree(GameState.new())
-	assert_true(GameState.RARITY.has("common"), "should have common rarity")
-	assert_true(GameState.RARITY.has("uncommon"), "should have uncommon rarity")
-	assert_true(GameState.RARITY.has("rare"), "should have rare rarity")
-	assert_true(GameState.RARITY.has("legendary"), "should have legendary rarity")
-	for key in GameState.RARITY:
-		var tier = GameState.RARITY[key]
+	assert_true(WeaponDB.RARITY.has("common"), "should have common rarity")
+	assert_true(WeaponDB.RARITY.has("uncommon"), "should have uncommon rarity")
+	assert_true(WeaponDB.RARITY.has("rare"), "should have rare rarity")
+	assert_true(WeaponDB.RARITY.has("legendary"), "should have legendary rarity")
+	for key in WeaponDB.RARITY:
+		var tier = WeaponDB.RARITY[key]
 		assert_true(tier.has("weight"), "rarity tier %s should have weight" % key)
 
 
 func test_game_state_skill_stats():
-	var gs = autofree(GameState.new())
-	var skill = gs.get_skill_stats("whirlwind_slash")
+	var skill = WeaponDB.get_skill_stats("whirlwind_slash")
 	assert_true(skill is Dictionary, "skill stats should return dictionary")
 	assert_true(skill.has("damage_mult"), "whirlwind_slash should have damage_mult")
 
 
 func test_game_state_dail_challenge_modifiers():
-	var gs = autofree(GameState.new())
 	assert_true(
-		GameState.DAILY_CHALLENGE_MODIFIERS is Dictionary,
+		DailyChallengeManager.DAILY_CHALLENGE_MODIFIERS is Dictionary,
 		"DAILY_CHALLENGE_MODIFIERS should be a dictionary"
 	)

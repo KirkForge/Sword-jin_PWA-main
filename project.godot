@@ -42,6 +42,12 @@ ScreenShake="*res://scripts/screen_shake.gd"
 HitStop="*res://scripts/hit_stop.gd"
 ScreenFader="*res://scenes/screen_fader.tscn"
 ErrorScreen="*res://scenes/error_screen.tscn"
+SaveManager="*res://scripts/autoload/save_manager.gd"
+WeaponDB="*res://scripts/autoload/weapon_db.gd"
+AchievementTracker="*res://scripts/autoload/achievement_tracker.gd"
+DailyChallengeManager="*res://scripts/autoload/daily_challenge_manager.gd"
+SettingsManager="*res://scripts/autoload/settings_manager.gd"
+BestiaryManager="*res://scripts/autoload/bestiary_manager.gd"
 
 [playfab]
 title_id=""
