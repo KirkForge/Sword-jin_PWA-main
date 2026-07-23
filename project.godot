@@ -49,6 +49,7 @@ DailyChallengeManager="*res://scripts/autoload/daily_challenge_manager.gd"
 SettingsManager="*res://scripts/autoload/settings_manager.gd"
 BestiaryManager="*res://scripts/autoload/bestiary_manager.gd"
 StreakManager="*res://scripts/autoload/streak_manager.gd"
+ErrorTracker="*res://scripts/autoload/error_tracker.gd"
 
 [playfab]
 title_id=""

@@ -207,6 +207,9 @@ func _on_request_completed(
 
 	if parse_err != OK:
 		push_error("[PlayFab] JSON parse error")
+		ErrorTracker.report_error(
+			"playfab_json", "JSON parse error in response", {"parse_error": parse_err}
+		)
 		_process_queue()
 		return
 
@@ -244,6 +247,7 @@ func _handle_login(data: Dictionary, status: int):
 	else:
 		var error: String = data.get("errorMessage", "Unknown error")
 		push_error("[PlayFab] Login failed: %s" % error)
+		ErrorTracker.report_error("playfab_login", error, {"status": status})
 		login_failed.emit(error)
 
 
@@ -257,6 +261,9 @@ func _handle_submit(data: Dictionary, status: int, context: Dictionary):
 	else:
 		var error: String = data.get("errorMessage", "Unknown error")
 		push_error("[PlayFab] Score submit failed for %s: %s" % [chapter_id, error])
+		ErrorTracker.report_error(
+			"playfab_score", error, {"chapter_id": chapter_id, "status": status}
+		)
 		score_submit_failed.emit(chapter_id, error)
 
 
@@ -285,6 +292,9 @@ func _handle_leaderboard(data: Dictionary, status: int, context: Dictionary):
 	else:
 		var error: String = data.get("errorMessage", "Unknown error")
 		push_error("[PlayFab] Leaderboard failed for %s: %s" % [chapter_id, error])
+		ErrorTracker.report_error(
+			"playfab_leaderboard", error, {"chapter_id": chapter_id, "status": status}
+		)
 		leaderboard_failed.emit(chapter_id, error)
 
 
