@@ -59,7 +59,6 @@ htmlcov/
 coverage.xml
 
 # === Generated binary assets (regenerate via scripts/) ===
-assets/bgm/
 assets/video/
 
 # === AI/automation state files ===
