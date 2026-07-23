@@ -1,6 +1,7 @@
 extends Node
+# gdlint:ignore=max-public-methods,max-file-lines
 # GameState — Persistent save/load + progression tracking
-# v0.88 — decomposed into subsystem autoloads: SaveManager, WeaponDB, AchievementTracker,
+# v0.89 — decomposed into subsystem autoloads: SaveManager, WeaponDB, AchievementTracker,
 # DailyChallengeManager, SettingsManager, BestiaryManager
 
 # Save file paths — delegated to SaveManager but kept for save_game/load_game
@@ -43,16 +44,7 @@ var equipped_weapon: String = "broken_sword"
 var equipped_skills: Array = ["dodge_roll"]
 
 # Settings
-var settings: Dictionary = {
-	"master_volume": 1.0,
-	"sfx_volume": 1.0,
-	"bgm_volume": 0.7,
-	"screen_shake": true,
-	"hit_stop": true,
-	"show_damage_numbers": true,
-	"auto_aim": false,
-	"text_speed": 1.0,
-}
+var settings: Dictionary = SettingsManager.DEFAULT_SETTINGS.duplicate()
 
 # Gate Key mechanic (Ch004)
 var has_gate_key := false
@@ -91,7 +83,6 @@ var BESTIARY: Dictionary:
 # Kill tracking: enemy_type → total kill count (persisted)
 var bestiary: Dictionary = {}  # enemy_type → {"kills": int, "lore_unlocked": [int]}
 
-# ─── Achievement Badges ──────────────────────────────────────────────────────
 # Delegated to AchievementTracker autoload
 var ACHIEVEMENTS: Dictionary:
 	get:
@@ -99,25 +90,29 @@ var ACHIEVEMENTS: Dictionary:
 
 var achievements_unlocked: Dictionary = {}  # achievement_id → timestamp
 signal achievement_unlocked(achievement_id: String, achievement_data: Dictionary)
-# ─── Daily Login Streak ───────────────────────────────────────────────────────
-# Consecutive days played → escalating gold + potion rewards
-# Streak breaks if >24h since last login
-# Streak caps at 7 days, then cycles (day 8 = day 1 rewards again, streak counter keeps going)
 
-# Streak rewards — delegated to GameState logic, data kept inline
-const STREAK_REWARDS := {
-	1: {"gold": 10, "potions": 0, "label": "Day 1 — 10g"},
-	2: {"gold": 20, "potions": 1, "label": "Day 2 — 20g + 1🧪"},
-	3: {"gold": 30, "potions": 1, "label": "Day 3 — 30g + 1🧪"},
-	4: {"gold": 50, "potions": 2, "label": "Day 4 — 50g + 2🧪"},
-	5: {"gold": 75, "potions": 2, "label": "Day 5 — 75g + 2🧪"},
-	6: {"gold": 100, "potions": 3, "label": "Day 6 — 100g + 3🧪"},
-	7: {"gold": 150, "potions": 3, "label": "Day 7 — 150g + 3🧪 🔥"},
-}
+var STREAK_REWARDS: Dictionary:
+	get:
+		return StreakManager.STREAK_REWARDS
 
-var daily_streak: int = 0
-var last_login_date: String = ""
-var streak_claimed_today: bool = false
+var daily_streak: int:
+	get:
+		return StreakManager.daily_streak
+	set(v):
+		StreakManager.daily_streak = v
+
+var last_login_date: String:
+	get:
+		return StreakManager.last_login_date
+	set(v):
+		StreakManager.last_login_date = v
+
+var streak_claimed_today: bool:
+	get:
+		return StreakManager.streak_claimed_today
+	set(v):
+		StreakManager.streak_claimed_today = v
+
 signal streak_claimed(streak_day: int, rewards: Dictionary)
 
 # Daily challenge modifiers — delegated to DailyChallengeManager autoload
@@ -127,33 +122,44 @@ var DAILY_CHALLENGE_MODIFIERS: Dictionary:
 
 # Daily challenge state
 var daily_challenge_completed_today: bool = false
-var daily_challenge_best_gold: int = 0  # Lifetime best gold from daily challenges
-var daily_challenge_total_completed: int = 0  # Lifetime total completions
+var daily_challenge_best_gold: int = 0
+var daily_challenge_total_completed: int = 0
 signal daily_challenge_completed(rewards: Dictionary)
 
 # Daily challenge runtime state (not persisted, set when starting a challenge)
 var is_daily_challenge_run: bool = false
-var active_daily_modifiers: Array = []  # Array of modifier IDs active this run
+var active_daily_modifiers: Array = []
 
 # Loot tracking
-var chapter_loot: Array = []  # Runtime: items dropped this chapter run
-var collected_weapons: Dictionary = {}  # weapon_id → {"count": int, "best_rarity": String}
+var chapter_loot: Array = []
+var collected_weapons: Dictionary = {}
 
 # Chapter performance tracking (runtime, reset per chapter)
 var chapter_start_time: float = 0.0
 var chapter_deaths: int = 0
 
 # Ghost run settings (persisted)
-var ghost_runs_enabled: bool = true  # Whether to show ghost replays
+var ghost_runs_enabled: bool = true
 
-# ─── Rested XP System ──────────────────────────────────────────────────────
-# Offline time accumulates bonus XP: 1 rested XP per 2 minutes offline
-# Max cap: 1000 rested XP (≈33 hours offline)
-# On next chapter completion, rested XP is added as bonus XP (2× multiplier)
-const RESTED_XP_RATE := 0.5  # rested XP per minute offline
-const RESTED_XP_CAP := 1000
-var rested_xp: int = 0  # Accumulated rested bonus XP
-var last_logout_time: float = 0.0  # Unix timestamp of last save/close
+var RESTED_XP_RATE: float:
+	get:
+		return StreakManager.RESTED_XP_RATE
+
+var RESTED_XP_CAP: int:
+	get:
+		return StreakManager.RESTED_XP_CAP
+
+var rested_xp: int:
+	get:
+		return StreakManager.rested_xp
+	set(v):
+		StreakManager.rested_xp = v
+
+var last_logout_time: float:
+	get:
+		return StreakManager.last_logout_time
+	set(v):
+		StreakManager.last_logout_time = v
 
 
 func _ready():
@@ -293,22 +299,7 @@ func load_game():
 		ghost_runs_enabled = data.get("ghost_runs_enabled", true)
 		rested_xp = data.get("rested_xp", 0)
 		last_logout_time = data.get("last_logout_time", 0.0)
-		settings = (
-			data
-			. get(
-				"settings",
-				{
-					"master_volume": 1.0,
-					"sfx_volume": 1.0,
-					"bgm_volume": 0.7,
-					"screen_shake": true,
-					"hit_stop": true,
-					"show_damage_numbers": true,
-					"auto_aim": false,
-					"text_speed": 1.0,
-				}
-			)
-		)
+		settings = data.get("settings", SettingsManager.DEFAULT_SETTINGS.duplicate())
 		print(
 			(
 				"Save loaded — HP %d/%d, weapon: %s, skills: %s"
@@ -572,47 +563,27 @@ func equip_skill(skill_id: String, slot: int) -> bool:
 	return true
 
 
-class ChapterProgress:
-	var chapter_id: String
-	var best_time: float
-	var stars: int = 0
-	var completed: bool = false
-
-
-# ─── Loot Drop System ───────────────────────────────────
-# Variable ratio reinforcement: enemies drop loot on death
-# Boss/champion kills = guaranteed drop + rare chance
-# Trash mob kills = 5% uncommon drop chance
-
-
 func roll_loot_drop(enemy_type: String, is_boss: bool = false) -> Dictionary:
-	"""Roll for a loot drop when an enemy dies. Returns {} if no drop."""
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
 
-	# Drop chance: trash 15%, boss/champion 100%
 	var drop_chance := 1.0 if is_boss else 0.15
 	if rng.randf() > drop_chance:
 		return {}
 
-	# Roll rarity: weighted random from RARITY
-	var rarity := _roll_rarity(is_boss)
-
-	# Pick a weapon of that rarity (or nearest lower)
-	var weapon_id := _pick_weapon_by_rarity(rarity)
+	var rarity := WeaponDB.roll_rarity(is_boss)
+	var weapon_id := WeaponDB.pick_weapon_by_rarity(rarity)
 	if weapon_id.is_empty():
 		return {}
 
 	var loot := {
 		"weapon_id": weapon_id,
 		"rarity": rarity,
-		"gold_value": _gold_value_for_rarity(rarity),
+		"gold_value": WeaponDB.gold_value_for_rarity(rarity),
 	}
 
-	# Track in chapter loot
 	chapter_loot.append(loot)
 
-	# If weapon not yet owned, unlock it
 	if weapon_id not in unlocked_weapons:
 		unlocked_weapons.append(weapon_id)
 		_auto_equip_best_weapon()
@@ -622,7 +593,6 @@ func roll_loot_drop(enemy_type: String, is_boss: bool = false) -> Dictionary:
 	else:
 		loot["is_new"] = false
 
-	# Update collection tracking
 	if not collected_weapons.has(weapon_id):
 		collected_weapons[weapon_id] = {"count": 0, "best_rarity": rarity}
 	collected_weapons[weapon_id]["count"] += 1
@@ -632,7 +602,6 @@ func roll_loot_drop(enemy_type: String, is_boss: bool = false) -> Dictionary:
 	if new_rank > current_rank:
 		collected_weapons[weapon_id]["best_rarity"] = rarity
 
-	# Add gold value
 	player_gold += loot.gold_value
 	inventory["gold"] = player_gold
 
@@ -643,106 +612,18 @@ func roll_loot_drop(enemy_type: String, is_boss: bool = false) -> Dictionary:
 		)
 	)
 
-	# Check loot achievements
-	check_loot_achievements(rarity)
+	AchievementTracker.check_loot_achievements(rarity)
 
 	save_game()
 	return loot
 
 
-func _roll_rarity(is_boss: bool) -> String:
-	"""Weighted random rarity roll. Bosses get +15% to rare/legendary."""
-	var rng := RandomNumberGenerator.new()
-	rng.randomize()
-
-	var weights := {}
-	for r in RARITY.keys():
-		weights[r] = RARITY[r].weight
-
-	# Boss bonus: shift weight from common up to rare/legendary
-	if is_boss:
-		weights["common"] = max(10, weights["common"] - 30)
-		weights["uncommon"] += 10
-		weights["rare"] += 12
-		weights["legendary"] += 8
-
-	var total := 0.0
-	for w in weights.values():
-		total += w
-
-	var roll := rng.randf() * total
-	var cumulative := 0.0
-	for r in ["legendary", "rare", "uncommon", "common"]:
-		cumulative += weights[r]
-		if roll <= cumulative:
-			return r
-	return "common"
-
-
-func _pick_weapon_by_rarity(rarity: String) -> String:
-	"""Pick a weapon matching the rolled rarity. Falls back to lower rarity."""
-	var rarity_order := ["legendary", "rare", "uncommon", "common"]
-	var target_idx := rarity_order.find(rarity)
-
-	# Try exact rarity first, then fall back to lower
-	for i in range(target_idx, rarity_order.size()):
-		var r: String = rarity_order[i]
-		var candidates: Array = []
-		for wid in WEAPON_STATS.keys():
-			if WEAPON_STATS[wid].get("rarity", "common") == r:
-				candidates.append(wid)
-		if not candidates.is_empty():
-			candidates.sort()
-			var rng := RandomNumberGenerator.new()
-			rng.randomize()
-			return candidates[rng.randi() % candidates.size()]
-	return ""
-
-
-func _gold_value_for_rarity(rarity: String) -> int:
-	match rarity:
-		"common":
-			return 5
-		"uncommon":
-			return 15
-		"rare":
-			return 40
-		"legendary":
-			return 100
-		_:
-			return 5
-
-
 func get_loot_summary() -> Dictionary:
-	"""Get summary of chapter loot for victory screen."""
-	var by_rarity := {}
-	for loot in chapter_loot:
-		var r: String = loot.get("rarity", "common")
-		if not by_rarity.has(r):
-			by_rarity[r] = {"count": 0, "items": [], "gold": 0}
-		by_rarity[r].count += 1
-		by_rarity[r].items.append(loot.weapon_id)
-		by_rarity[r].gold += loot.get("gold_value", 0)
-	return {
-		"total_drops": chapter_loot.size(),
-		"total_gold": chapter_loot.reduce(func(acc, l): return acc + l.get("gold_value", 0), 0),
-		"new_weapons": chapter_loot.filter(func(l): return l.get("is_new", false)).size(),
-		"by_rarity": by_rarity,
-	}
+	return WeaponDB.get_loot_summary(chapter_loot)
 
 
 func get_collection_progress() -> Dictionary:
-	"""Get weapon collection stats for UI."""
-	var total_weapons := WEAPON_STATS.size()
-	var collected := collected_weapons.size()
-	return {
-		"total": total_weapons,
-		"collected": collected,
-		"percentage": (collected * 100.0 / total_weapons) if total_weapons > 0 else 0.0,
-	}
-
-
-# ─── Bestiary ─────────────────────────────────────────────────────────────────
+	return WeaponDB.get_collection_progress(collected_weapons)
 
 
 func record_kill(enemy_type: String) -> void:
@@ -781,9 +662,6 @@ func get_bestiary_progress() -> Dictionary:
 	return BestiaryManager.get_bestiary_progress()
 
 
-# ─── Achievement System ─────────────────────────────────────────────────────
-
-
 func unlock_achievement(achievement_id: String) -> bool:
 	var result := AchievementTracker.unlock_achievement(achievement_id)
 	if result:
@@ -800,7 +678,6 @@ func is_achievement_unlocked(achievement_id: String) -> bool:
 
 
 func check_achievements() -> void:
-	"""Check all achievement conditions and unlock any that are met. Call at key moments."""
 	var total_kills := 0
 	for enemy_type in bestiary:
 		total_kills += bestiary[enemy_type].get("kills", 0)
@@ -817,85 +694,32 @@ func check_achievements() -> void:
 		if stars >= 3:
 			three_star_count += 1
 
-	# Combat
-	if total_kills >= 1:
-		unlock_achievement("first_blood")
-	if total_kills >= 50:
-		unlock_achievement("body_count_50")
-	if total_kills >= 200:
-		unlock_achievement("body_count_200")
-
-	# Exploration
-	if completed_count >= 1:
-		unlock_achievement("first_step")
-	if completed_count >= 5:
-		unlock_achievement("half_way")
-	if current_act >= 2 or completed_count >= 4:
-		unlock_achievement("act2_reacher")
-	if current_act >= 3 or completed_count >= 10:
-		unlock_achievement("act3_reacher")
-	if completed_count >= 15:
-		unlock_achievement("act3_complete")
-	if current_act >= 4 or completed_count >= 16:
-		unlock_achievement("act4_reacher")
-	if completed_count >= 20:
-		unlock_achievement("act4_complete")
-	if current_act >= 5 or completed_count >= 21:
-		unlock_achievement("act5_reacher")
-	if completed_count >= 25:
-		unlock_achievement("act5_complete")
-	if current_act >= 6 or completed_count >= 26:
-		unlock_achievement("act6_reacher")
-	if completed_count >= 30:
-		unlock_achievement("act6_complete")
-
-	# Collection
-	if weapons_count >= 3:
-		unlock_achievement("armory_3")
-	if weapons_count >= WEAPON_STATS.size():
-		unlock_achievement("armory_all")
-	if discovered_enemies >= 4:
-		unlock_achievement("bestiary_half")
-	if discovered_enemies >= BESTIARY.size():
-		unlock_achievement("bestiary_all")
-
-	# Mastery
-	if three_star_count >= 1:
-		unlock_achievement("speed_demon")
-	if three_star_count >= 5:
-		unlock_achievement("perfectionist")
+	AchievementTracker.check_achievements(
+		total_kills,
+		completed_count,
+		weapons_count,
+		discovered_enemies,
+		BESTIARY.size(),
+		three_star_count,
+		current_act
+	)
+	sync_achievements()
 
 
 func check_chapter_achievements(deaths: int, stars: int) -> void:
-	"""Check achievements that depend on chapter performance. Call after chapter completion."""
-	if deaths == 0:
-		unlock_achievement("flawless_chapter")
-	if stars >= 3:
-		unlock_achievement("speed_demon")
-
-	# Speed Demon: 3-star 5 different chapters
-	var three_star_count := 0
-	for chapter_id in chapter_stars:
-		if chapter_stars[chapter_id] >= 3:
-			three_star_count += 1
-	if three_star_count >= 5:
-		unlock_achievement("speed_demon_5")
-
-	# Re-check general achievements too
+	AchievementTracker.check_chapter_achievements(deaths, stars, chapter_stars)
+	sync_achievements()
 	check_achievements()
 
 
 func check_ghost_achievement(chapter_id: String, completion_time: float) -> void:
-	"""Check if player beat their ghost. Called after chapter completion if ghost was active."""
-	var best_time := GhostRecorder.get_best_time(chapter_id)
-	if best_time > 0 and completion_time < best_time:
-		unlock_achievement("ghost_hunter")
+	AchievementTracker.check_ghost_achievement(chapter_id, completion_time)
+	sync_achievements()
 
 
 func check_loot_achievements(rarity: String) -> void:
-	"""Check achievements that depend on loot drops. Call after loot roll."""
-	if rarity == "legendary":
-		unlock_achievement("legendary_find")
+	AchievementTracker.check_loot_achievements(rarity)
+	sync_achievements()
 	check_achievements()
 
 
@@ -907,197 +731,36 @@ func get_achievements_by_category() -> Dictionary:
 	return AchievementTracker.get_achievements_by_category()
 
 
-# ─── Daily Login Streak System ──────────────────────────────────────────────
-
-
 func _check_daily_streak() -> void:
-	"""Check and update daily login streak. Call on game startup."""
-	var today := Time.get_datetime_string_from_system().split(" ")[0]  # YYYY-MM-DD
-
-	# Guard against malformed/empty saved dates
-	if last_login_date.is_empty() or not _is_valid_date_string(last_login_date):
-		# First ever login (or corrupted save)
-		daily_streak = 1
-		last_login_date = today
-		streak_claimed_today = false
-		daily_challenge_completed_today = false  # New day = fresh challenge
-		print("STREAK: First login! Day 1")
-		return
-
-	if last_login_date == today:
-		# Same day — already logged in today
-		print("STREAK: Already logged in today (day %d)" % daily_streak)
-		return
-
-	# New day — reset daily challenge
-	daily_challenge_completed_today = false
-
-	# Check if yesterday was the last login (consecutive)
-	var yesterday := _get_yesterday_date(last_login_date)
-	if today == yesterday or _is_next_day(last_login_date, today):
-		# Consecutive day
-		daily_streak += 1
-		last_login_date = today
-		streak_claimed_today = false
-		print("STREAK: Consecutive! Day %d" % daily_streak)
-	else:
-		# Streak broken — missed a day
-		daily_streak = 1
-		last_login_date = today
-		streak_claimed_today = false
-		print("STREAK: Broken! Reset to day 1")
+	StreakManager.check_daily_streak()
+	daily_streak = StreakManager.daily_streak
+	last_login_date = StreakManager.last_login_date
+	streak_claimed_today = StreakManager.streak_claimed_today
 
 
 func claim_daily_streak() -> Dictionary:
-	"""Claim today's streak reward. Returns reward dict or empty if already claimed."""
-	if streak_claimed_today:
-		return {}
-
-	var reward_day := ((daily_streak - 1) % 7) + 1  # Cycle 1-7
-	var rewards: Dictionary = STREAK_REWARDS.get(reward_day, STREAK_REWARDS[1]).duplicate()
-
-	# Apply rewards
-	player_gold += rewards.get("gold", 0)
-	inventory["gold"] = player_gold
-	add_potion(rewards.get("potions", 0))
-
-	streak_claimed_today = true
-	print("STREAK CLAIMED: Day %d → %s" % [daily_streak, rewards.get("label", "")])
-	AudioManager.play_sfx("streak_claim")
-	streak_claimed.emit(daily_streak, rewards)
-
-	# Check streak achievements
-	_check_streak_achievements()
-
-	save_game()
+	var rewards := StreakManager.claim_daily_streak(self)
+	daily_streak = StreakManager.daily_streak
+	streak_claimed_today = StreakManager.streak_claimed_today
 	return rewards
 
 
 func get_streak_info() -> Dictionary:
-	"""Get streak status for UI display."""
-	var reward_day := ((daily_streak - 1) % 7) + 1
-	var next_reward: Dictionary = STREAK_REWARDS.get(reward_day, STREAK_REWARDS[1])
-	return {
-		"streak": daily_streak,
-		"reward_day": reward_day,
-		"claimed_today": streak_claimed_today,
-		"next_reward": next_reward,
-		"days_to_cycle": 7 - reward_day,
-	}
+	return StreakManager.get_streak_info()
 
 
-func _check_streak_achievements() -> void:
-	"""Check streak-related achievements."""
-	if daily_streak >= 3:
-		unlock_achievement("streak_3")
-	if daily_streak >= 7:
-		unlock_achievement("streak_7")
-
-
-func _is_valid_date_string(date_str: String) -> bool:
-	"""Validate YYYY-MM-DD format and sane values."""
-	var parts := date_str.split("-")
-	if parts.size() != 3:
-		return false
-	var year := int(parts[0])
-	var month := int(parts[1])
-	var day := int(parts[2])
-	if year < 2020 or year > 2100 or month < 1 or month > 12 or day < 1 or day > 31:
-		return false
-	return true
-
-
-func _get_yesterday_date(date_str: String) -> String:
-	"""Get the date string for the day before the given date."""
-	if not _is_valid_date_string(date_str):
-		return ""
-	var parts := date_str.split("-")
-	var year := int(parts[0])
-	var month := int(parts[1])
-	var day := int(parts[2])
-
-	# Convert to unix timestamp and subtract 86400
-	var epoch := Time.get_unix_time_from_datetime_dict(
-		{"year": year, "month": month, "day": day, "hour": 12, "minute": 0, "second": 0}
-	)
-	var yesterday_epoch := epoch - 86400
-	var yesterday_dict := Time.get_datetime_dict_from_unix_time(yesterday_epoch)
-	return (
-		"%04d-%02d-%02d" % [yesterday_dict["year"], yesterday_dict["month"], yesterday_dict["day"]]
-	)
-
-
-func _is_next_day(date1: String, date2: String) -> bool:
-	"""Check if date2 is the day after date1."""
-	var parts1 := date1.split("-")
-	var parts2 := date2.split("-")
-	var epoch1 := Time.get_unix_time_from_datetime_dict(
-		{
-			"year": int(parts1[0]),
-			"month": int(parts1[1]),
-			"day": int(parts1[2]),
-			"hour": 12,
-			"minute": 0,
-			"second": 0
-		}
-	)
-	var epoch2 := Time.get_unix_time_from_datetime_dict(
-		{
-			"year": int(parts2[0]),
-			"month": int(parts2[1]),
-			"day": int(parts2[2]),
-			"hour": 12,
-			"minute": 0,
-			"second": 0
-		}
-	)
-	return (epoch2 - epoch1) <= 86400 and epoch2 > epoch1
-
-
-# ─── Rested XP System ───────────────────────────────────────────────────────
+func sync_achievements() -> void:
+	achievements_unlocked = AchievementTracker.achievements_unlocked
 
 
 func _calculate_rested_xp() -> void:
-	"""Calculate rested XP accumulated since last logout."""
-	if last_logout_time <= 0:
-		# First time or no prior logout — no rested XP
-		last_logout_time = Time.get_unix_time_from_system()
-		return
-
-	var now := Time.get_unix_time_from_system()
-	var offline_minutes := (now - last_logout_time) / 60.0
-
-	if offline_minutes < 1.0:
-		return  # Less than 1 minute offline — no bonus
-
-	var earned := int(offline_minutes * RESTED_XP_RATE)
-	rested_xp = mini(rested_xp + earned, RESTED_XP_CAP)
-	last_logout_time = now
-
-	if earned > 0:
-		var hours := offline_minutes / 60.0
-		print(
-			(
-				"RESTED XP: Away %.1fh → +%d rested XP (total: %d/%d)"
-				% [hours, earned, rested_xp, RESTED_XP_CAP]
-			)
-		)
+	StreakManager.calculate_rested_xp()
+	rested_xp = StreakManager.rested_xp
+	last_logout_time = StreakManager.last_logout_time
 
 
 func get_rested_xp_info() -> Dictionary:
-	"""Get rested XP status for UI display."""
-	var is_capped := rested_xp >= RESTED_XP_CAP
-	var pct := (rested_xp * 100.0 / RESTED_XP_CAP) if RESTED_XP_CAP > 0 else 0.0
-	return {
-		"rested_xp": rested_xp,
-		"cap": RESTED_XP_CAP,
-		"percentage": pct,
-		"is_capped": is_capped,
-		"has_bonus": rested_xp > 0,
-	}
-
-
-# ─── Daily Challenge System ───────────────────────────────────────────────────
+	return StreakManager.get_rested_xp_info()
 
 
 func get_daily_challenge() -> Dictionary:
@@ -1116,15 +779,10 @@ func complete_daily_challenge() -> void:
 		else challenge.get("gold_reward", 50)
 	)
 	player_gold += bonus_gold
+	AchievementTracker.check_daily_challenge_achievements(daily_challenge_total_completed)
+	sync_achievements()
 	AudioManager.play_sfx("daily_challenge")
 	save_game()
-
-
-func _check_daily_challenge_achievements() -> void:
-	if daily_challenge_total_completed >= 1:
-		unlock_achievement("daily_challenger")
-	if daily_challenge_total_completed >= 7:
-		unlock_achievement("daily_veteran")
 
 
 func is_daily_challenge_available() -> bool:

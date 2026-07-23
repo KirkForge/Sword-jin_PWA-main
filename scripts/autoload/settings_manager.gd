@@ -2,7 +2,7 @@ extends Node
 ## SettingsManager — Audio, display, and accessibility settings.
 ## Extracted from GameState for testability and separation of concerns.
 
-var settings: Dictionary = {
+const DEFAULT_SETTINGS := {
 	"master_volume": 1.0,
 	"sfx_volume": 1.0,
 	"bgm_volume": 0.7,
@@ -12,6 +12,8 @@ var settings: Dictionary = {
 	"auto_aim": false,
 	"text_speed": 1.0,
 }
+
+var settings: Dictionary = DEFAULT_SETTINGS.duplicate()
 
 
 func apply_settings():

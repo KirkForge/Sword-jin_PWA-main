@@ -116,3 +116,89 @@ func get_best_weapon(unlocked_weapons: Array) -> String:
 				best_dmg = dmg
 				best_weapon = weapon_id
 	return best_weapon
+
+
+func roll_rarity(is_boss: bool) -> String:
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+
+	var weights := {}
+	for r in RARITY.keys():
+		weights[r] = RARITY[r].weight
+
+	if is_boss:
+		weights["common"] = max(10, weights["common"] - 30)
+		weights["uncommon"] += 10
+		weights["rare"] += 12
+		weights["legendary"] += 8
+
+	var total := 0.0
+	for w in weights.values():
+		total += w
+
+	var roll := rng.randf() * total
+	var cumulative := 0.0
+	for r in ["legendary", "rare", "uncommon", "common"]:
+		cumulative += weights[r]
+		if roll <= cumulative:
+			return r
+	return "common"
+
+
+func pick_weapon_by_rarity(rarity: String) -> String:
+	var rarity_order := ["legendary", "rare", "uncommon", "common"]
+	var target_idx := rarity_order.find(rarity)
+
+	for i in range(target_idx, rarity_order.size()):
+		var r: String = rarity_order[i]
+		var candidates: Array = []
+		for wid in WEAPON_STATS.keys():
+			if WEAPON_STATS[wid].get("rarity", "common") == r:
+				candidates.append(wid)
+		if not candidates.is_empty():
+			candidates.sort()
+			var rng := RandomNumberGenerator.new()
+			rng.randomize()
+			return candidates[rng.randi() % candidates.size()]
+	return ""
+
+
+func gold_value_for_rarity(rarity: String) -> int:
+	match rarity:
+		"common":
+			return 5
+		"uncommon":
+			return 15
+		"rare":
+			return 40
+		"legendary":
+			return 100
+		_:
+			return 5
+
+
+func get_loot_summary(chapter_loot: Array) -> Dictionary:
+	var by_rarity := {}
+	for loot in chapter_loot:
+		var r: String = loot.get("rarity", "common")
+		if not by_rarity.has(r):
+			by_rarity[r] = {"count": 0, "items": [], "gold": 0}
+		by_rarity[r].count += 1
+		by_rarity[r].items.append(loot.weapon_id)
+		by_rarity[r].gold += loot.get("gold_value", 0)
+	return {
+		"total_drops": chapter_loot.size(),
+		"total_gold": chapter_loot.reduce(func(acc, l): return acc + l.get("gold_value", 0), 0),
+		"new_weapons": chapter_loot.filter(func(l): return l.get("is_new", false)).size(),
+		"by_rarity": by_rarity,
+	}
+
+
+func get_collection_progress(collected_weapons: Dictionary) -> Dictionary:
+	var total_weapons := WEAPON_STATS.size()
+	var collected := collected_weapons.size()
+	return {
+		"total": total_weapons,
+		"collected": collected,
+		"percentage": (collected * 100.0 / total_weapons) if total_weapons > 0 else 0.0,
+	}

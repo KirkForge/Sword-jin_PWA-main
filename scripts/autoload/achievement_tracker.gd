@@ -214,3 +214,96 @@ func get_achievements_by_category() -> Dictionary:
 			entry["timestamp"] = achievements_unlocked[id]
 		categories[category].append(entry)
 	return categories
+
+
+func check_achievements(
+	total_kills: int,
+	completed_count: int,
+	weapons_count: int,
+	discovered_enemies: int,
+	bestiary_size: int,
+	three_star_count: int,
+	current_act: int
+) -> void:
+	if total_kills >= 1:
+		unlock_achievement("first_blood")
+	if total_kills >= 50:
+		unlock_achievement("body_count_50")
+	if total_kills >= 200:
+		unlock_achievement("body_count_200")
+
+	if completed_count >= 1:
+		unlock_achievement("first_step")
+	if completed_count >= 5:
+		unlock_achievement("half_way")
+	if current_act >= 2 or completed_count >= 4:
+		unlock_achievement("act2_reacher")
+	if current_act >= 3 or completed_count >= 10:
+		unlock_achievement("act3_reacher")
+	if completed_count >= 15:
+		unlock_achievement("act3_complete")
+	if current_act >= 4 or completed_count >= 16:
+		unlock_achievement("act4_reacher")
+	if completed_count >= 20:
+		unlock_achievement("act4_complete")
+	if current_act >= 5 or completed_count >= 21:
+		unlock_achievement("act5_reacher")
+	if completed_count >= 25:
+		unlock_achievement("act5_complete")
+	if current_act >= 6 or completed_count >= 26:
+		unlock_achievement("act6_reacher")
+	if completed_count >= 30:
+		unlock_achievement("act6_complete")
+
+	if weapons_count >= 3:
+		unlock_achievement("armory_3")
+	if weapons_count >= WeaponDB.WEAPON_STATS.size():
+		unlock_achievement("armory_all")
+	if discovered_enemies >= 4:
+		unlock_achievement("bestiary_half")
+	if discovered_enemies >= bestiary_size:
+		unlock_achievement("bestiary_all")
+
+	if three_star_count >= 1:
+		unlock_achievement("speed_demon")
+	if three_star_count >= 5:
+		unlock_achievement("speed_demon_5")
+
+
+func check_chapter_achievements(deaths: int, stars: int, chapter_stars: Dictionary) -> void:
+	if deaths == 0:
+		unlock_achievement("flawless_chapter")
+	if stars >= 3:
+		unlock_achievement("speed_demon")
+
+	var three_star_count := 0
+	for chapter_id in chapter_stars:
+		if chapter_stars[chapter_id] >= 3:
+			three_star_count += 1
+	if three_star_count >= 5:
+		unlock_achievement("speed_demon_5")
+
+
+func check_ghost_achievement(chapter_id: String, completion_time: float) -> void:
+	var best_time := GhostRecorder.get_best_time(chapter_id)
+	if best_time > 0 and completion_time < best_time:
+		unlock_achievement("ghost_hunter")
+
+
+func check_loot_achievements(rarity: String) -> void:
+	if rarity == "legendary":
+		unlock_achievement("legendary_find")
+
+
+func check_daily_challenge_achievements(total_completed: int) -> void:
+	if total_completed >= 1:
+		unlock_achievement("daily_challenger")
+	if total_completed >= 7:
+		unlock_achievement("daily_veteran")
+
+
+func check_streak_achievements(streak: int) -> void:
+	if streak >= 3:
+		unlock_achievement("streak_3")
+	if streak >= 7:
+		unlock_achievement("streak_7")

@@ -42,8 +42,8 @@ jobs:
 
       - name: GDScript lint
         run: |
-          gdformat --check scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd
-          gdlint scripts/*.gd scripts/autoload/*.gd scripts/ci/*.gd
+          gdformat --check $(find . -name "*.gd" -not -path "./addons/*")
+          gdlint $(find . -name "*.gd" -not -path "./addons/*")
 
   test:
     runs-on: ubuntu-latest
