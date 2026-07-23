@@ -54,9 +54,18 @@ assets/               Generated art, BGM, SFX, voice (gitignored; regenerate)
 
 ## Git
 
-- Branch from `dev`, PR to `main`
+- Branch from `dev`, PR to `dev` or `main`
 - Commit format: `type(scope): message` — see `feat`, `fix`, `docs`, `refactor`, `test`, `chore`
 - Pre-push hooks run via `ci-cleandev`; fix failures, don't bypass
+
+## Testing
+
+Run GUT unit tests headless:
+```bash
+godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://test -gexit
+```
+
+All tests must pass before pushing. Target: 91+ tests, 1276+ assertions.
 
 ## Asset Generation
 
@@ -70,4 +79,4 @@ Generated assets land in `assets/art/generated/`, `assets/bgm/`, etc. These are 
 
 ## Deploy
 
-Pushes to `main` trigger GitHub Pages deploy via `.github/workflows/deploy.yml`. The deploy workflow runs the Godot export, patches the PWA, and uploads `builds/web/` to Pages.
+Pushes to `main` trigger GitHub Pages deploy via `.github/workflows/ci.yml` (build + deploy job). The deploy workflow runs the Godot export, patches the PWA, and uploads `builds/web/` to Pages.

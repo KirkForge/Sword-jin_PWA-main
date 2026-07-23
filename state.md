@@ -3,11 +3,29 @@
 *Tracked. Updated at session close. What changed, what's pending, what's blocked.*
 
 ## Current state
-- Head: `b0f9359` (chore/ci-quality-and-docs)
-- Tests: GUT unit tests — 15 tests, 26 assertions, all passing
+- Head: `ed549ab` (feat: switch Lighthouse to mobile preset, add ErrorTracker)
+- Tests: GUT unit tests — 91 tests, 1276 assertions, all passing
 - Smoke test: 30/30 chapters, no script errors
-- Lint: `gdformat --check . && gdlint .` — PASS (binding in CI)
-- Last updated: 2026-07-22
+- Lint: `gdformat --check . && gdlint .` — PASS (all .gd files excluding addons)
+- game_state.gd: 814 lines (from 1953), 7 subsystem autoloads extracted
+- Last updated: 2026-07-23
+
+---
+
+## Session 2026-07-23 — WORKORDER 5.0: test coverage, decomposition, CI lint, Lighthouse mobile, ADRs
+
+### Completed tasks
+- **Task 1**: Expanded test coverage from 29→91 tests (61→1276 assertions). New test files: test_level_manager, test_arena_builder, test_player_movement, test_enemy_ai, test_audio_manager, test_error_tracker
+- **Task 2**: Decomposed game_state.gd (1953→814 lines) into 7 autoloads: SaveManager, WeaponDB, AchievementTracker, DailyChallengeManager, SettingsManager, BestiaryManager, StreakManager. All 91 tests pass.
+- **Task 3**: Expanded CI lint scope to all .gd files (excluding addons). Re-enabled max-file-lines (1000) and max-public-methods (60) gdlint rules. Removed `test` from excluded directories.
+- **Task 4**: Switched Lighthouse CI from desktop to mobile preset with accessibility category. Added ErrorTracker autoload with PlayFab error reporting. 7 new test functions.
+- **Task 5**: Created ADR-007, ADR-008, ADR-009; ADR template; PR template. Updated CONTRIBUTING.md (fix deploy.yml reference, add dev branch target, add GUT test instructions). Updated CHANGELOG.md.
+
+### Pending
+- game_state.gd still has 54 public methods (coordinator pattern — acceptable for autoload singleton)
+- level_manager.gd is 918 lines (under 1000 threshold, but could benefit from decomposition in future)
+- Lighthouse mobile PWA score needs CI verification
+- E2E mobile device testing still manual (no Detox/Maestro)
 
 ---
 

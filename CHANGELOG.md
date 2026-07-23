@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Decompose game_state.gd (1953→814 lines) into 7 focused autoloads: SaveManager, WeaponDB, AchievementTracker, DailyChallengeManager, SettingsManager, BestiaryManager, StreakManager
+- Expand test coverage from 29→91 tests (61→1276 assertions) with new test files for level_manager, arena_builder, player_movement, enemy_ai, audio_manager, error_tracker
+- Switch Lighthouse CI from desktop to mobile preset with performance/accessibility thresholds
+- Add ErrorTracker autoload (circular buffer error logging, PlayFab error reporting)
+- Add CI lint scope to all .gd files (excluding addons), re-enable max-file-lines and max-public-methods gdlint rules
+- Add ADR-007, ADR-008, ADR-009; ADR template; PR template
+
 ### Fixed
 
 - CI: Smoke driver now detects chapter completion via GameState fallback when VictoryScreen is unreachable (fixes 0/30 chapters completed in headless CI)
