@@ -3,12 +3,12 @@
 *Tracked. Updated at session close. What changed, what's pending, what's blocked.*
 
 ## Current state
-- Head: `ed549ab` (feat: switch Lighthouse to mobile preset, add ErrorTracker)
-- Tests: GUT unit tests — 91 tests, 1276 assertions, all passing
+- Head: post-merge
+- Tests: GUT unit tests — 91+ tests, 1276+ assertions, all passing
 - Smoke test: 30/30 chapters, no script errors
 - Lint: `gdformat --check . && gdlint .` — PASS (all .gd files excluding addons)
 - game_state.gd: 814 lines (from 1953), 7 subsystem autoloads extracted
-- Last updated: 2026-07-23
+- Last updated: 2026-07-24
 
 ---
 
@@ -29,7 +29,52 @@
 
 ---
 
-## Session 2026-07-22 — CI quality, docs, tests, PlayFab, save encryption
+## Session 2026-07-23 — GUT tests, save migration, ghost replay (B+ → A−)
+
+### Completed
+- **Task 1**: 14 new GUT unit tests
+  - `test/test_combat_depth.gd` — 5 tests: overkill damage → HP≤0, zero damage unchanged, multiple enemies, player heal, enemy armor reduction
+  - `test/test_playfab_login_error.gd` — 3 new tests (was 2, now 5): ErrorScreen receives message, auto-hides after timeout, dismiss on return
+  - `test/test_save_depth.gd` — 3 tests: encryption structure validation, v0 migration preserves fields, game_data namespace migration
+  - `test/test_ghost_replay.gd` — 3 tests: record start/stop state, snapshot data structure, empty ghost list no crash
+- **Task 3**: Save data structure expansion
+  - `game_state.gd`: added `game_data: Dictionary = {}` (persisted)
+
+---
+
+## Session 2026-07-23 — GUT tests, save migration, ghost replay (B+ → A−)
+
+### Completed
+- **Task 1**: 14 new GUT unit tests
+  - `test/test_combat_depth.gd` — 5 tests: overkill damage → HP≤0, zero damage unchanged, multiple enemies, player heal, enemy armor reduction
+  - `test/test_playfab_login_error.gd` — 3 new tests (was 2, now 5): ErrorScreen receives message, auto-hides after timeout, dismiss on return
+  - `test/test_save_depth.gd` — 3 tests: encryption structure validation, v0 migration preserves fields, game_data namespace migration
+  - `test/test_ghost_replay.gd` — 3 tests: record start/stop state, snapshot data structure, empty ghost list no crash
+- **Task 3**: Save data structure expansion
+  - `game_state.gd`: added `game_data: Dictionary = {}` (persisted)
+  - Added `get_game_data(key, default)` and `set_game_data(key, value)` methods
+  - `_migrate_save` now adds `game_data: {}` namespace for saves lacking it (v1→v2 compatible)
+  - `save_game()` and `load_game()` include `game_data`
+- **Task 4**: Ghost replay — tests for existing GhostRecorder autoload (3 tests)
+
+### Not completed
+- **Task 2**: Real-device offline PWA test — no physical Android/iOS devices available for manual testing. Documented as pending.
+
+### Gate evidence
+```
+$ gdformat --check test/*.gd scripts/autoload/game_state.gd
+5 files would be left unchanged
+
+$ gdlint test/*.gd scripts/autoload/game_state.gd
+Success: no problems found
+
+$ godot --headless --path . -s addons/gut/gut_cmdln.gd -gdir=res://test -gexit
+Scripts: 8, Tests: 29, Passing: 29, Asserts: 61 — All tests passed!
+```
+
+### Pending
+- **Task 2** (real-device offline test): No physical devices available. Document in state.md as pending.
+- Smoke test times out on this machine (pre-existing — 300s timeout insufficient for 30 chapters headless locally; passes in CI)
 
 ### Completed tasks
 - **Task 0.1**: FF `main` to `2842be6`, synced `dev`, deleted `fix/smoke-driver-victory-detection` branch

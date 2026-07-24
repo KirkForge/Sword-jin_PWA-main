@@ -72,5 +72,7 @@ func _migrate_save(data: Dictionary) -> Dictionary:
 			data["daily_challenge_total_completed"] = 0
 		if not data.has("collected_weapons"):
 			data["collected_weapons"] = {}
+	if not data.has("game_data"):
+		data["game_data"] = {}
 	data["version"] = "2.6"
 	return data

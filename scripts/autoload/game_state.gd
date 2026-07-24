@@ -141,6 +141,9 @@ var chapter_deaths: int = 0
 # Ghost run settings (persisted)
 var ghost_runs_enabled: bool = true
 
+# Game data namespace (v2 save expansion — achievements, bestiary, daily, etc.)
+var game_data: Dictionary = {}
+
 var RESTED_XP_RATE: float:
 	get:
 		return StreakManager.RESTED_XP_RATE
@@ -237,6 +240,7 @@ func save_game():
 		"ghost_runs_enabled": ghost_runs_enabled,
 		"rested_xp": rested_xp,
 		"last_logout_time": Time.get_unix_time_from_system(),
+		"game_data": game_data,
 	}
 
 	var file := FileAccess.open(SAVE_FILE, FileAccess.WRITE)
@@ -299,6 +303,7 @@ func load_game():
 		ghost_runs_enabled = data.get("ghost_runs_enabled", true)
 		rested_xp = data.get("rested_xp", 0)
 		last_logout_time = data.get("last_logout_time", 0.0)
+		game_data = data.get("game_data", {})
 		settings = data.get("settings", SettingsManager.DEFAULT_SETTINGS.duplicate())
 		print(
 			(
@@ -561,6 +566,29 @@ func equip_skill(skill_id: String, slot: int) -> bool:
 	equipped_skills[slot] = skill_id
 	save_game()
 	return true
+
+
+func get_game_data(key: String, default_value = null):
+	if game_data.has(key):
+		return game_data[key]
+	return default_value
+
+
+func set_game_data(key: String, value) -> void:
+	game_data[key] = value
+
+
+class ChapterProgress:
+	var chapter_id: String
+	var best_time: float
+	var stars: int = 0
+	var completed: bool = false
+
+
+# ─── Loot Drop System ───────────────────────────────────
+# Variable ratio reinforcement: enemies drop loot on death
+# Boss/champion kills = guaranteed drop + rare chance
+# Trash mob kills = 5% uncommon drop chance
 
 
 func roll_loot_drop(enemy_type: String, is_boss: bool = false) -> Dictionary:

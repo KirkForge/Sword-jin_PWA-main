@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Decompose game_state.gd (1953→814 lines) into 7 focused autoloads: SaveManager, WeaponDB, AchievementTracker, DailyChallengeManager, SettingsManager, BestiaryManager, StreakManager
 - Expand test coverage from 29→91 tests (61→1276 assertions) with new test files for level_manager, arena_builder, player_movement, enemy_ai, audio_manager, error_tracker
+- Maintenance merge: 14 GUT tests + `game_data` save namespace from `feat/gut-tests-save-migration-ghost-replay` (combat depth, PlayFab login error, save depth, ghost replay) — `_migrate_save` adds `game_data: {}` for v1→v2 migration (forward-compatible)
+- Save: `game_data` namespace in save format for future features (achievements, bestiary, daily challenges); `get_game_data(key)` / `set_game_data(key, value)` methods on GameState
 - Switch Lighthouse CI from desktop to mobile preset with performance/accessibility thresholds
 - Add ErrorTracker autoload (circular buffer error logging, PlayFab error reporting)
 - Add CI lint scope to all .gd files (excluding addons), re-enable max-file-lines and max-public-methods gdlint rules
